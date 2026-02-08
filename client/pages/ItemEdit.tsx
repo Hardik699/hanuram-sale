@@ -98,6 +98,7 @@ export default function ItemEdit() {
   const [newVariationValue, setNewVariationValue] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [isGs1Enabled, setIsGs1Enabled] = useState(false);
 
   // Load dropdown data
   useEffect(() => {
