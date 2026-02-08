@@ -712,6 +712,23 @@ export default function ItemEdit() {
             </div>
           </div>
 
+          {/* Report Section */}
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Report</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Unit Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter unit name for reports"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Variations Section */}
           <div className="border-t pt-6">
             <div className="flex justify-between items-center mb-4">
