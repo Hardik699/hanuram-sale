@@ -85,11 +85,68 @@ export default function DataValidation() {
 
       const result = await response.json();
       setValidationResult(result);
+      setSaveMessage(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Validation error occurred");
       console.error(err);
     } finally {
       setIsValidating(false);
+    }
+  };
+
+  const saveDataToDatabase = async () => {
+    if (!validationResult || fileData.length === 0) {
+      setSaveMessage({ type: "error", text: "No validated data to save" });
+      return;
+    }
+
+    if (validationResult.accuracy < 100) {
+      setSaveMessage({
+        type: "error",
+        text: "Data has errors. Please fix all mismatches before saving.",
+      });
+      return;
+    }
+
+    setIsSaving(true);
+    setSaveMessage(null);
+
+    try {
+      const response = await fetch("/api/data-save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dataType,
+          data: fileData,
+          validationResult,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Save failed");
+      }
+
+      const result = await response.json();
+      setSaveMessage({
+        type: "success",
+        text: `✓ Successfully saved ${result.rowsSaved} rows to database!`,
+      });
+
+      // Reset form after 2 seconds
+      setTimeout(() => {
+        setFileData([]);
+        setValidationResult(null);
+        setSaveMessage(null);
+      }, 2000);
+    } catch (err) {
+      setSaveMessage({
+        type: "error",
+        text: err instanceof Error ? err.message : "Failed to save data",
+      });
+      console.error(err);
+    } finally {
+      setIsSaving(false);
     }
   };
 
