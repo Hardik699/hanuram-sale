@@ -755,20 +755,51 @@ export default function ItemEdit() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Variation Value
                     </label>
-                    <select
-                      value={variation.value}
-                      onChange={(e) =>
-                        updateVariation(variation.id, "value", e.target.value)
-                      }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                    >
-                      <option value="">Select Variation</option>
-                      {variationValues.map((val) => (
-                        <option key={val} value={val}>
-                          {val}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="flex gap-2">
+                      <select
+                        value={variation.value}
+                        onChange={(e) =>
+                          updateVariation(variation.id, "value", e.target.value)
+                        }
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                      >
+                        <option value="">Select Variation</option>
+                        {variationValues.map((val) => (
+                          <option key={val} value={val}>
+                            {val}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type="button"
+                        onClick={() => setNewVariationValue("")}
+                        className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
+                      >
+                        +
+                      </button>
+                    </div>
+                    {newVariationValue !== null &&
+                      newVariationValue !== undefined && (
+                        <div className="mt-2 flex gap-2">
+                          <input
+                            type="text"
+                            value={newVariationValue}
+                            onChange={(e) =>
+                              setNewVariationValue(e.target.value)
+                            }
+                            placeholder="e.g., 300 Gms, 1.5 L"
+                            autoFocus
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                          />
+                          <button
+                            type="button"
+                            onClick={addVariationValue}
+                            className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
+                          >
+                            Add
+                          </button>
+                        </div>
+                      )}
                   </div>
 
                   <div>
