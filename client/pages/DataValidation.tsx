@@ -382,6 +382,18 @@ export default function DataValidation() {
                   : `✗ Data has ${validationResult.errorRows} error(s) - ${(100 - validationResult.accuracy).toFixed(1)}% mismatch`}
               </p>
             </div>
+
+            {/* Save Button */}
+            {validationResult.accuracy === 100 && (
+              <button
+                onClick={saveDataToDatabase}
+                disabled={isSaving}
+                className="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                <Save className="w-5 h-5" />
+                {isSaving ? "Saving to Database..." : "Save Data to Database"}
+              </button>
+            )}
           </div>
         )}
       </div>
