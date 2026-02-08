@@ -79,6 +79,16 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/data-validation"
+              element={
+                <ProtectedRoute>
+                  <ProtectedLayout>
+                    <DataValidation />
+                  </ProtectedLayout>
+                </ProtectedRoute>
+              }
+            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
