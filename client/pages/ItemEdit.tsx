@@ -657,7 +657,7 @@ export default function ItemEdit() {
                   +
                 </button>
               </div>
-              {newCategory !== null && newCategory !== undefined && (
+              {newCategory !== null && (
                 <div className="mt-2 flex gap-2">
                   <input
                     type="text"
