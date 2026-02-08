@@ -92,9 +92,9 @@ export default function ItemEdit() {
   const [variationValues, setVariationValues] =
     useState<string[]>(VARIATION_VALUES);
 
-  const [newGroup, setNewGroup] = useState("");
-  const [newCategory, setNewCategory] = useState("");
-  const [newHsnCode, setNewHsnCode] = useState("");
+  const [newGroup, setNewGroup] = useState<string | null>(null);
+  const [newCategory, setNewCategory] = useState<string | null>(null);
+  const [newHsnCode, setNewHsnCode] = useState<string | null>(null);
   const [newVariationValue, setNewVariationValue] = useState<string | null>(null);
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
