@@ -610,7 +610,7 @@ export default function ItemEdit() {
                   +
                 </button>
               </div>
-              {newGroup !== null && newGroup !== undefined && (
+              {newGroup !== null && (
                 <div className="mt-2 flex gap-2">
                   <input
                     type="text"
