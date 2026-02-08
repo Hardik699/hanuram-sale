@@ -153,6 +153,7 @@ export default function ItemEdit() {
         setGst(foundItem.gst?.toString() || "");
         setItemType(foundItem.itemType || "Goods");
         setUnitType(foundItem.unitType || "Single Count");
+        setIsGs1Enabled(foundItem.isGs1Enabled || false);
 
         // Load existing images
         if (foundItem.images && Array.isArray(foundItem.images)) {
