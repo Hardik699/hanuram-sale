@@ -373,6 +373,7 @@ export default function ItemEdit() {
       gst: parseFloat(gst) || 0,
       itemType,
       unitType,
+      isGs1Enabled,
       variations,
       images: imagePreviews,
     };
