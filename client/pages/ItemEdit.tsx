@@ -862,9 +862,6 @@ export default function ItemEdit() {
                     <label className="block text-sm font-medium text-gray-700">
                       Channel Prices
                     </label>
-                    <p className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                      Zomato & Swiggy: auto +15% (rounded to 5)
-                    </p>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {CHANNELS.map((channel) => {
