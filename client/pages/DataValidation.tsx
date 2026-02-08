@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Upload, CheckCircle2, AlertCircle } from "lucide-react";
+import { ArrowLeft, Upload, CheckCircle2, AlertCircle, Save } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 
@@ -25,8 +25,10 @@ export default function DataValidation() {
   const [fileData, setFileData] = useState<any[]>([]);
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
   const [isValidating, setIsValidating] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dataType, setDataType] = useState<"sales" | "items">("sales");
+  const [saveMessage, setSaveMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
