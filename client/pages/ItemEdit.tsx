@@ -651,7 +651,7 @@ export default function ItemEdit() {
                 </select>
                 <button
                   type="button"
-                  onClick={() => setNewCategory("")}
+                  onClick={() => setNewCategory(newCategory === null ? "" : null)}
                   className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
                 >
                   +
