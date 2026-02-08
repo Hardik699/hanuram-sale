@@ -235,6 +235,43 @@ export default function DataValidation() {
           </div>
         )}
 
+        {/* Save Message */}
+        {saveMessage && (
+          <div
+            className={`mb-6 p-4 border rounded-lg flex gap-3 ${
+              saveMessage.type === "success"
+                ? "bg-green-50 border-green-200"
+                : "bg-red-50 border-red-200"
+            }`}
+          >
+            {saveMessage.type === "success" ? (
+              <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+            ) : (
+              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+            )}
+            <div>
+              <p
+                className={`font-semibold ${
+                  saveMessage.type === "success"
+                    ? "text-green-900"
+                    : "text-red-900"
+                }`}
+              >
+                {saveMessage.type === "success" ? "Success" : "Error"}
+              </p>
+              <p
+                className={`text-sm ${
+                  saveMessage.type === "success"
+                    ? "text-green-700"
+                    : "text-red-700"
+                }`}
+              >
+                {saveMessage.text}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Validation Results */}
         {validationResult && (
           <div className="space-y-6">
