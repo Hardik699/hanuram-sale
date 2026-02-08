@@ -868,6 +868,11 @@ export default function ItemEdit() {
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {CHANNELS.map((channel) => {
+                      // Skip GS1 if not enabled
+                      if (channel === "GS1" && !isGs1Enabled) {
+                        return null;
+                      }
+
                       const isAutoCalculated = ["Zomato", "Swiggy"].includes(
                         channel,
                       );
