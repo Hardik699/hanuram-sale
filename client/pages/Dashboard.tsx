@@ -23,13 +23,22 @@ export default function Dashboard() {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Data Upload Portal</h1>
           <p className="text-gray-500 text-sm mt-1">Manage your data uploads efficiently</p>
         </div>
-        <button
-          onClick={() => navigate("/items")}
-          className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg font-medium transition text-sm sm:text-base"
-        >
-          <Package className="w-4 h-4" />
-          Items Page
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => navigate("/data-validation")}
+            className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:shadow-lg font-medium transition text-sm sm:text-base"
+          >
+            <Package className="w-4 h-4" />
+            Validate Data
+          </button>
+          <button
+            onClick={() => navigate("/items")}
+            className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg font-medium transition text-sm sm:text-base"
+          >
+            <Package className="w-4 h-4" />
+            Items Page
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
