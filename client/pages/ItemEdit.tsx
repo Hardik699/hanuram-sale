@@ -95,7 +95,9 @@ export default function ItemEdit() {
   const [newGroup, setNewGroup] = useState<string | null>(null);
   const [newCategory, setNewCategory] = useState<string | null>(null);
   const [newHsnCode, setNewHsnCode] = useState<string | null>(null);
-  const [newVariationValue, setNewVariationValue] = useState<string | null>(null);
+  const [newVariationValue, setNewVariationValue] = useState<string | null>(
+    null,
+  );
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [isGs1Enabled, setIsGs1Enabled] = useState(false);
@@ -651,7 +653,9 @@ export default function ItemEdit() {
                 </select>
                 <button
                   type="button"
-                  onClick={() => setNewCategory(newCategory === null ? "" : null)}
+                  onClick={() =>
+                    setNewCategory(newCategory === null ? "" : null)
+                  }
                   className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
                 >
                   +
@@ -772,7 +776,11 @@ export default function ItemEdit() {
                       </select>
                       <button
                         type="button"
-                        onClick={() => setNewVariationValue(newVariationValue === null ? "" : null)}
+                        onClick={() =>
+                          setNewVariationValue(
+                            newVariationValue === null ? "" : null,
+                          )
+                        }
                         className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
                       >
                         +
