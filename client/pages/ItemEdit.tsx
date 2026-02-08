@@ -95,7 +95,7 @@ export default function ItemEdit() {
   const [newGroup, setNewGroup] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [newHsnCode, setNewHsnCode] = useState("");
-  const [newVariationValue, setNewVariationValue] = useState("");
+  const [newVariationValue, setNewVariationValue] = useState<string | null>(null);
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [isGs1Enabled, setIsGs1Enabled] = useState(false);
