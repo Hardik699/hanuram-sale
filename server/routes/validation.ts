@@ -56,6 +56,86 @@ interface ValidationResult {
   validationDetails: ValidationRow[];
 }
 
+export const handleDataSave: RequestHandler = async (req, res) => {
+  try {
+    const { dataType, data } = req.body;
+
+    if (!dataType || !Array.isArray(data) || data.length === 0) {
+      return res.status(400).json({ error: "Invalid request: dataType and data array required" });
+    }
+
+    console.log(`💾 Saving ${data.length} rows of ${dataType} data to database`);
+
+    const db = await getDatabase();
+    let savedCount = 0;
+
+    try {
+      if (dataType === "sales") {
+        // Save sales data
+        const salesCollection = db.collection("sales_records");
+        const result = await salesCollection.insertMany(
+          data.map((row: any) => ({
+            ...row,
+            savedAt: new Date(),
+            dataType: "sales",
+          }))
+        );
+        savedCount = result.insertedIds.length;
+      } else if (dataType === "items") {
+        // Save items data
+        const itemsCollection = db.collection("items");
+
+        for (const row of data) {
+          const itemId = row.itemId || row.item_id || row["Item ID"];
+          if (itemId) {
+            // Check if item exists
+            const existingItem = await itemsCollection.findOne({ itemId: itemId.toString() });
+
+            if (existingItem) {
+              // Update existing item
+              await itemsCollection.updateOne(
+                { itemId: itemId.toString() },
+                {
+                  $set: {
+                    ...row,
+                    updatedAt: new Date(),
+                  },
+                }
+              );
+            } else {
+              // Insert new item
+              await itemsCollection.insertOne({
+                itemId: itemId.toString(),
+                ...row,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              });
+            }
+            savedCount++;
+          }
+        }
+      }
+
+      console.log(`✅ Successfully saved ${savedCount} rows`);
+      res.json({
+        success: true,
+        rowsSaved: savedCount,
+        message: `Data saved successfully: ${savedCount} rows`,
+      });
+    } catch (dbError) {
+      console.error("❌ Database error:", dbError);
+      throw new Error(
+        `Database save error: ${dbError instanceof Error ? dbError.message : "Unknown error"}`
+      );
+    }
+  } catch (error) {
+    console.error("❌ Save error:", error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Failed to save data",
+    });
+  }
+};
+
 export const handleDataValidation: RequestHandler = async (req, res) => {
   try {
     const { dataType, data } = req.body;
