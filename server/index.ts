@@ -113,8 +113,9 @@ export function createServer() {
   app.put("/api/upload", handleUpdateUpload);
   app.get("/api/data", handleGetData);
 
-  // Data Validation route
+  // Data Validation routes
   app.post("/api/data-validation", handleDataValidation);
+  app.post("/api/data-save", handleDataSave);
 
   // Items routes - more specific routes first
   app.get("/api/items/dropdowns", handleGetDropdowns);
