@@ -566,6 +566,20 @@ export default function ItemEdit() {
                 ))}
               </select>
             </div>
+
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isGs1Enabled}
+                  onChange={(e) => setIsGs1Enabled(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-600"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Enable GS1
+                </span>
+              </label>
+            </div>
           </div>
 
           {/* Group & Category */}
