@@ -679,8 +679,8 @@ export default function ItemEdit() {
             </div>
           </div>
 
-          {/* Item Type & Unit Type */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Item Type & Profit Margin */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Profit Margin (%)
@@ -704,23 +704,6 @@ export default function ItemEdit() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
               >
                 {ITEM_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Unit Type
-              </label>
-              <select
-                value={unitType}
-                onChange={(e) => setUnitType(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-              >
-                {UNIT_TYPES.map((type) => (
                   <option key={type} value={type}>
                     {type}
                   </option>
