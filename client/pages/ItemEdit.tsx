@@ -92,12 +92,15 @@ export default function ItemEdit() {
   const [variationValues, setVariationValues] =
     useState<string[]>(VARIATION_VALUES);
 
-  const [newGroup, setNewGroup] = useState("");
-  const [newCategory, setNewCategory] = useState("");
-  const [newHsnCode, setNewHsnCode] = useState("");
-  const [newVariationValue, setNewVariationValue] = useState("");
+  const [newGroup, setNewGroup] = useState<string | null>(null);
+  const [newCategory, setNewCategory] = useState<string | null>(null);
+  const [newHsnCode, setNewHsnCode] = useState<string | null>(null);
+  const [newVariationValue, setNewVariationValue] = useState<string | null>(
+    null,
+  );
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [isGs1Enabled, setIsGs1Enabled] = useState(false);
 
   // Load dropdown data
   useEffect(() => {
@@ -150,6 +153,7 @@ export default function ItemEdit() {
         setGst(foundItem.gst?.toString() || "");
         setItemType(foundItem.itemType || "Goods");
         setUnitType(foundItem.unitType || "Single Count");
+        setIsGs1Enabled(foundItem.isGs1Enabled || false);
 
         // Load existing images
         if (foundItem.images && Array.isArray(foundItem.images)) {
@@ -369,6 +373,7 @@ export default function ItemEdit() {
       gst: parseFloat(gst) || 0,
       itemType,
       unitType,
+      isGs1Enabled,
       variations,
       images: imagePreviews,
     };
@@ -455,7 +460,7 @@ export default function ItemEdit() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Item ID (Read-only)
+                Item ID
               </label>
               <input
                 type="text"
@@ -480,7 +485,7 @@ export default function ItemEdit() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Short Code (Read-only)
+                Short Code
               </label>
               <input
                 type="text"
@@ -521,13 +526,13 @@ export default function ItemEdit() {
                 </select>
                 <button
                   type="button"
-                  onClick={() => setNewHsnCode("")}
+                  onClick={() => setNewHsnCode(newHsnCode === null ? "" : null)}
                   className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
                 >
                   +
                 </button>
               </div>
-              {newHsnCode !== null && newHsnCode !== undefined && (
+              {newHsnCode !== null && (
                 <div className="mt-2 flex gap-2">
                   <input
                     type="text"
@@ -565,6 +570,20 @@ export default function ItemEdit() {
                 ))}
               </select>
             </div>
+
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isGs1Enabled}
+                  onChange={(e) => setIsGs1Enabled(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-600"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Enable GS1
+                </span>
+              </label>
+            </div>
           </div>
 
           {/* Group & Category */}
@@ -589,13 +608,13 @@ export default function ItemEdit() {
                 </select>
                 <button
                   type="button"
-                  onClick={() => setNewGroup("")}
+                  onClick={() => setNewGroup(newGroup === null ? "" : null)}
                   className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
                 >
                   +
                 </button>
               </div>
-              {newGroup !== null && newGroup !== undefined && (
+              {newGroup !== null && (
                 <div className="mt-2 flex gap-2">
                   <input
                     type="text"
@@ -636,13 +655,15 @@ export default function ItemEdit() {
                 </select>
                 <button
                   type="button"
-                  onClick={() => setNewCategory("")}
+                  onClick={() =>
+                    setNewCategory(newCategory === null ? "" : null)
+                  }
                   className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
                 >
                   +
                 </button>
               </div>
-              {newCategory !== null && newCategory !== undefined && (
+              {newCategory !== null && (
                 <div className="mt-2 flex gap-2">
                   <input
                     type="text"
@@ -664,8 +685,8 @@ export default function ItemEdit() {
             </div>
           </div>
 
-          {/* Item Type & Unit Type */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Item Type & Profit Margin */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Profit Margin (%)
@@ -695,22 +716,22 @@ export default function ItemEdit() {
                 ))}
               </select>
             </div>
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Unit Type
-              </label>
-              <select
-                value={unitType}
-                onChange={(e) => setUnitType(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-              >
-                {UNIT_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
+          {/* Report Section */}
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Report</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Unit Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter unit name for reports"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                />
+              </div>
             </div>
           </div>
 
@@ -757,7 +778,11 @@ export default function ItemEdit() {
                       </select>
                       <button
                         type="button"
-                        onClick={() => setNewVariationValue("")}
+                        onClick={() =>
+                          setNewVariationValue(
+                            newVariationValue === null ? "" : null,
+                          )
+                        }
                         className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
                       >
                         +
@@ -847,12 +872,14 @@ export default function ItemEdit() {
                     <label className="block text-sm font-medium text-gray-700">
                       Channel Prices
                     </label>
-                    <p className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                      Zomato & Swiggy: auto +15% (rounded to 5)
-                    </p>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {CHANNELS.map((channel) => {
+                      // Skip GS1 if not enabled
+                      if (channel === "GS1" && !isGs1Enabled) {
+                        return null;
+                      }
+
                       const isAutoCalculated = ["Zomato", "Swiggy"].includes(
                         channel,
                       );

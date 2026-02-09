@@ -54,6 +54,7 @@ import {
   handleResetItemSales,
   handleDebugItemSalesRaw,
 } from "./routes/sales";
+import { handleDataValidation, handleDataSave } from "./routes/validation";
 
 export function createServer() {
   const app = express();
@@ -111,6 +112,10 @@ export function createServer() {
   app.get("/api/uploads", handleGetUploads);
   app.put("/api/upload", handleUpdateUpload);
   app.get("/api/data", handleGetData);
+
+  // Data Validation routes
+  app.post("/api/data-validation", handleDataValidation);
+  app.post("/api/data-save", handleDataSave);
 
   // Items routes - more specific routes first
   app.get("/api/items/dropdowns", handleGetDropdowns);

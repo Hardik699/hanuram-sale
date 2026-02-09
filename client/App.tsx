@@ -17,6 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import Items from "./pages/Items";
 import ItemDetail from "./pages/ItemDetail";
 import ItemEdit from "./pages/ItemEdit";
+import DataValidation from "./pages/DataValidation";
 import WhiteScreen from "./pages/WhiteScreen";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProtectedLayout from "./components/ProtectedLayout";
@@ -74,6 +75,16 @@ const App = () => {
                 <ProtectedRoute>
                   <ProtectedLayout>
                     <Items />
+                  </ProtectedLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/data-validation"
+              element={
+                <ProtectedRoute>
+                  <ProtectedLayout>
+                    <DataValidation />
                   </ProtectedLayout>
                 </ProtectedRoute>
               }
