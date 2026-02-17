@@ -6,14 +6,26 @@ interface DateFilterProps {
 }
 
 export default function DateFilter({ onDateRangeChange }: DateFilterProps) {
-  // Default to last 365 days to capture more data
-  const [startDate, setStartDate] = useState(new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
-  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+  // Initialize with proper local timezone handling
+  const getLocalDateString = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
-  // Call the callback on component mount with initial dates
+  // Default to last 365 days to capture more data
+  const [startDate, setStartDate] = useState(() =>
+    getLocalDateString(new Date(Date.now() - 365 * 24 * 60 * 60 * 1000))
+  );
+  const [endDate, setEndDate] = useState(() =>
+    getLocalDateString(new Date())
+  );
+
+  // Call the callback on component mount with initial dates (only once)
   useEffect(() => {
     onDateRangeChange(startDate, endDate);
-  }, [startDate, endDate]);
+  }, []);
 
   const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newStartDate = e.target.value;
