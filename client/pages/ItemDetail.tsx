@@ -912,6 +912,7 @@ export default function ItemDetail() {
                 <SalesDataTable
                   data={salesData.salesTableData}
                   itemName={item.itemName}
+                  saleType={item?.variations?.[0]?.saleType || "QTY"}
                 />
 
                 {/* Sales Charts */}

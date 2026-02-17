@@ -28,9 +28,10 @@ interface SalesRow {
 interface SalesDataTableProps {
   data: SalesRow[];
   itemName: string;
+  saleType?: "QTY" | "KG";
 }
 
-export default function SalesDataTable({ data, itemName }: SalesDataTableProps) {
+export default function SalesDataTable({ data, itemName, saleType = "QTY" }: SalesDataTableProps) {
   const calculateTotals = () => {
     return data.reduce(
       (acc, row) => ({
@@ -159,9 +160,26 @@ export default function SalesDataTable({ data, itemName }: SalesDataTableProps) 
         </table>
       </div>
 
-      <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        <p className="text-xs font-semibold text-blue-900 uppercase">Item</p>
-        <p className="text-sm text-blue-800 mt-1">{itemName}</p>
+      <div className="mt-6 p-5 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl border-2 border-purple-100 shadow-sm">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <p className="text-xs font-bold text-purple-900 uppercase tracking-wider mb-1">
+              Grand Total Sale
+            </p>
+            <p className="text-sm font-medium text-gray-600">
+              {itemName}
+            </p>
+          </div>
+          <div className="text-left sm:text-right">
+            <p className="text-3xl font-black text-purple-700">
+              {totals.totalQty.toFixed(2)}
+              <span className="text-sm ml-1 uppercase">{saleType === "KG" ? "KG" : "qty"}</span>
+            </p>
+            <p className="text-xs text-purple-500 font-semibold mt-1">
+              (Zomato + Swiggy + Dining + Parcel)
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

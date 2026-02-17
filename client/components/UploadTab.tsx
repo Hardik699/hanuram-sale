@@ -52,36 +52,53 @@ export default function UploadTab({ type }: UploadTabProps) {
 
   // Fetch month statuses when type or selectedYear changes
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
     const fetchMonthStatus = async () => {
       try {
         console.log(`Fetching month status for ${type} year ${selectedYear}`);
 
-        const response = await fetch(`/api/uploads?type=${type}&year=${selectedYear}`);
+        const response = await fetch(`/api/uploads?type=${type}&year=${selectedYear}`, {
+          signal: controller.signal
+        });
 
         if (!response.ok) {
           console.warn(`API returned status ${response.status}`);
-          setMonthsStatus(Array.from({ length: 12 }, (_, i) => ({
-            month: i + 1,
-            status: "pending" as const
-          })));
+          if (isMounted) {
+            setMonthsStatus(Array.from({ length: 12 }, (_, i) => ({
+              month: i + 1,
+              status: "pending" as const
+            })));
+          }
           return;
         }
 
         const data = await response.json();
-        if (data.data && Array.isArray(data.data)) {
+        if (isMounted && data.data && Array.isArray(data.data)) {
           setMonthsStatus(data.data);
         }
       } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") {
+          return; // Ignore aborts
+        }
         console.error("Failed to fetch month status:", error);
         // Set default pending status on fetch error - don't block UI
-        setMonthsStatus(Array.from({ length: 12 }, (_, i) => ({
-          month: i + 1,
-          status: "pending" as const
-        })));
+        if (isMounted) {
+          setMonthsStatus(Array.from({ length: 12 }, (_, i) => ({
+            month: i + 1,
+            status: "pending" as const
+          })));
+        }
       }
     };
 
     fetchMonthStatus();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, [type, selectedYear]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,32 +168,85 @@ export default function UploadTab({ type }: UploadTabProps) {
     }, 100);
   };
 
-  const validateData = async (data: any[]) => {
+  const validateData = async (fullData: any[]) => {
     try {
       setIsValidating(true);
+      setMessage(null);
+
+      if (!fullData || fullData.length < 2) {
+        setIsValidating(false);
+        return;
+      }
+
+      const headers = fullData[0] as string[];
+
+      // Find indices of columns we need for validation
+      const getColumnIndex = (name: string) =>
+        headers.findIndex((h) => h?.toLowerCase().trim() === name.toLowerCase().trim());
+
+      const restaurantIdx = getColumnIndex("restaurant_name");
+      const sapCodeIdx = getColumnIndex("sap_code");
+
+      if (restaurantIdx === -1 || sapCodeIdx === -1) {
+        console.warn("Validation columns not found in file");
+        setIsValidating(false);
+        return;
+      }
+
+      // Create a minimal version of the data for validation to save bandwidth/memory
+      const minimalData = fullData.map((row, idx) => {
+        if (idx === 0) return headers; // Keep headers for server-side index discovery
+        return [row[restaurantIdx], row[sapCodeIdx]];
+      });
+
+      console.log(`Starting validation for ${minimalData.length - 1} rows (minimal payload)`);
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout for validation
 
       const response = await fetch("/api/upload/validate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, data }),
+        body: JSON.stringify({
+          type,
+          data: minimalData,
+          isMinimal: true,
+          originalIndices: { restaurantIdx, sapCodeIdx }
+        }),
         signal: controller.signal
       });
 
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        const error = await response.json();
-        setMessage({ type: "error", text: error.error || "Validation failed" });
+        let errorText = "Validation failed";
+        try {
+          const errorData = await response.json();
+          errorText = errorData.error || errorText;
+        } catch (e) {}
+
+        setMessage({ type: "error", text: errorText });
         setIsValidating(false);
         return;
       }
 
       const result = await response.json();
+
       if (result.invalidCount > 0) {
-        setValidationResult(result);
+        // Map minimal row data back to original row data for display
+        const mappedInvalidRows = result.invalidRows.map((invalidRow: any) => {
+          const originalRow = fullData[invalidRow.rowIndex - 1]; // rowIndex is 1-based
+          return {
+            ...invalidRow,
+            data: originalRow
+          };
+        });
+
+        setValidationResult({
+          ...result,
+          invalidRows: mappedInvalidRows
+        });
+
         // Select all valid rows by default
         setSelectedValidRowIndices(result.validRows.map((r: any) => r.rowIndex));
         setMessage({
@@ -191,8 +261,13 @@ export default function UploadTab({ type }: UploadTabProps) {
       setIsValidating(false);
     } catch (error) {
       console.error("Validation error:", error);
-      if (error instanceof TypeError && error.name === "AbortError") {
-        setMessage({ type: "error", text: "Validation took too long. Please try again with fewer rows." });
+      if (error instanceof Error && error.name === "AbortError") {
+        setMessage({ type: "error", text: "Validation took too long. The server might be busy. Please try again." });
+      } else if (error instanceof TypeError && error.message === "Failed to fetch") {
+        setMessage({
+          type: "error",
+          text: "Connection failed during validation. This could be due to a large file or server timeout. Try refreshing the page."
+        });
       } else {
         setMessage({ type: "error", text: `Failed to validate data: ${error instanceof Error ? error.message : "Unknown error"}` });
       }
