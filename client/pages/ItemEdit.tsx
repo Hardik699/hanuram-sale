@@ -58,6 +58,7 @@ interface Variation {
   price: number;
   sapCode: string;
   gs1Code?: string;
+  saleType?: "QTY" | "KG";
   profitMargin: number;
   gs1Enabled?: boolean;
   salesHistory?: Array<{
@@ -207,6 +208,7 @@ export default function ItemEdit() {
                 price: basePrice,
                 sapCode: v.sapCode || "",
                 gs1Code: v.gs1Code || "",
+                saleType: v.saleType || "QTY",
                 profitMargin: v.profitMargin || 0,
                 gs1Enabled: gs1Enabled,
                 salesHistory: v.salesHistory || [],
@@ -321,6 +323,7 @@ export default function ItemEdit() {
       price: 0,
       sapCode: "",
       gs1Code: "",
+      saleType: "QTY",
       profitMargin: 0,
       gs1Enabled: false,
       salesHistory: [],
@@ -914,6 +917,26 @@ export default function ItemEdit() {
                       step="0.01"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Sale Type
+                    </label>
+                    <select
+                      value={variation.saleType || "QTY"}
+                      onChange={(e) =>
+                        updateVariation(
+                          variation.id,
+                          "saleType",
+                          e.target.value as "QTY" | "KG"
+                        )
+                      }
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    >
+                      <option value="QTY">QTY (Quantity)</option>
+                      <option value="KG">KG (Kilogram)</option>
+                    </select>
                   </div>
                 </div>
 
