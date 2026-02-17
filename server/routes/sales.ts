@@ -451,29 +451,31 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
           | "parcel";
 
         const variationName = sapCodeToVariation[sapCode];
+        const kgFactor = getKgFactor(variationName);
+        const adjustedQuantity = quantity * kgFactor;
 
         // Aggregate by area & variation
         if (!salesByArea[normalizedArea][variationName]) {
           salesByArea[normalizedArea][variationName] = { quantity: 0, value: 0 };
         }
-        salesByArea[normalizedArea][variationName].quantity += Math.round(quantity);
+        salesByArea[normalizedArea][variationName].quantity += adjustedQuantity;
         salesByArea[normalizedArea][variationName].value += value;
 
         // Aggregate by month & area
         const month = recordDate.toISOString().substring(0, 7);
         if (!monthlyByArea[month]) monthlyByArea[month] = {};
         monthlyByArea[month][normalizedArea] =
-          (monthlyByArea[month][normalizedArea] || 0) + Math.round(quantity);
+          (monthlyByArea[month][normalizedArea] || 0) + adjustedQuantity;
 
         // Aggregate by day & area
         const day = recordDate.toISOString().substring(0, 10);
         if (!dailyByArea[day]) dailyByArea[day] = {};
         dailyByArea[day][normalizedArea] =
-          (dailyByArea[day][normalizedArea] || 0) + Math.round(quantity);
+          (dailyByArea[day][normalizedArea] || 0) + adjustedQuantity;
 
         // Aggregate by restaurant
         restaurantSales[restaurantName] =
-          (restaurantSales[restaurantName] || 0) + Math.round(quantity);
+          (restaurantSales[restaurantName] || 0) + adjustedQuantity;
       }
     }
 
@@ -783,11 +785,13 @@ export const handleDebugItemSalesRaw: RequestHandler = async (req, res) => {
         const value = Math.round(quantity * price);
 
         const variationName = sapCodeToVariation[sapCode];
+        const kgFactor = getKgFactor(variationName);
+        const adjustedQuantity = quantity * kgFactor;
 
         if (!salesByArea[normalizedArea][variationName]) {
           salesByArea[normalizedArea][variationName] = { quantity: 0, value: 0 };
         }
-        salesByArea[normalizedArea][variationName].quantity += Math.round(quantity);
+        salesByArea[normalizedArea][variationName].quantity += adjustedQuantity;
         salesByArea[normalizedArea][variationName].value += value;
       }
     }
@@ -903,13 +907,15 @@ export const handleDebugAllData: RequestHandler = async (req, res) => {
         const orderType = orderTypeIdx !== -1 ? row[orderTypeIdx]?.toString().trim() || "" : "";
         const restaurant = restaurantIdx !== -1 ? row[restaurantIdx]?.toString().trim() || "" : "";
         const variation = sapCodeToVariation[sapCode];
+        const kgFactor = getKgFactor(variation);
+        const adjustedQuantity = quantity * kgFactor;
 
         const normalizedArea = normalizeArea(area, orderType);
 
         if (!summaryByArea[normalizedArea]) {
           summaryByArea[normalizedArea] = 0;
         }
-        summaryByArea[normalizedArea] += quantity;
+        summaryByArea[normalizedArea] += adjustedQuantity;
 
         if (normalizedArea === "parcel") {
           detailedRecords.push({
@@ -917,7 +923,7 @@ export const handleDebugAllData: RequestHandler = async (req, res) => {
             variation,
             area,
             orderType,
-            quantity,
+            quantity: adjustedQuantity,
             restaurant,
             normalizedArea,
           });
@@ -1023,25 +1029,27 @@ export const handleDebugParcelData: RequestHandler = async (req, res) => {
         const date = dateIdx !== -1 ? row[dateIdx]?.toString().trim() || "" : "";
         const restaurant = restaurantIdx !== -1 ? row[restaurantIdx]?.toString().trim() || "" : "";
         const variation = sapCodeToVariation[sapCode];
+        const kgFactor = getKgFactor(variation);
+        const adjustedQuantity = quantity * kgFactor;
 
         // Track by variation
         if (!parcelByVariation[variation]) {
           parcelByVariation[variation] = 0;
         }
-        parcelByVariation[variation] += quantity;
+        parcelByVariation[variation] += adjustedQuantity;
 
         parcelRows.push({
           sapCode,
           variation,
           area,
           orderType,
-          quantity,
+          quantity: adjustedQuantity,
           price,
           date,
           restaurant,
         });
 
-        totalQuantity += quantity;
+        totalQuantity += adjustedQuantity;
       }
     }
 
