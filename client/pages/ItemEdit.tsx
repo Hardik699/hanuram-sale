@@ -1120,26 +1120,33 @@ export default function ItemEdit() {
 
             {/* Image Previews Grouped by Channel */}
             {images.length > 0 && (
-              <div className="space-y-6">
+              <div className="space-y-8 mt-8">
+                <h4 className="text-lg font-bold text-gray-900 mb-4">
+                  📷 Uploaded Images ({images.length})
+                </h4>
                 {["Website", "Zomato", "Swiggy", "GS1"]
                   .filter((channel) => images.some((img) => img.channel === channel))
-                  .map((channel) => (
-                    <div key={channel}>
-                      <h4 className="text-sm font-semibold text-gray-900 mb-3">
-                        {channel} Images ({images.filter((img) => img.channel === channel).length})
-                      </h4>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        {images
-                          .map((img, idx) => ({ img, idx }))
-                          .filter(({ img }) => img.channel === channel)
-                          .map(({ img, idx }) => (
+                  .map((channel) => {
+                    const channelImages = images.filter((img) => img.channel === channel);
+                    return (
+                      <div key={channel} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <h4 className="text-sm font-bold text-gray-900 mb-4 pb-2 border-b border-gray-300">
+                          {channel === "Website" && "🌐"}
+                          {channel === "Zomato" && "🔴"}
+                          {channel === "Swiggy" && "🟠"}
+                          {channel === "GS1" && "📦"}
+                          {" "}
+                          {channel} ({channelImages.length})
+                        </h4>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                          {channelImages.map((img, idx) => (
                             <div key={idx} className="relative group">
                               <img
                                 src={img.preview}
                                 alt={`${channel} Preview ${idx}`}
-                                className="w-full h-32 object-cover rounded-lg"
+                                className="w-full h-40 object-cover rounded-lg shadow-md"
                               />
-                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg flex flex-col items-center justify-center gap-2">
+                              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition rounded-lg flex flex-col items-center justify-center gap-3">
                                 <select
                                   value={img.channel}
                                   onChange={(e) =>
@@ -1148,26 +1155,28 @@ export default function ItemEdit() {
                                       e.target.value
                                     )
                                   }
-                                  className="text-xs px-2 py-1 rounded bg-white border border-gray-300"
+                                  className="text-xs px-2 py-1 rounded bg-white border border-gray-300 font-semibold"
                                 >
-                                  <option value="Website">Website</option>
-                                  <option value="Zomato">Zomato</option>
-                                  <option value="Swiggy">Swiggy</option>
-                                  <option value="GS1">GS1</option>
+                                  <option value="Website">🌐 Website</option>
+                                  <option value="Zomato">🔴 Zomato</option>
+                                  <option value="Swiggy">🟠 Swiggy</option>
+                                  <option value="GS1">📦 GS1</option>
                                 </select>
                                 <button
                                   type="button"
                                   onClick={() => removeImage(images.findIndex((i) => i === img))}
-                                  className="bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
+                                  className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 shadow-lg"
+                                  title="Delete image"
                                 >
                                   <X className="w-4 h-4" />
                                 </button>
                               </div>
                             </div>
                           ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
               </div>
             )}
           </div>
