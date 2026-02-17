@@ -820,6 +820,123 @@ export const handleDebugItemSalesRaw: RequestHandler = async (req, res) => {
   }
 };
 
+// GET /api/sales/debug-all/:itemId - Debug endpoint to see ALL data for item (no filters)
+export const handleDebugAllData: RequestHandler = async (req, res) => {
+  try {
+    const { itemId } = req.params;
+
+    if (!itemId) {
+      return res.status(400).json({ error: "itemId parameter required" });
+    }
+
+    const db = await getDatabase();
+    const itemsCollection = db.collection("items");
+    const item = await itemsCollection.findOne({ itemId });
+
+    if (!item) {
+      return res.json({
+        success: false,
+        error: `Item ${itemId} not found`,
+      });
+    }
+
+    // Build a map of SAP codes for this item
+    const sapCodeToVariation: { [sapCode: string]: string } = {};
+    if (item.variations && Array.isArray(item.variations)) {
+      item.variations.forEach((variation: any, idx: number) => {
+        if (variation.sapCode) {
+          const variationName = variation.value || variation.name || `Variation ${idx + 1}`;
+          sapCodeToVariation[variation.sapCode] = variationName;
+        }
+      });
+    }
+
+    const sapCodes = Object.keys(sapCodeToVariation);
+    console.log(`🔍 Debugging ALL data for item ${itemId} (NO DATE FILTERING)`);
+
+    // Summary by area
+    const summaryByArea: { [area: string]: number } = {};
+    const detailedRecords: any[] = [];
+
+    const getColumnIndex = (headers: string[], name: string) =>
+      headers.findIndex((h) => h.toLowerCase().trim() === name.toLowerCase().trim());
+
+    const petpoojaCollection = db.collection("petpooja");
+    const allPetpoojaData = await petpoojaCollection.find({}).toArray();
+
+    let totalAllRecords = 0;
+    let totalMatchingSapCode = 0;
+
+    for (const petpoojaDoc of allPetpoojaData) {
+      if (!Array.isArray(petpoojaDoc.data) || petpoojaDoc.data.length < 2) continue;
+
+      const headers = petpoojaDoc.data[0] as string[];
+      const dataRows = petpoojaDoc.data.slice(1);
+
+      const sapCodeIdx = getColumnIndex(headers, "sap_code");
+      const areaIdx = getColumnIndex(headers, "area");
+      const orderTypeIdx = getColumnIndex(headers, "order_type");
+      const quantityIdx = getColumnIndex(headers, "item_quantity");
+      const restaurantIdx = getColumnIndex(headers, "restaurant_name");
+
+      if (sapCodeIdx === -1) continue;
+
+      for (const row of dataRows) {
+        if (!Array.isArray(row)) continue;
+
+        totalAllRecords++;
+        const sapCode = row[sapCodeIdx]?.toString().trim() || "";
+
+        if (!sapCodeToVariation[sapCode]) continue;
+
+        totalMatchingSapCode++;
+
+        const quantity = quantityIdx !== -1 ? parseFloat(row[quantityIdx]?.toString() || "0") || 0 : 0;
+        const area = areaIdx !== -1 ? row[areaIdx]?.toString().trim() || "" : "";
+        const orderType = orderTypeIdx !== -1 ? row[orderTypeIdx]?.toString().trim() || "" : "";
+        const restaurant = restaurantIdx !== -1 ? row[restaurantIdx]?.toString().trim() || "" : "";
+        const variation = sapCodeToVariation[sapCode];
+
+        const normalizedArea = normalizeArea(area, orderType);
+
+        if (!summaryByArea[normalizedArea]) {
+          summaryByArea[normalizedArea] = 0;
+        }
+        summaryByArea[normalizedArea] += quantity;
+
+        if (normalizedArea === "parcel") {
+          detailedRecords.push({
+            sapCode,
+            variation,
+            area,
+            orderType,
+            quantity,
+            restaurant,
+            normalizedArea,
+          });
+        }
+      }
+    }
+
+    res.json({
+      success: true,
+      itemId,
+      itemName: (item as any).itemName,
+      totalAllRecords,
+      totalMatchingSapCode,
+      summaryByArea,
+      parcelRecordCount: detailedRecords.length,
+      parcelTotalQuantity: summaryByArea["parcel"] || 0,
+      parcelSample: detailedRecords.slice(0, 30),
+    });
+  } catch (error) {
+    console.error("Error in debug all data:", error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
 // GET /api/sales/debug-parcel/:itemId - Debug endpoint to see all rows being counted as Parcel
 export const handleDebugParcelData: RequestHandler = async (req, res) => {
   try {
