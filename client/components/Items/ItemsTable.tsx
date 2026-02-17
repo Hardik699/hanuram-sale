@@ -63,7 +63,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200 text-xs sm:text-sm whitespace-nowrap">
                 {/* Checkbox - Sticky */}
-                <th className="px-2 sm:px-4 py-3 text-left w-10 sticky left-0 z-20 bg-gray-100">
+                <th className="px-2 sm:px-4 py-3 text-left w-10 sticky left-0 z-20 bg-gray-700">
                   <input
                     type="checkbox"
                     checked={
@@ -71,21 +71,21 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                       selectedRows.size === paginatedItems.length
                     }
                     onChange={toggleSelectAll}
-                    className="w-4 h-4"
+                    className="w-4 h-4 cursor-pointer"
                   />
                 </th>
 
                 {/* Basic Info - Sticky */}
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-gray-700 bg-gray-100 sticky left-10 z-20">
+                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-gray-700 sticky left-10 z-20">
                   Item ID
                 </th>
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-gray-700 bg-gray-100 hidden sm:table-cell">
+                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-gray-700 hidden sm:table-cell">
                   Group
                 </th>
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-gray-700 bg-gray-100 hidden md:table-cell">
+                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-gray-700 hidden md:table-cell">
                   Category
                 </th>
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-gray-700 bg-gray-100 hidden lg:table-cell">
+                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-gray-700 hidden lg:table-cell">
                   Item Name
                 </th>
 
@@ -94,9 +94,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   <th
                     key={`${variation.name}-${variation.value}`}
                     colSpan={4}
-                    className={`px-3 sm:px-4 py-3 text-center text-xs font-bold text-white ${
-                      idx % 2 === 0 ? "bg-purple-600" : "bg-purple-500"
-                    } border-l border-gray-300`}
+                    className={`px-3 sm:px-4 py-4 text-center text-sm font-bold text-white border-l-2 border-white bg-blue-500`}
                   >
                     {variation.value}
                   </th>
@@ -105,16 +103,14 @@ export default function ItemsTable({ items }: ItemsTableProps) {
 
               {/* Sub-header for Channels - Show all variations */}
               {allVariations.length > 0 && (
-                <tr className="bg-white border-b border-gray-200 text-xs whitespace-nowrap">
-                  <th colSpan={5} className="px-2 sm:px-4 py-2 sticky left-10 z-20 bg-gray-50"></th>
+                <tr className="bg-gray-50 border-b border-gray-300 text-xs whitespace-nowrap">
+                  <th colSpan={5} className="px-2 sm:px-4 py-3 sticky left-10 z-20 bg-gray-50"></th>
                   {allVariations.map((variation, idx) => (
                     <React.Fragment key={`${variation.name}-${variation.value}`}>
                       {CHANNELS.map((channel) => (
                         <th
                           key={`${variation.value}-${channel}`}
-                          className={`px-2 sm:px-3 py-2 text-center font-semibold border-r border-gray-200 ${
-                            idx % 2 === 0 ? "bg-purple-100 text-purple-700" : "bg-purple-50 text-purple-600"
-                          }`}
+                          className={`px-3 sm:px-4 py-3 text-center font-semibold text-white border-r border-white bg-blue-400`}
                         >
                           {channel}
                         </th>
@@ -174,12 +170,10 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                         {CHANNELS.map((channel) => (
                           <td
                             key={`${item.itemId}-${variation.value}-${channel}`}
-                            className={`px-2 sm:px-3 py-3 text-center font-semibold border-r border-gray-200 ${
-                              idx % 2 === 0 ? "bg-purple-50 text-purple-700" : "bg-purple-100 text-purple-700"
-                            }`}
+                            className={`px-3 sm:px-4 py-3 text-center font-semibold border-r border-white bg-blue-50 text-blue-900`}
                           >
-                            {itemVariation
-                              ? `₹${itemVariation.channels[channel] || "-"}`
+                            {itemVariation && itemVariation.channels[channel]
+                              ? `₹${itemVariation.channels[channel]}`
                               : "-"}
                           </td>
                         ))}
