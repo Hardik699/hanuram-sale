@@ -21,9 +21,9 @@ async function getDatabase(): Promise<Db> {
     try {
       const client = new MongoClient(MONGODB_URI, {
         maxPoolSize: 10,
-        serverSelectionTimeoutMS: 3000,
-        connectTimeoutMS: 5000,
-        socketTimeoutMS: 5000,
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 10000,
+        socketTimeoutMS: 30000,
         family: 4,
       });
 

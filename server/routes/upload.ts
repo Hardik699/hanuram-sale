@@ -22,9 +22,9 @@ async function getDatabase(): Promise<Db> {
     try {
       const client = new MongoClient(MONGODB_URI, {
         maxPoolSize: 10,
-        serverSelectionTimeoutMS: 3000,
-        connectTimeoutMS: 5000,
-        socketTimeoutMS: 5000,
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 10000,
+        socketTimeoutMS: 30000,
         family: 4, // Use IPv4
       });
 
@@ -362,16 +362,26 @@ export const handleGetData: RequestHandler = async (req, res) => {
 // Validate data against database before upload
 export const handleValidateUpload: RequestHandler = async (req, res) => {
   try {
-    const { type, data } = req.body;
+    const { type, data, isMinimal, originalIndices } = req.body;
 
-    console.log("📋 Validation request received:", { type, rowCount: Array.isArray(data) ? data.length : 0 });
+    console.log("📋 Validation request received:", {
+      type,
+      rowCount: Array.isArray(data) ? data.length : 0,
+      isMinimal: !!isMinimal
+    });
 
     if (!type || !Array.isArray(data) || data.length === 0) {
       return res.status(400).json({ error: "Invalid request data" });
     }
 
     if (type !== "petpooja") {
-      return res.json({ success: true, validRows: data.slice(1), invalidRows: [] });
+      return res.json({
+        success: true,
+        validCount: data.length - 1,
+        invalidCount: 0,
+        validRows: data.slice(1).map((row, i) => ({ rowIndex: i + 2, data: row })),
+        invalidRows: []
+      });
     }
 
     console.log("🔗 Connecting to database for validation...");
@@ -380,19 +390,16 @@ export const handleValidateUpload: RequestHandler = async (req, res) => {
 
     // Get all items and build SAP code map
     console.log("📊 Fetching items to build SAP code map...");
-    const items = await itemsCollection.find({}).toArray();
+    const items = await itemsCollection.find({}, { projection: { "variations.sapCode": 1 } }).toArray();
     console.log(`✅ Found ${items.length} items`);
 
-    const sapCodeMap: { [key: string]: { itemId: string; variationId: string } } = {};
+    const sapCodeMap: { [key: string]: boolean } = {};
 
     for (const item of items) {
       if (item.variations && Array.isArray(item.variations)) {
-        item.variations.forEach((v: any, idx: number) => {
+        item.variations.forEach((v: any) => {
           if (v.sapCode) {
-            sapCodeMap[v.sapCode] = {
-              itemId: item.itemId,
-              variationId: idx.toString(),
-            };
+            sapCodeMap[v.sapCode.trim()] = true;
           }
         });
       }
@@ -404,13 +411,24 @@ export const handleValidateUpload: RequestHandler = async (req, res) => {
     const dataRows = data.slice(1);
 
     // Find column indices
-    const getColumnIndex = (name: string) =>
-      headers.findIndex((h) => h.toLowerCase().trim() === name.toLowerCase().trim());
+    let restaurantIdx: number;
+    let sapCodeIdx: number;
 
-    const restaurantIdx = getColumnIndex("restaurant_name");
-    const sapCodeIdx = getColumnIndex("sap_code");
+    if (isMinimal && originalIndices) {
+      // In minimal mode, data rows only have 2 columns: [restaurant, sapCode]
+      // headers still contains original headers to keep index discovery logic if needed,
+      // but here we know the mapping is always [0, 1]
+      restaurantIdx = 0;
+      sapCodeIdx = 1;
+    } else {
+      const getColumnIndex = (name: string) =>
+        headers.findIndex((h) => h?.toLowerCase().trim() === name.toLowerCase().trim());
 
-    console.log(`📍 Column indices - restaurant: ${restaurantIdx}, sapCode: ${sapCodeIdx}`);
+      restaurantIdx = getColumnIndex("restaurant_name");
+      sapCodeIdx = getColumnIndex("sap_code");
+    }
+
+    console.log(`📍 Using column indices - restaurant: ${restaurantIdx}, sapCode: ${sapCodeIdx}`);
 
     const validRows = [];
     const invalidRows = [];
@@ -427,16 +445,24 @@ export const handleValidateUpload: RequestHandler = async (req, res) => {
 
       if (!restaurant) {
         isValid = false;
-        reason = "No restaurant name";
+        reason = "No restaurant name found in row";
+      } else if (!sapCode) {
+        isValid = false;
+        reason = "No SAP code found in row";
       } else if (!sapCodeMap[sapCode]) {
         isValid = false;
         reason = `SAP code "${sapCode}" not found in database`;
       }
 
+      const rowResult = {
+        rowIndex: i + 2,
+        data: isMinimal ? [restaurant, sapCode] : row
+      };
+
       if (isValid) {
-        validRows.push({ rowIndex: i + 2, data: row }); // +2 because header is row 1, data starts at row 2
+        validRows.push(rowResult);
       } else {
-        invalidRows.push({ rowIndex: i + 2, data: row, reason });
+        invalidRows.push({ ...rowResult, reason });
       }
     }
 
