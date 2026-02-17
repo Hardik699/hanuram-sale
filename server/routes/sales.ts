@@ -205,11 +205,42 @@ function getKgFactor(variationValue: string): number {
   return 1; // Default to 1 if can't parse
 }
 
+// Helper function to parse Excel serial date
+function parseExcelDate(serialDate: number): Date | null {
+  if (!serialDate || isNaN(serialDate)) return null;
+
+  // Excel serial dates start from January 1, 1900 = 1
+  // There's a leap year bug in Excel (Feb 29, 1900 doesn't exist but Excel counts it)
+  const excelEpoch = new Date(1900, 0, 1).getTime();
+  const msPerDay = 24 * 60 * 60 * 1000;
+
+  // Account for Excel's leap year bug (dates after Feb 28, 1900 are off by 1)
+  let adjustedSerial = serialDate;
+  if (serialDate > 60) {
+    adjustedSerial = serialDate - 1; // Subtract 1 for the non-existent Feb 29, 1900
+  }
+
+  const timestamp = excelEpoch + (adjustedSerial - 1) * msPerDay;
+  const date = new Date(timestamp);
+
+  return isNaN(date.getTime()) ? null : date;
+}
+
 // Helper function to parse date string (handles multiple formats)
 function parseDate(dateStr: string): Date | null {
   if (!dateStr) return null;
 
-  // Try YYYY-MM-DD format first (from HTML date input)
+  // Try to parse as Excel serial number first
+  const numVal = parseFloat(dateStr);
+  if (!isNaN(numVal) && numVal > 0) {
+    const excelDate = parseExcelDate(numVal);
+    if (excelDate) {
+      console.log(`  📅 Parsed Excel date ${dateStr} → ${excelDate.toISOString().split('T')[0]}`);
+      return excelDate;
+    }
+  }
+
+  // Try YYYY-MM-DD format (from HTML date input)
   const isoMatch = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (isoMatch) {
     const year = parseInt(isoMatch[1]);
