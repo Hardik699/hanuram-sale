@@ -793,12 +793,12 @@ export default function ItemEdit() {
                     </label>
                     <input
                       type="number"
-                      value={variation.price}
+                      value={variation.price || 0}
                       onChange={(e) =>
                         updateVariation(
                           variation.id,
                           "price",
-                          parseFloat(e.target.value),
+                          parseFloat(e.target.value) || 0,
                         )
                       }
                       placeholder="0"
@@ -827,12 +827,12 @@ export default function ItemEdit() {
                     </label>
                     <input
                       type="number"
-                      value={variation.profitMargin}
+                      value={variation.profitMargin || 0}
                       onChange={(e) =>
                         updateVariation(
                           variation.id,
                           "profitMargin",
-                          parseFloat(e.target.value),
+                          parseFloat(e.target.value) || 0,
                         )
                       }
                       step="0.01"
@@ -869,12 +869,12 @@ export default function ItemEdit() {
                           </label>
                           <input
                             type="number"
-                            value={variation.channels[channel]}
+                            value={variation.channels[channel] || 0}
                             onChange={(e) =>
                               updateChannelPrice(
                                 variation.id,
                                 channel,
-                                parseFloat(e.target.value),
+                                parseFloat(e.target.value) || 0,
                               )
                             }
                             placeholder="0"
