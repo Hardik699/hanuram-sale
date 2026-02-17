@@ -1075,44 +1075,58 @@ export default function ItemEdit() {
 
           {/* Image Upload */}
           <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Images by Channel</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Images by Channel</h3>
 
-            {/* Channel Selector */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Select Channel for Images
+            {/* Channel Selector - PROMINENT */}
+            <div className="mb-6 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-300 rounded-lg p-4">
+              <label className="block text-sm font-bold text-gray-900 mb-3">
+                📁 Step 1: Select Channel
               </label>
-              <select
-                value={selectedImageChannel}
-                onChange={(e) => setSelectedImageChannel(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-              >
-                <option value="Website">Website</option>
-                <option value="Zomato">Zomato</option>
-                <option value="Swiggy">Swiggy</option>
-                <option value="GS1">GS1</option>
-              </select>
-              <p className="text-xs text-gray-500 mt-1">
-                Select a channel, then upload images for that channel
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {["Website", "Zomato", "Swiggy", "GS1"].map((channel) => (
+                  <button
+                    key={channel}
+                    type="button"
+                    onClick={() => setSelectedImageChannel(channel)}
+                    className={`px-4 py-3 rounded-lg font-semibold transition ${
+                      selectedImageChannel === channel
+                        ? "bg-purple-600 text-white shadow-lg scale-105"
+                        : "bg-white text-gray-700 border border-gray-300 hover:border-purple-400"
+                    }`}
+                  >
+                    {channel}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-600 mt-3">
+                ✓ Selected: <strong>{selectedImageChannel}</strong> - Now upload images below
               </p>
             </div>
 
             {/* Upload Area */}
-            <div className="mb-4 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50">
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="image-input"
-              />
-              <label htmlFor="image-input" className="cursor-pointer block">
-                <p className="text-gray-700 font-medium">
-                  Click to upload or drag images for <strong>{selectedImageChannel}</strong>
-                </p>
-                <p className="text-gray-500 text-sm">PNG, JPG up to 10MB</p>
+            <div className="mb-6">
+              <label className="block text-sm font-bold text-gray-900 mb-3">
+                📸 Step 2: Upload Images for {selectedImageChannel}
               </label>
+              <div className="border-2 border-dashed border-purple-300 rounded-lg p-8 text-center bg-purple-50 hover:bg-purple-100 transition">
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="image-input"
+                />
+                <label htmlFor="image-input" className="cursor-pointer block">
+                  <p className="text-gray-900 font-bold text-lg">
+                    Click to upload or drag images
+                  </p>
+                  <p className="text-gray-600 text-sm mt-1">PNG, JPG up to 10MB</p>
+                  <p className="text-purple-600 text-xs mt-2 font-semibold">
+                    All uploaded images will be assigned to: <strong>{selectedImageChannel}</strong>
+                  </p>
+                </label>
+              </div>
             </div>
 
             {/* Image Previews Grouped by Channel */}
