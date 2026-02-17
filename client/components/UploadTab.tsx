@@ -383,13 +383,7 @@ export default function UploadTab({ type }: UploadTabProps) {
 
   const format = UPLOAD_FORMATS[type as UploadType];
 
-  const generateDemoData = () => {
-    if (type !== "petpooja") {
-      setMessage({ type: "error", text: "Demo data only available for Petpooja upload" });
-      return;
-    }
-
-    // Create demo CSV data
+  const getDemoData = () => {
     const headers = UPLOAD_FORMATS.petpooja.requiredColumns;
     const demoRows = [
       ["Hanuram", "INV001", "2026-02-15", "2026-02-15", "12:30", "UPI", "Swiggy", "Completed", "South Delhi", "Hanuram", "Main", "Staff", "9876543210", "John Doe", "South Delhi", "2", "", "850", "100", "50", "0", "0", "20", "0", "0", "0", "1020", "Butter Chicken", "Main Course", "SAP001", "450", "1", "450", "1020"],
@@ -399,20 +393,35 @@ export default function UploadTab({ type }: UploadTabProps) {
       ["Hanuram", "INV005", "2026-02-16", "2026-02-16", "15:30", "Cash", "Swiggy", "Completed", "Central Delhi", "Hanuram", "Main", "Staff", "9876543214", "Robert Brown", "Central Delhi", "1", "", "750", "95", "40", "0", "0", "18", "0", "0", "0", "903", "Dal Makhani", "Main Course", "SAP004", "400", "1.5", "600", "903"]
     ];
 
-    // Create file data structure
-    const jsonData = [headers, ...demoRows];
-    const parsedFileData = {
-      rows: demoRows.length,
-      columns: headers.length,
-      data: jsonData
-    };
+    return { headers, demoRows };
+  };
 
-    setFileData(parsedFileData);
-    setShowUploadForm(true);
-    setMessage({ type: "success", text: "Demo data loaded! Review and upload." });
+  const downloadDemoData = () => {
+    if (type !== "petpooja") {
+      setMessage({ type: "error", text: "Demo data only available for Petpooja upload" });
+      return;
+    }
 
-    // Validate demo data
-    validateData(jsonData);
+    const { headers, demoRows } = getDemoData();
+
+    // Create CSV content
+    const csvContent = [
+      headers.join(","),
+      ...demoRows.map(row => row.map(cell => `"${cell}"`).join(","))
+    ].join("\n");
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `demo_petpooja_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    setMessage({ type: "success", text: "Demo file downloaded successfully!" });
   };
 
   return (
@@ -489,10 +498,10 @@ export default function UploadTab({ type }: UploadTabProps) {
           </div>
           <div className="mt-4">
             <button
-              onClick={generateDemoData}
+              onClick={downloadDemoData}
               className="w-full px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition"
             >
-              Load Demo Data
+              Download Demo File
             </button>
           </div>
         </div>
