@@ -222,6 +222,7 @@ export default function ItemDetail() {
     let isMounted = true;
     const controller = new AbortController();
     let timeoutId: NodeJS.Timeout | null = null;
+    let isCleanup = false;
 
     const fetchSalesData = async () => {
       if (!itemId || !dateRange.start || !dateRange.end) {
@@ -245,8 +246,10 @@ export default function ItemDetail() {
 
         // Increase timeout to 60 seconds for large datasets
         timeoutId = setTimeout(() => {
-          console.warn("⚠️ Sales data fetch timeout after 60 seconds");
-          controller.abort();
+          if (!isCleanup) {
+            console.warn("⚠️ Sales data fetch timeout after 60 seconds");
+            controller.abort();
+          }
         }, 60000);
 
         const response = await fetch(url.toString(), {
@@ -418,7 +421,9 @@ export default function ItemDetail() {
         }
       } catch (error) {
         if (error instanceof Error && error.name === "AbortError") {
-          console.error("❌ Sales data fetch was aborted (timeout or cancelled)");
+          if (!isCleanup) {
+            console.error("❌ Sales data fetch was aborted (timeout or cancelled)");
+          }
         } else {
           console.error("Error fetching sales data:", error);
         }
@@ -432,9 +437,10 @@ export default function ItemDetail() {
 
     // Cleanup function
     return () => {
+      isCleanup = true;
       isMounted = false;
       if (timeoutId) clearTimeout(timeoutId);
-      controller.abort();
+      // Don't abort the controller during cleanup to avoid AbortError
     };
   }, [itemId, dateRange, selectedRestaurant]);
 
