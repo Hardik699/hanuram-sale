@@ -9,6 +9,7 @@ interface SalesCardProps {
     quantity: number;
     value: number;
   }>;
+  saleType?: "QTY" | "KG";
 }
 
 const typeColors = {
@@ -43,8 +44,18 @@ export function SalesCard({
   totalQuantity = 0,
   totalValue = 0,
   variations = [],
+  saleType = "QTY",
 }: SalesCardProps) {
   const colors = typeColors[type];
+  const isKG = saleType === "KG";
+
+  // Format quantity based on sale type
+  const formatQuantity = (qty: number) => {
+    if (isKG) {
+      return `${qty.toFixed(2)} KG`;
+    }
+    return qty.toLocaleString();
+  };
 
   return (
     <div className={`${colors.bg} border-2 ${colors.border} rounded-xl p-6`}>
@@ -58,10 +69,10 @@ export function SalesCard({
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
           <p className="text-xs font-semibold text-gray-600 uppercase mb-1">
-            Sale Quantity
+            Sale {isKG ? "Quantity (KG)" : "Quantity"}
           </p>
           <p className={`text-2xl font-bold ${colors.text}`}>
-            {(totalQuantity ?? 0).toLocaleString()}
+            {formatQuantity(totalQuantity ?? 0)}
           </p>
         </div>
         <div>
@@ -84,7 +95,7 @@ export function SalesCard({
                   {variation.name}
                 </p>
                 <span className={`text-xs font-semibold ${colors.text}`}>
-                  {variation.quantity} qty
+                  {isKG ? `${variation.quantity.toFixed(2)} KG` : `${variation.quantity} qty`}
                 </span>
               </div>
               <p className={`text-sm font-semibold ${colors.text}`}>
@@ -121,6 +132,7 @@ interface SalesSummaryCardsProps {
     value: number;
     variations: Array<{ name: string; quantity: number; value: number }>;
   };
+  saleType?: "QTY" | "KG";
 }
 
 export default function SalesSummaryCards({
@@ -128,6 +140,7 @@ export default function SalesSummaryCards({
   swiggyData,
   diningData,
   parcelData,
+  saleType = "QTY",
 }: SalesSummaryCardsProps) {
   return (
     <div>
@@ -143,24 +156,28 @@ export default function SalesSummaryCards({
           totalQuantity={zomatoData.quantity}
           totalValue={zomatoData.value}
           variations={zomatoData.variations}
+          saleType={saleType}
         />
         <SalesCard
           type="Swiggy"
           totalQuantity={swiggyData.quantity}
           totalValue={swiggyData.value}
           variations={swiggyData.variations}
+          saleType={saleType}
         />
         <SalesCard
           type="Dining"
           totalQuantity={diningData.quantity}
           totalValue={diningData.value}
           variations={diningData.variations}
+          saleType={saleType}
         />
         <SalesCard
           type="Parcel"
           totalQuantity={parcelData.quantity}
           totalValue={parcelData.value}
           variations={parcelData.variations}
+          saleType={saleType}
         />
       </div>
     </div>

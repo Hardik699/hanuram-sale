@@ -142,11 +142,11 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   </td>
 
                   {/* Basic Info - Sticky */}
-                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-bold bg-gray-50 sticky left-10 z-10">
+                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-bold bg-transparent sticky left-10 z-10">
                     <span className="sm:hidden">ID: </span>
                     {item.itemId}
                   </td>
-                  <td className="px-2 sm:px-4 py-3 text-gray-700 bg-gray-50 hidden sm:table-cell">
+                  <td className="px-2 sm:px-4 py-3 text-gray-700 bg-transparent hidden sm:table-cell">
                     {item.group}
                   </td>
                   <td className="px-2 sm:px-4 py-3 text-gray-700 hidden md:table-cell">
