@@ -1146,31 +1146,14 @@ export default function ItemEdit() {
                                 alt={`${channel} Preview ${idx}`}
                                 className="w-full h-40 object-cover rounded-lg shadow-md"
                               />
-                              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition rounded-lg flex flex-col items-center justify-center gap-3">
-                                <select
-                                  value={img.channel}
-                                  onChange={(e) =>
-                                    updateImageChannel(
-                                      images.findIndex((i) => i === img),
-                                      e.target.value
-                                    )
-                                  }
-                                  className="text-xs px-2 py-1 rounded bg-white border border-gray-300 font-semibold"
-                                >
-                                  <option value="Website">🌐 Website</option>
-                                  <option value="Zomato">🔴 Zomato</option>
-                                  <option value="Swiggy">🟠 Swiggy</option>
-                                  <option value="GS1">📦 GS1</option>
-                                </select>
-                                <button
-                                  type="button"
-                                  onClick={() => removeImage(images.findIndex((i) => i === img))}
-                                  className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 shadow-lg"
-                                  title="Delete image"
-                                >
-                                  <X className="w-4 h-4" />
-                                </button>
-                              </div>
+                              <button
+                                type="button"
+                                onClick={() => removeImage(images.findIndex((i) => i === img))}
+                                className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 shadow-lg opacity-0 group-hover:opacity-100 transition"
+                                title="Delete image"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
                             </div>
                           ))}
                         </div>
