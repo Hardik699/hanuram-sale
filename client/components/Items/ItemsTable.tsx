@@ -56,14 +56,14 @@ export default function ItemsTable({ items }: ItemsTableProps) {
   return (
     <div className="space-y-4">
       {/* Responsive Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
           <table className="w-full min-w-full">
             {/* Table Header */}
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200 text-xs sm:text-sm">
-                {/* Checkbox */}
-                <th className="px-2 sm:px-4 py-3 text-left w-10">
+              <tr className="bg-gray-50 border-b border-gray-200 text-xs sm:text-sm whitespace-nowrap">
+                {/* Checkbox - Sticky */}
+                <th className="px-2 sm:px-4 py-3 text-left w-10 sticky left-0 z-20 bg-gray-100">
                   <input
                     type="checkbox"
                     checked={
@@ -75,8 +75,8 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   />
                 </th>
 
-                {/* Basic Info */}
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-gray-700 bg-gray-100">
+                {/* Basic Info - Sticky */}
+                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-gray-700 bg-gray-100 sticky left-10 z-20">
                   Item ID
                 </th>
                 <th className="px-2 sm:px-4 py-3 text-left font-semibold text-gray-700 bg-gray-100 hidden sm:table-cell">
@@ -89,12 +89,14 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   Item Name
                 </th>
 
-                {/* Variation Columns - Show all variations */}
-                {allVariations.map((variation) => (
+                {/* Variation Columns - Show all variations with better spacing */}
+                {allVariations.map((variation, idx) => (
                   <th
                     key={`${variation.name}-${variation.value}`}
-                    colSpan={2}
-                    className="px-2 sm:px-4 py-3 text-center text-xs font-semibold text-gray-700 border-l border-gray-200"
+                    colSpan={4}
+                    className={`px-3 sm:px-4 py-3 text-center text-xs font-bold text-white ${
+                      idx % 2 === 0 ? "bg-purple-600" : "bg-purple-500"
+                    } border-l border-gray-300`}
                   >
                     {variation.value}
                   </th>
@@ -103,14 +105,16 @@ export default function ItemsTable({ items }: ItemsTableProps) {
 
               {/* Sub-header for Channels - Show all variations */}
               {allVariations.length > 0 && (
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th colSpan={5} className="px-2 sm:px-4 py-3"></th>
-                  {allVariations.map((variation) => (
+                <tr className="bg-white border-b border-gray-200 text-xs whitespace-nowrap">
+                  <th colSpan={5} className="px-2 sm:px-4 py-2 sticky left-10 z-20 bg-gray-50"></th>
+                  {allVariations.map((variation, idx) => (
                     <React.Fragment key={`${variation.name}-${variation.value}`}>
                       {CHANNELS.map((channel) => (
                         <th
                           key={`${variation.value}-${channel}`}
-                          className="px-2 sm:px-4 py-3 text-center text-xs font-medium text-gray-600 border-l border-gray-200"
+                          className={`px-2 sm:px-3 py-2 text-center font-semibold border-r border-gray-200 ${
+                            idx % 2 === 0 ? "bg-purple-100 text-purple-700" : "bg-purple-50 text-purple-600"
+                          }`}
                         >
                           {channel}
                         </th>
@@ -127,12 +131,12 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 <tr
                   key={item.itemId}
                   onClick={() => navigate(`/items/${item.itemId}`)}
-                  className={`border-b border-gray-200 hover:bg-gray-50 transition cursor-pointer text-xs sm:text-sm ${
-                    selectedRows.has(item.itemId) ? "bg-blue-50" : ""
+                  className={`border-b border-gray-200 hover:bg-blue-50 transition cursor-pointer text-xs sm:text-sm whitespace-nowrap ${
+                    selectedRows.has(item.itemId) ? "bg-blue-100" : ""
                   }`}
                 >
-                  {/* Checkbox */}
-                  <td className="px-2 sm:px-4 py-3 text-center w-10" onClick={(e) => e.stopPropagation()}>
+                  {/* Checkbox - Sticky */}
+                  <td className="px-2 sm:px-4 py-3 text-center w-10 sticky left-0 z-10 bg-white" onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selectedRows.has(item.itemId)}
@@ -141,8 +145,8 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                     />
                   </td>
 
-                  {/* Basic Info */}
-                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-medium bg-gray-50">
+                  {/* Basic Info - Sticky */}
+                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-bold bg-gray-50 sticky left-10 z-10">
                     <span className="sm:hidden">ID: </span>
                     {item.itemId}
                   </td>
@@ -157,7 +161,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   </td>
 
                   {/* Variation Prices - Show all variations and channels */}
-                  {allVariations.map((variation) => {
+                  {allVariations.map((variation, idx) => {
                     const itemVariation = item.variations.find(
                       (v: any) =>
                         v.name === variation.name && v.value === variation.value
@@ -170,7 +174,9 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                         {CHANNELS.map((channel) => (
                           <td
                             key={`${item.itemId}-${variation.value}-${channel}`}
-                            className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm font-medium text-gray-900 border-l border-gray-200"
+                            className={`px-2 sm:px-3 py-3 text-center font-semibold border-r border-gray-200 ${
+                              idx % 2 === 0 ? "bg-purple-50 text-purple-700" : "bg-purple-100 text-purple-700"
+                            }`}
                           >
                             {itemVariation
                               ? `₹${itemVariation.channels[channel] || "-"}`
