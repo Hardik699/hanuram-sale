@@ -149,11 +149,18 @@ export default function UploadTab({ type }: UploadTabProps) {
   const validateData = async (data: any[]) => {
     try {
       setIsValidating(true);
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
       const response = await fetch("/api/upload/validate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, data })
+        body: JSON.stringify({ type, data }),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const error = await response.json();
@@ -179,7 +186,11 @@ export default function UploadTab({ type }: UploadTabProps) {
       setIsValidating(false);
     } catch (error) {
       console.error("Validation error:", error);
-      setMessage({ type: "error", text: "Failed to validate data" });
+      if (error instanceof TypeError && error.name === "AbortError") {
+        setMessage({ type: "error", text: "Validation took too long. Please try again with fewer rows." });
+      } else {
+        setMessage({ type: "error", text: `Failed to validate data: ${error instanceof Error ? error.message : "Unknown error"}` });
+      }
       setIsValidating(false);
     }
   };
