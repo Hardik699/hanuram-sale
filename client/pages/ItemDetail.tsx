@@ -219,14 +219,18 @@ export default function ItemDetail() {
   const [salesLoading, setSalesLoading] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    let timeoutId: NodeJS.Timeout | null = null;
+
     const fetchSalesData = async () => {
       if (!itemId || !dateRange.start || !dateRange.end) {
-        setSalesData(null);
+        if (isMounted) setSalesData(null);
         return;
       }
 
       try {
-        setSalesLoading(true);
+        if (isMounted) setSalesLoading(true);
         const url = new URL(
           `/api/sales/item/${itemId}`,
           window.location.origin,
@@ -239,13 +243,17 @@ export default function ItemDetail() {
 
         console.log(`🔄 Fetching sales data: ${url.toString()}`);
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+        // Increase timeout to 60 seconds for large datasets
+        timeoutId = setTimeout(() => {
+          console.warn("⚠️ Sales data fetch timeout after 60 seconds");
+          controller.abort();
+        }, 60000);
 
         const response = await fetch(url.toString(), {
           signal: controller.signal,
         });
-        clearTimeout(timeoutId);
+
+        if (timeoutId) clearTimeout(timeoutId);
 
         if (!response.ok) {
           const errorText = await response.text();
@@ -259,7 +267,7 @@ export default function ItemDetail() {
         const result = await response.json();
         console.log("✅ Sales data response:", result);
 
-        if (result.success && result.data) {
+        if (result.success && result.data && isMounted) {
           // The server now returns pre-aggregated data!
           const data = result.data;
           console.log("✅ Pre-aggregated data from server:", {
@@ -409,14 +417,25 @@ export default function ItemDetail() {
           });
         }
       } catch (error) {
-        console.error("Error fetching sales data:", error);
-        setSalesData(null);
+        if (error instanceof Error && error.name === "AbortError") {
+          console.error("❌ Sales data fetch was aborted (timeout or cancelled)");
+        } else {
+          console.error("Error fetching sales data:", error);
+        }
+        if (isMounted) setSalesData(null);
       } finally {
-        setSalesLoading(false);
+        if (isMounted) setSalesLoading(false);
       }
     };
 
     fetchSalesData();
+
+    // Cleanup function
+    return () => {
+      isMounted = false;
+      if (timeoutId) clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, [itemId, dateRange, selectedRestaurant]);
 
   if (loading) {
