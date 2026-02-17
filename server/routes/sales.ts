@@ -145,6 +145,38 @@ function mapOrderType(
   return "Dining";
 }
 
+// Helper function to normalize area to lowercase
+function normalizeArea(area: string, orderType?: string): "zomato" | "swiggy" | "dining" | "parcel" {
+  const areaLower = area?.toLowerCase().trim() || "";
+  const orderTypeLower = orderType?.toLowerCase().trim() || "";
+
+  // Check for Zomato variations
+  if (areaLower.includes("zomato")) {
+    return "zomato";
+  }
+
+  // Check for Swiggy variations
+  if (areaLower.includes("swiggy")) {
+    return "swiggy";
+  }
+
+  // Check for Parcel/Delivery variations
+  if (areaLower.includes("parcel") || areaLower.includes("home delivery") || areaLower.includes("pickup")) {
+    return "parcel";
+  }
+
+  // Check order type as fallback
+  if (orderTypeLower.includes("pickup") || orderTypeLower.includes("home delivery")) {
+    return "parcel";
+  }
+  if (orderTypeLower.includes("delivery")) {
+    return "parcel";
+  }
+
+  // Default to dining
+  return "dining";
+}
+
 // Helper function to parse date string (handles multiple formats)
 function parseDate(dateStr: string): Date | null {
   if (!dateStr) return null;
@@ -185,7 +217,7 @@ function parseDate(dateStr: string): Date | null {
   return isNaN(date.getTime()) ? null : date;
 }
 
-// GET /api/sales/item/:itemId - Get sales data for a specific item from stored salesHistory
+// GET /api/sales/item/:itemId - Get sales data for a specific item directly from petpooja collection
 export const handleGetItemSales: RequestHandler = async (req, res) => {
   try {
     const { itemId } = req.params;
@@ -199,23 +231,20 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
       const parsedEnd = parseDate(endDate as string);
 
       if (!parsedStart || !parsedEnd) {
-        // If dates can't be parsed, just return all data (no filtering)
         start = new Date("2000-01-01");
         end = new Date("2099-12-31");
       } else {
         start = parsedStart;
-        // End date should include the entire day (next day at 00:00 - 1ms = 23:59:59.999)
         end = new Date(parsedEnd.getTime() + 24 * 60 * 60 * 1000 - 1);
       }
     } else {
-      // Default to wide range that will include all data
       start = new Date("2000-01-01");
       end = new Date("2099-12-31");
     }
 
     const db = await getDatabase();
 
-    // Fetch the item with all its variations and salesHistory
+    // Get the item to find all its SAP codes
     const itemsCollection = db.collection("items");
     const item = await itemsCollection.findOne({ itemId });
 
@@ -228,21 +257,54 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
           swiggyData: { quantity: 0, value: 0, variations: [] },
           diningData: { quantity: 0, value: 0, variations: [] },
           parcelData: { quantity: 0, value: 0, variations: [] },
+          monthlyData: [],
+          dateWiseData: [],
+          restaurantSales: {},
         },
       });
     }
 
-    console.log(
-      `📊 Fetching sales for item ${itemId} from stored salesHistory`,
-    );
-    console.log(
-      `📅 Date range: ${start.toISOString()} to ${end.toISOString()}`,
-    );
+    // Build a map of SAP codes for this item
+    const sapCodeToVariation: { [sapCode: string]: string } = {};
+    if (item.variations && Array.isArray(item.variations)) {
+      item.variations.forEach((variation: any, idx: number) => {
+        if (variation.sapCode) {
+          const variationName = variation.value || variation.name || `Variation ${idx + 1}`;
+          sapCodeToVariation[variation.sapCode] = variationName;
+        }
+      });
+    }
 
-    // Aggregate sales data by month, day, area, and restaurant
-    const monthlyByArea: { [key: string]: { [area: string]: number } } = {};
-    const dailyByArea: { [key: string]: { [area: string]: number } } = {};
-    const restaurantSales: { [key: string]: number } = {};
+    const sapCodes = Object.keys(sapCodeToVariation);
+    console.log(
+      `📊 Fetching sales for item ${itemId} from petpooja collection`,
+    );
+    console.log(`  SAP codes: ${sapCodes.join(", ")}`);
+    console.log(`  Date range: ${start.toISOString()} to ${end.toISOString()}`);
+
+    if (sapCodes.length === 0) {
+      return res.json({
+        success: true,
+        data: {
+          itemId,
+          zomatoData: { quantity: 0, value: 0, variations: [] },
+          swiggyData: { quantity: 0, value: 0, variations: [] },
+          diningData: { quantity: 0, value: 0, variations: [] },
+          parcelData: { quantity: 0, value: 0, variations: [] },
+          monthlyData: [],
+          dateWiseData: [],
+          restaurantSales: {},
+        },
+      });
+    }
+
+    // Query petpooja collection directly using MongoDB aggregation
+    const petpoojaCollection = db.collection("petpooja");
+
+    // First, get all data files to extract sales records
+    const allPetpoojaData = await petpoojaCollection.find({}).toArray();
+
+    // Process all data and aggregate
     const salesByArea: {
       [key in "zomato" | "swiggy" | "dining" | "parcel"]: {
         [variationName: string]: { quantity: number; value: number };
@@ -254,83 +316,96 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
       parcel: {},
     };
 
-    let totalRecordsProcessed = 0;
-    let totalRecordsFiltered = 0;
+    const monthlyByArea: { [key: string]: { [area: string]: number } } = {};
+    const dailyByArea: { [key: string]: { [area: string]: number } } = {};
+    const restaurantSales: { [key: string]: number } = {};
 
-    if ((item as any).variations && Array.isArray((item as any).variations)) {
-      (item as any).variations.forEach((variation: any, idx: number) => {
-        if (!variation.salesHistory || !Array.isArray(variation.salesHistory)) {
-          return;
+    let totalRecords = 0;
+    let matchedRecords = 0;
+
+    // Helper to get column index
+    const getColumnIndex = (headers: string[], name: string) =>
+      headers.findIndex((h) => h.toLowerCase().trim() === name.toLowerCase().trim());
+
+    for (const petpoojaDoc of allPetpoojaData) {
+      if (!Array.isArray(petpoojaDoc.data) || petpoojaDoc.data.length < 2) continue;
+
+      const headers = petpoojaDoc.data[0] as string[];
+      const dataRows = petpoojaDoc.data.slice(1);
+
+      const sapCodeIdx = getColumnIndex(headers, "sap_code");
+      const restaurantIdx = getColumnIndex(headers, "restaurant_name");
+      const dateIdx = getColumnIndex(headers, "New Date");
+      const areaIdx = getColumnIndex(headers, "area");
+      const orderTypeIdx = getColumnIndex(headers, "order_type");
+      const quantityIdx = getColumnIndex(headers, "item_quantity");
+      const priceIdx = getColumnIndex(headers, "item_price");
+
+      if (sapCodeIdx === -1) continue;
+
+      for (const row of dataRows) {
+        if (!Array.isArray(row)) continue;
+
+        totalRecords++;
+        const sapCode = row[sapCodeIdx]?.toString().trim() || "";
+
+        // Only process rows matching this item's SAP codes
+        if (!sapCodeToVariation[sapCode]) continue;
+
+        const dateStr = row[dateIdx]?.toString().trim() || "";
+        const recordDate = parseDate(dateStr);
+
+        // Filter by date range
+        if (!recordDate || recordDate < start || recordDate > end) continue;
+
+        const restaurantName = restaurantIdx !== -1 ? row[restaurantIdx]?.toString().trim() || "Unknown" : "Unknown";
+
+        // Filter by restaurant if provided
+        if (restaurant && restaurantName !== restaurant) continue;
+
+        matchedRecords++;
+
+        const quantity = quantityIdx !== -1 ? parseFloat(row[quantityIdx]?.toString() || "0") || 0 : 0;
+        const price = priceIdx !== -1 ? parseFloat(row[priceIdx]?.toString() || "0") || 0 : 0;
+        const value = Math.round(quantity * price);
+
+        const area = areaIdx !== -1 ? row[areaIdx]?.toString().trim() || "" : "";
+        const orderType = orderTypeIdx !== -1 ? row[orderTypeIdx]?.toString().trim() || "" : "";
+        const normalizedArea = normalizeArea(area, orderType) as
+          | "zomato"
+          | "swiggy"
+          | "dining"
+          | "parcel";
+
+        const variationName = sapCodeToVariation[sapCode];
+
+        // Aggregate by area & variation
+        if (!salesByArea[normalizedArea][variationName]) {
+          salesByArea[normalizedArea][variationName] = { quantity: 0, value: 0 };
         }
+        salesByArea[normalizedArea][variationName].quantity += Math.round(quantity);
+        salesByArea[normalizedArea][variationName].value += value;
 
-        const variationName =
-          variation.value || variation.name || `Variation ${idx + 1}`;
-        console.log(
-          `  Processing variation ${idx} (${variationName}): ${variation.salesHistory.length} records`,
-        );
+        // Aggregate by month & area
+        const month = recordDate.toISOString().substring(0, 7);
+        if (!monthlyByArea[month]) monthlyByArea[month] = {};
+        monthlyByArea[month][normalizedArea] =
+          (monthlyByArea[month][normalizedArea] || 0) + Math.round(quantity);
 
-        variation.salesHistory.forEach((record: any) => {
-          totalRecordsProcessed++;
-          const recordDate = parseDate(record.date);
+        // Aggregate by day & area
+        const day = recordDate.toISOString().substring(0, 10);
+        if (!dailyByArea[day]) dailyByArea[day] = {};
+        dailyByArea[day][normalizedArea] =
+          (dailyByArea[day][normalizedArea] || 0) + Math.round(quantity);
 
-          // Debug first few records
-          if (totalRecordsProcessed <= 3) {
-            console.log(
-              `    Record ${totalRecordsProcessed}: date="${record.date}" → parsed="${recordDate?.toISOString()}" (start=${start.toISOString()}, end=${end.toISOString()})`,
-            );
-            console.log(
-              `    Comparison: ${recordDate?.getTime()} < ${start.getTime()} ? ${recordDate! < start}, ${recordDate?.getTime()} > ${end.getTime()} ? ${recordDate! > end}`,
-            );
-          }
-
-          if (!recordDate || recordDate < start || recordDate > end) {
-            totalRecordsFiltered++;
-            return;
-          }
-
-          // Filter by restaurant if provided
-          if (restaurant && record.restaurant !== restaurant) {
-            return;
-          }
-
-          // Normalize area to lowercase (handles cases where area might be stored as "Zomato" or "ZOMATO")
-          const rawArea = record.area || "dining";
-          const area = rawArea.toLowerCase() as
-            | "zomato"
-            | "swiggy"
-            | "dining"
-            | "parcel";
-          const quantity = record.quantity || 0;
-          const restaurantName = record.restaurant || "Unknown";
-
-          // Aggregate by area & variation
-          if (!salesByArea[area][variationName]) {
-            salesByArea[area][variationName] = { quantity: 0, value: 0 };
-          }
-          salesByArea[area][variationName].quantity += quantity;
-          salesByArea[area][variationName].value += record.value || 0;
-
-          // Aggregate by month & area
-          const month = recordDate.toISOString().substring(0, 7); // YYYY-MM
-          if (!monthlyByArea[month]) monthlyByArea[month] = {};
-          monthlyByArea[month][area] =
-            (monthlyByArea[month][area] || 0) + quantity;
-
-          // Aggregate by day & area
-          const day = recordDate.toISOString().substring(0, 10); // YYYY-MM-DD
-          if (!dailyByArea[day]) dailyByArea[day] = {};
-          dailyByArea[day][area] = (dailyByArea[day][area] || 0) + quantity;
-
-          // Aggregate by restaurant
-          restaurantSales[restaurantName] =
-            (restaurantSales[restaurantName] || 0) + quantity;
-        });
-      });
+        // Aggregate by restaurant
+        restaurantSales[restaurantName] =
+          (restaurantSales[restaurantName] || 0) + Math.round(quantity);
+      }
     }
 
     // Format data for output
     const formatAreaData = (
-      areaKey: string,
       data: { [variationName: string]: { quantity: number; value: number } },
     ) => {
       const variations = Object.entries(data).map(([variationName, info]) => ({
@@ -380,25 +455,22 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
 
     const salesData = {
       itemId,
-      zomatoData: formatAreaData("zomato", salesByArea.zomato),
-      swiggyData: formatAreaData("swiggy", salesByArea.swiggy),
-      diningData: formatAreaData("dining", salesByArea.dining),
-      parcelData: formatAreaData("parcel", salesByArea.parcel),
+      zomatoData: formatAreaData(salesByArea.zomato),
+      swiggyData: formatAreaData(salesByArea.swiggy),
+      diningData: formatAreaData(salesByArea.dining),
+      parcelData: formatAreaData(salesByArea.parcel),
       monthlyData,
       dateWiseData,
       restaurantSales,
     };
 
     console.log(`✅ Sales data for ${itemId}:`, {
-      totalProcessed: totalRecordsProcessed,
-      totalFiltered: totalRecordsFiltered,
+      totalRecords,
+      matchedRecords,
       zomato: salesData.zomatoData.quantity,
       swiggy: salesData.swiggyData.quantity,
       dining: salesData.diningData.quantity,
       parcel: salesData.parcelData.quantity,
-      monthlyMonths: salesData.monthlyData.length,
-      dailyDays: salesData.dateWiseData.length,
-      restaurants: Object.keys(salesData.restaurantSales).length,
     });
 
     res.json({
@@ -547,7 +619,7 @@ export const handleGetDailySales: RequestHandler = async (req, res) => {
   }
 };
 
-// Debug endpoint - Get raw sales data for an item without date filtering
+// Debug endpoint - Get raw sales data for an item without date filtering from petpooja collection
 export const handleDebugItemSalesRaw: RequestHandler = async (req, res) => {
   try {
     const { itemId } = req.query;
@@ -567,6 +639,19 @@ export const handleDebugItemSalesRaw: RequestHandler = async (req, res) => {
       });
     }
 
+    // Build a map of SAP codes for this item
+    const sapCodeToVariation: { [sapCode: string]: string } = {};
+    if (item.variations && Array.isArray(item.variations)) {
+      item.variations.forEach((variation: any, idx: number) => {
+        if (variation.sapCode) {
+          const variationName = variation.value || variation.name || `Variation ${idx + 1}`;
+          sapCodeToVariation[variation.sapCode] = variationName;
+        }
+      });
+    }
+
+    const sapCodes = Object.keys(sapCodeToVariation);
+
     const salesByArea: {
       [key in "zomato" | "swiggy" | "dining" | "parcel"]: {
         [variationName: string]: { quantity: number; value: number };
@@ -581,32 +666,57 @@ export const handleDebugItemSalesRaw: RequestHandler = async (req, res) => {
     let totalRecords = 0;
     let areaCount: { [key: string]: number } = {};
 
-    if ((item as any).variations && Array.isArray((item as any).variations)) {
-      (item as any).variations.forEach((variation: any, idx: number) => {
-        if (!variation.salesHistory || !Array.isArray(variation.salesHistory)) {
-          return;
+    // Query petpooja collection
+    const petpoojaCollection = db.collection("petpooja");
+    const allPetpoojaData = await petpoojaCollection.find({}).toArray();
+
+    const getColumnIndex = (headers: string[], name: string) =>
+      headers.findIndex((h) => h.toLowerCase().trim() === name.toLowerCase().trim());
+
+    for (const petpoojaDoc of allPetpoojaData) {
+      if (!Array.isArray(petpoojaDoc.data) || petpoojaDoc.data.length < 2) continue;
+
+      const headers = petpoojaDoc.data[0] as string[];
+      const dataRows = petpoojaDoc.data.slice(1);
+
+      const sapCodeIdx = getColumnIndex(headers, "sap_code");
+      const areaIdx = getColumnIndex(headers, "area");
+      const orderTypeIdx = getColumnIndex(headers, "order_type");
+      const quantityIdx = getColumnIndex(headers, "item_quantity");
+      const priceIdx = getColumnIndex(headers, "item_price");
+
+      if (sapCodeIdx === -1) continue;
+
+      for (const row of dataRows) {
+        if (!Array.isArray(row)) continue;
+
+        const sapCode = row[sapCodeIdx]?.toString().trim() || "";
+        if (!sapCodeToVariation[sapCode]) continue;
+
+        totalRecords++;
+
+        const area = areaIdx !== -1 ? row[areaIdx]?.toString().trim() || "" : "";
+        const orderType = orderTypeIdx !== -1 ? row[orderTypeIdx]?.toString().trim() || "" : "";
+        const normalizedArea = normalizeArea(area, orderType) as
+          | "zomato"
+          | "swiggy"
+          | "dining"
+          | "parcel";
+
+        areaCount[normalizedArea] = (areaCount[normalizedArea] || 0) + 1;
+
+        const quantity = quantityIdx !== -1 ? parseFloat(row[quantityIdx]?.toString() || "0") || 0 : 0;
+        const price = priceIdx !== -1 ? parseFloat(row[priceIdx]?.toString() || "0") || 0 : 0;
+        const value = Math.round(quantity * price);
+
+        const variationName = sapCodeToVariation[sapCode];
+
+        if (!salesByArea[normalizedArea][variationName]) {
+          salesByArea[normalizedArea][variationName] = { quantity: 0, value: 0 };
         }
-
-        const variationName =
-          variation.value || variation.name || `Variation ${idx + 1}`;
-
-        variation.salesHistory.forEach((record: any) => {
-          totalRecords++;
-          const rawArea = record.area || "dining";
-          const area = rawArea.toLowerCase() as
-            | "zomato"
-            | "swiggy"
-            | "dining"
-            | "parcel";
-          areaCount[area] = (areaCount[area] || 0) + 1;
-
-          if (!salesByArea[area][variationName]) {
-            salesByArea[area][variationName] = { quantity: 0, value: 0 };
-          }
-          salesByArea[area][variationName].quantity += record.quantity || 0;
-          salesByArea[area][variationName].value += record.value || 0;
-        });
-      });
+        salesByArea[normalizedArea][variationName].quantity += Math.round(quantity);
+        salesByArea[normalizedArea][variationName].value += value;
+      }
     }
 
     const formatAreaData = (data: {
@@ -628,6 +738,7 @@ export const handleDebugItemSalesRaw: RequestHandler = async (req, res) => {
       success: true,
       itemId,
       itemName: (item as any).itemName,
+      sapCodes,
       totalRecords,
       areaCount,
       zomatoData: formatAreaData(salesByArea.zomato),
@@ -691,7 +802,8 @@ export const handleGetRestaurants: RequestHandler = async (req, res) => {
   }
 };
 
-// DELETE /api/sales/item/:itemId - Reset all sales data for an item
+// DELETE /api/sales/item/:itemId - Sales data is now managed via petpooja collection uploads
+// To reset sales data, re-upload the petpooja file or delete the upload records
 export const handleResetItemSales: RequestHandler = async (req, res) => {
   try {
     const { itemId } = req.params;
@@ -715,27 +827,18 @@ export const handleResetItemSales: RequestHandler = async (req, res) => {
       });
     }
 
-    // Clear salesHistory from all variations
-    const result = await itemsCollection.updateOne(
-      { itemId },
-      {
-        $set: {
-          "variations.$[].salesHistory": [],
-        },
-      },
-    );
-
     console.log(
-      `✅ Reset sales data for item ${itemId}. Matched: ${result.matchedCount}, Modified: ${result.modifiedCount}`,
+      `📊 Sales data for item ${itemId} is managed through petpooja uploads`,
     );
 
     res.json({
       success: true,
-      message: `Sales data cleared for item "${item.itemName}" (ID: ${itemId})`,
+      message: `Sales data for item "${item.itemName}" (ID: ${itemId}) is managed through petpooja collection. To modify sales data, re-upload or delete petpooja records.`,
       itemName: item.itemName,
+      info: "Sales data is no longer stored in item variations - it's fetched directly from the petpooja collection on demand",
     });
   } catch (error) {
-    console.error("Error resetting sales data:", error);
+    console.error("Error in handleResetItemSales:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
     res.status(500).json({

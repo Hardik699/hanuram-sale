@@ -383,6 +383,47 @@ export default function UploadTab({ type }: UploadTabProps) {
 
   const format = UPLOAD_FORMATS[type as UploadType];
 
+  const getDemoData = () => {
+    const headers = UPLOAD_FORMATS.petpooja.requiredColumns;
+    const demoRows = [
+      ["Hanuram", "INV001", "2026-02-15", "2026-02-15", "12:30", "UPI", "Swiggy", "Completed", "South Delhi", "Hanuram", "Main", "Staff", "9876543210", "John Doe", "South Delhi", "2", "", "850", "100", "50", "0", "0", "20", "0", "0", "0", "1020", "Butter Chicken", "Main Course", "SAP001", "450", "1", "450", "1020"],
+      ["Hanuram", "INV002", "2026-02-15", "2026-02-15", "13:15", "Cash", "Zomato", "Completed", "East Delhi", "Hanuram", "Main", "Staff", "9876543211", "Jane Smith", "East Delhi", "1", "", "650", "80", "30", "0", "0", "15", "0", "0", "0", "775", "Paneer Tikka", "Appetizer", "SAP002", "350", "2", "700", "775"],
+      ["Hanuram", "INV003", "2026-02-15", "2026-02-15", "14:45", "Card", "Dining", "Completed", "West Delhi", "Hanuram", "Main", "Staff", "9876543212", "Mike Johnson", "West Delhi", "3", "", "1200", "150", "80", "0", "0", "30", "0", "0", "0", "1460", "Biryani", "Rice", "SAP003", "500", "1", "500", "1460"],
+      ["Hanuram", "INV004", "2026-02-16", "2026-02-16", "11:20", "UPI", "Parcel", "Completed", "North Delhi", "Hanuram", "Main", "Staff", "9876543213", "Sarah Lee", "North Delhi", "2", "", "950", "120", "60", "0", "0", "25", "0", "0", "0", "1155", "Tandoori Chicken", "Main Course", "SAP001", "450", "1.5", "675", "1155"],
+      ["Hanuram", "INV005", "2026-02-16", "2026-02-16", "15:30", "Cash", "Swiggy", "Completed", "Central Delhi", "Hanuram", "Main", "Staff", "9876543214", "Robert Brown", "Central Delhi", "1", "", "750", "95", "40", "0", "0", "18", "0", "0", "0", "903", "Dal Makhani", "Main Course", "SAP004", "400", "1.5", "600", "903"]
+    ];
+
+    return { headers, demoRows };
+  };
+
+  const downloadDemoData = () => {
+    if (type !== "petpooja") {
+      setMessage({ type: "error", text: "Demo data only available for Petpooja upload" });
+      return;
+    }
+
+    const { headers, demoRows } = getDemoData();
+
+    // Create CSV content
+    const csvContent = [
+      headers.join(","),
+      ...demoRows.map(row => row.map(cell => `"${cell}"`).join(","))
+    ].join("\n");
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `demo_petpooja_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    setMessage({ type: "success", text: "Demo file downloaded successfully!" });
+  };
+
   return (
     <div className="space-y-6 sm:space-y-8">
       {/* Upload Loader Animation */}
@@ -454,6 +495,14 @@ export default function UploadTab({ type }: UploadTabProps) {
               <p className="text-gray-700 font-medium">Click to upload or drag & drop</p>
               <p className="text-gray-500 text-sm">CSV or Excel files</p>
             </label>
+          </div>
+          <div className="mt-4">
+            <button
+              onClick={downloadDemoData}
+              className="w-full px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition"
+            >
+              Download Demo File
+            </button>
           </div>
         </div>
 

@@ -30,20 +30,23 @@ const VARIATION_VALUES = [
 
 // Helper function to calculate auto pricing
 const calculateAutoPrices = (basePrice: number) => {
-  if (basePrice <= 0) return { Zomato: 0, Swiggy: 0 };
-
-  // Add 15% markup
-  const priceWith15Percent = basePrice * 1.15;
+  if (basePrice <= 0) return { Zomato: 0, Swiggy: 0, GS1: 0 };
 
   // Round to nearest 5
   const roundToNearest5 = (price: number) => {
     return Math.round(price / 5) * 5;
   };
 
+  // Add 15% markup for Zomato and Swiggy
+  const priceWith15Percent = basePrice * 1.15;
   const autoPriceZomato = roundToNearest5(priceWith15Percent);
   const autoPriceSwiggy = roundToNearest5(priceWith15Percent);
 
-  return { Zomato: autoPriceZomato, Swiggy: autoPriceSwiggy };
+  // Add 20% markup for GS1
+  const priceWith20Percent = basePrice * 1.20;
+  const autoPriceGS1 = roundToNearest5(priceWith20Percent);
+
+  return { Zomato: autoPriceZomato, Swiggy: autoPriceSwiggy, GS1: autoPriceGS1 };
 };
 
 interface Variation {
@@ -54,7 +57,10 @@ interface Variation {
   channels: Record<string, number>;
   price: number;
   sapCode: string;
+  gs1Code?: string;
+  saleType?: "QTY" | "KG";
   profitMargin: number;
+  gs1Enabled?: boolean;
   salesHistory?: Array<{
     date: string;
     channel: "Dining" | "Parcel" | "Online";
@@ -96,8 +102,18 @@ export default function ItemEdit() {
   const [newCategory, setNewCategory] = useState("");
   const [newHsnCode, setNewHsnCode] = useState("");
   const [newVariationValue, setNewVariationValue] = useState("");
-  const [images, setImages] = useState<File[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+
+  // Images with channel info
+  interface ImageWithChannel {
+    file?: File;
+    preview: string;
+    channel: string;
+  }
+
+  const [images, setImages] = useState<ImageWithChannel[]>([]);
+  const [selectedImageChannel, setSelectedImageChannel] = useState("Website");
+  const [showChannelModal, setShowChannelModal] = useState(false);
+  const [tempFileInput, setTempFileInput] = useState<HTMLInputElement | null>(null);
 
   // Load dropdown data
   useEffect(() => {
@@ -151,9 +167,17 @@ export default function ItemEdit() {
         setItemType(foundItem.itemType || "Goods");
         setUnitType(foundItem.unitType || "Single Count");
 
-        // Load existing images
+        // Load existing images with channel info
         if (foundItem.images && Array.isArray(foundItem.images)) {
-          setImagePreviews(foundItem.images);
+          const imageList = foundItem.images.map((img: any) => {
+            // Handle both old format (string) and new format (object with url and channel)
+            if (typeof img === "string") {
+              return { preview: img, channel: "Website" };
+            } else {
+              return { preview: img.url || img.preview, channel: img.channel || "Website" };
+            }
+          });
+          setImages(imageList);
         }
 
         // Load variations with auto-calculated prices
@@ -162,6 +186,13 @@ export default function ItemEdit() {
             foundItem.variations.map((v: any) => {
               const basePrice = v.price || 0;
               const autoPrices = calculateAutoPrices(basePrice);
+              const gs1Enabled = v.channels?.GS1 && v.channels.GS1 > 0 ? true : false;
+
+              // Ensure all channels are initialized
+              const initialChannels = CHANNELS.reduce(
+                (acc, ch) => ({ ...acc, [ch]: v.channels?.[ch] ?? 0 }),
+                {} as Record<string, number>
+              );
 
               return {
                 id: v.id || Date.now().toString(),
@@ -169,15 +200,22 @@ export default function ItemEdit() {
                 value: v.value || "",
                 area: v.area || "",
                 channels: {
-                  ...(v.channels ||
-                    CHANNELS.reduce((acc, ch) => ({ ...acc, [ch]: 0 }), {})),
-                  // Override Zomato and Swiggy with auto-calculated prices
+                  ...initialChannels,
+                  // Base price for Dining and Parcel (if not already set)
+                  Dining: v.channels?.Dining ?? basePrice,
+                  Parcale: v.channels?.Parcale ?? basePrice,
+                  // Auto-calculated prices for Zomato and Swiggy (+15%)
                   Zomato: autoPrices.Zomato,
                   Swiggy: autoPrices.Swiggy,
+                  // Include GS1 if it's enabled (+20%)
+                  ...(gs1Enabled && { GS1: autoPrices.GS1 }),
                 },
                 price: basePrice,
                 sapCode: v.sapCode || "",
+                gs1Code: v.gs1Code || "",
+                saleType: v.saleType || "QTY",
                 profitMargin: v.profitMargin || 0,
+                gs1Enabled: gs1Enabled,
                 salesHistory: v.salesHistory || [],
               };
             }),
@@ -286,10 +324,19 @@ export default function ItemEdit() {
       name: "",
       value: "",
       area: "",
-      channels: CHANNELS.reduce((acc, ch) => ({ ...acc, [ch]: 0 }), {}),
+      channels: {
+        Dining: 0,
+        Parcale: 0,
+        Swiggy: 0,
+        Zomato: 0,
+        GS1: 0,
+      },
       price: 0,
       sapCode: "",
+      gs1Code: "",
+      saleType: "QTY",
       profitMargin: 0,
+      gs1Enabled: false,
       salesHistory: [],
     };
     setVariations([...variations, newVariation]);
@@ -302,14 +349,39 @@ export default function ItemEdit() {
 
         const updated = { ...v, [field]: value };
 
-        // Auto-calculate Zomato and Swiggy prices when base price changes
+        // Auto-calculate prices when base price changes
         if (field === "price") {
           const autoPrices = calculateAutoPrices(value);
+          // Ensure all channels exist in the object before updating
+          const channelsWithDefaults = CHANNELS.reduce(
+            (acc, ch) => ({ ...acc, [ch]: updated.channels?.[ch] ?? 0 }),
+            {} as Record<string, number>
+          );
           updated.channels = {
-            ...updated.channels,
+            ...channelsWithDefaults,
+            // Base price for Dining and Parcel
+            Dining: value || 0,
+            Parcale: value || 0,
+            // Auto-calculated prices for Zomato and Swiggy (+15%)
             Zomato: autoPrices.Zomato,
             Swiggy: autoPrices.Swiggy,
           };
+          // Add GS1 price if GS1 is enabled (+20%)
+          if (updated.gs1Enabled) {
+            updated.channels.GS1 = autoPrices.GS1;
+          }
+        }
+
+        // When GS1 is toggled, calculate or clear GS1 price
+        if (field === "gs1Enabled") {
+          if (value) {
+            // Enable GS1: calculate auto price
+            const autoPrices = calculateAutoPrices(updated.price);
+            updated.channels.GS1 = autoPrices.GS1;
+          } else {
+            // Disable GS1: set to 0
+            updated.channels.GS1 = 0;
+          }
         }
 
         return updated;
@@ -333,20 +405,51 @@ export default function ItemEdit() {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setImages([...images, ...files]);
 
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImagePreviews((prev) => [...prev, event.target?.result as string]);
-      };
-      reader.readAsDataURL(file);
-    });
+    if (files.length > 0) {
+      // Show modal to select channel
+      setTempFileInput(e.target);
+      setShowChannelModal(true);
+
+      // Process files
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setImages((prev) => [
+            ...prev,
+            {
+              file: file,
+              preview: event.target?.result as string,
+              channel: selectedImageChannel,
+            },
+          ]);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const handleChannelSelect = (channel: string) => {
+    // Update the channel for newly uploaded images
+    setSelectedImageChannel(channel);
+    setShowChannelModal(false);
+
+    // Reset input
+    if (tempFileInput) {
+      tempFileInput.value = "";
+    }
   };
 
   const removeImage = (index: number) => {
     setImages(images.filter((_, i) => i !== index));
-    setImagePreviews(imagePreviews.filter((_, i) => i !== index));
+  };
+
+  const updateImageChannel = (index: number, channel: string) => {
+    setImages(
+      images.map((img, i) =>
+        i === index ? { ...img, channel } : img
+      )
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -356,6 +459,12 @@ export default function ItemEdit() {
       alert("Please fill all required fields");
       return;
     }
+
+    // Format images with channel info
+    const imageData = images.map((img) => ({
+      url: img.preview,
+      channel: img.channel,
+    }));
 
     const updatedItem = {
       itemId,
@@ -370,7 +479,7 @@ export default function ItemEdit() {
       itemType,
       unitType,
       variations,
-      images: imagePreviews,
+      images: imageData,
     };
 
     try {
@@ -793,12 +902,12 @@ export default function ItemEdit() {
                     </label>
                     <input
                       type="number"
-                      value={variation.price}
+                      value={variation.price || 0}
                       onChange={(e) =>
                         updateVariation(
                           variation.id,
                           "price",
-                          parseFloat(e.target.value),
+                          parseFloat(e.target.value) || 0,
                         )
                       }
                       placeholder="0"
@@ -827,32 +936,55 @@ export default function ItemEdit() {
                     </label>
                     <input
                       type="number"
-                      value={variation.profitMargin}
+                      value={variation.profitMargin || 0}
                       onChange={(e) =>
                         updateVariation(
                           variation.id,
                           "profitMargin",
-                          parseFloat(e.target.value),
+                          parseFloat(e.target.value) || 0,
                         )
                       }
                       step="0.01"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                     />
                   </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Sale Type
+                    </label>
+                    <select
+                      value={variation.saleType || "QTY"}
+                      onChange={(e) =>
+                        updateVariation(
+                          variation.id,
+                          "saleType",
+                          e.target.value as "QTY" | "KG"
+                        )
+                      }
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    >
+                      <option value="QTY">QTY (Quantity)</option>
+                      <option value="KG">KG (Kilogram)</option>
+                    </select>
+                  </div>
                 </div>
 
                 {/* Channel Prices */}
                 <div className="mb-4">
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex justify-between items-center mb-3">
                     <label className="block text-sm font-medium text-gray-700">
                       Channel Prices
                     </label>
-                    <p className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                      Zomato & Swiggy: auto +15% (rounded to 5)
-                    </p>
+                    <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded space-y-1">
+                      <p>Zomato & Swiggy: auto +15% (rounded to 5)</p>
+                      <p>GS1: auto +20% (rounded to 5) - Optional</p>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {CHANNELS.map((channel) => {
+
+                  {/* Standard Channels (excluding GS1) */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                    {CHANNELS.filter((ch) => ch !== "GS1").map((channel) => {
                       const isAutoCalculated = ["Zomato", "Swiggy"].includes(
                         channel,
                       );
@@ -869,12 +1001,12 @@ export default function ItemEdit() {
                           </label>
                           <input
                             type="number"
-                            value={variation.channels[channel]}
+                            value={variation.channels[channel] || 0}
                             onChange={(e) =>
                               updateChannelPrice(
                                 variation.id,
                                 channel,
-                                parseFloat(e.target.value),
+                                parseFloat(e.target.value) || 0,
                               )
                             }
                             placeholder="0"
@@ -889,6 +1021,73 @@ export default function ItemEdit() {
                         </div>
                       );
                     })}
+                  </div>
+
+                  {/* GS1 with Checkbox and Code */}
+                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        id={`gs1-checkbox-${variation.id}`}
+                        checked={variation.gs1Enabled || false}
+                        onChange={(e) =>
+                          updateVariation(
+                            variation.id,
+                            "gs1Enabled",
+                            e.target.checked,
+                          )
+                        }
+                        className="w-4 h-4 border-gray-300 rounded focus:ring-2 focus:ring-purple-600 cursor-pointer"
+                      />
+                      <label
+                        htmlFor={`gs1-checkbox-${variation.id}`}
+                        className="text-sm font-medium text-gray-700 cursor-pointer flex-1"
+                      >
+                        Enable GS1 Channel
+                      </label>
+                    </div>
+
+                    {variation.gs1Enabled && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {/* GS1 Price */}
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
+                            GS1 Price (auto)
+                          </label>
+                          <input
+                            type="number"
+                            value={variation.channels.GS1 || 0}
+                            placeholder="Auto: 0"
+                            step="0.01"
+                            disabled
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-blue-50 text-gray-500 cursor-not-allowed"
+                          />
+                          <p className="text-xs text-blue-600 mt-1">
+                            Auto +20% (rounded to 5)
+                          </p>
+                        </div>
+
+                        {/* GS1 Code */}
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
+                            GS1 Code
+                          </label>
+                          <input
+                            type="text"
+                            value={variation.gs1Code || ""}
+                            onChange={(e) =>
+                              updateVariation(
+                                variation.id,
+                                "gs1Code",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Enter GS1 code"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -906,46 +1105,109 @@ export default function ItemEdit() {
 
           {/* Image Upload */}
           <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Images</h3>
-            <div className="mb-4 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="image-input"
-              />
-              <label htmlFor="image-input" className="cursor-pointer block">
-                <p className="text-gray-700 font-medium">
-                  Click to upload or drag images
-                </p>
-                <p className="text-gray-500 text-sm">PNG, JPG up to 10MB</p>
-              </label>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">📸 Images by Channel</h3>
+
+            {/* Upload Area */}
+            <div className="mb-6">
+              <div className="border-2 border-dashed border-purple-400 rounded-lg p-10 text-center bg-gradient-to-b from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 transition cursor-pointer">
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="image-input"
+                />
+                <label htmlFor="image-input" className="cursor-pointer block">
+                  <p className="text-3xl mb-2">📁</p>
+                  <p className="text-gray-900 font-bold text-lg">
+                    Click to upload images
+                  </p>
+                  <p className="text-gray-600 text-sm mt-2">PNG, JPG up to 10MB</p>
+                  <p className="text-purple-600 text-xs mt-3 font-semibold">
+                    Select channel in the popup that appears
+                  </p>
+                </label>
+              </div>
             </div>
 
-            {/* Image Previews */}
-            {imagePreviews.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {imagePreviews.map((preview, idx) => (
-                  <div key={idx} className="relative group">
-                    <img
-                      src={preview}
-                      alt={`Preview ${idx}`}
-                      className="w-full h-32 object-cover rounded-lg"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(idx)}
-                      className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
+            {/* Image Previews Grouped by Channel */}
+            {images.length > 0 && (
+              <div className="space-y-8 mt-8">
+                <h4 className="text-lg font-bold text-gray-900 mb-4">
+                  📷 Uploaded Images ({images.length})
+                </h4>
+                {["Website", "Zomato", "Swiggy", "GS1"]
+                  .filter((channel) => images.some((img) => img.channel === channel))
+                  .map((channel) => {
+                    const channelImages = images.filter((img) => img.channel === channel);
+                    return (
+                      <div key={channel} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <h4 className="text-sm font-bold text-gray-900 mb-4 pb-2 border-b border-gray-300">
+                          {channel === "Website" && "🌐"}
+                          {channel === "Zomato" && "🔴"}
+                          {channel === "Swiggy" && "🟠"}
+                          {channel === "GS1" && "📦"}
+                          {" "}
+                          {channel} ({channelImages.length})
+                        </h4>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                          {channelImages.map((img, idx) => (
+                            <div key={idx} className="relative group">
+                              <img
+                                src={img.preview}
+                                alt={`${channel} Preview ${idx}`}
+                                className="w-full h-40 object-cover rounded-lg shadow-md"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeImage(images.findIndex((i) => i === img))}
+                                className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 shadow-lg opacity-0 group-hover:opacity-100 transition"
+                                title="Delete image"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
             )}
           </div>
+
+          {/* Channel Selection Modal */}
+          {showChannelModal && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 rounded-lg p-4">
+              <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                  📁 Select Channel for Images
+                </h2>
+
+                <p className="text-gray-600 text-center mb-6">
+                  Choose which channel these images will be uploaded to:
+                </p>
+
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  {["Website", "Zomato", "Swiggy", "GS1"].map((channel) => (
+                    <button
+                      key={channel}
+                      type="button"
+                      onClick={() => handleChannelSelect(channel)}
+                      className="px-4 py-3 rounded-lg font-semibold border-2 border-gray-300 hover:border-purple-600 hover:bg-purple-50 transition text-gray-700"
+                    >
+                      {channel}
+                    </button>
+                  ))}
+                </div>
+
+                <p className="text-xs text-gray-500 text-center">
+                  Click a channel to confirm upload
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Submit */}
           <div className="flex gap-3 border-t pt-6">

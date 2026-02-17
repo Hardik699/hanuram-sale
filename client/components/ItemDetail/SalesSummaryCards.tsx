@@ -138,10 +138,30 @@ export default function SalesSummaryCards({
         </h2>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <SalesCard type="Zomato" {...zomatoData} />
-        <SalesCard type="Swiggy" {...swiggyData} />
-        <SalesCard type="Dining" {...diningData} />
-        <SalesCard type="Parcel" {...parcelData} />
+        <SalesCard
+          type="Zomato"
+          totalQuantity={zomatoData.quantity}
+          totalValue={zomatoData.value}
+          variations={zomatoData.variations}
+        />
+        <SalesCard
+          type="Swiggy"
+          totalQuantity={swiggyData.quantity}
+          totalValue={swiggyData.value}
+          variations={swiggyData.variations}
+        />
+        <SalesCard
+          type="Dining"
+          totalQuantity={diningData.quantity}
+          totalValue={diningData.value}
+          variations={diningData.variations}
+        />
+        <SalesCard
+          type="Parcel"
+          totalQuantity={parcelData.quantity}
+          totalValue={parcelData.value}
+          variations={parcelData.variations}
+        />
       </div>
     </div>
   );
