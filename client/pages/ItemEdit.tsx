@@ -112,6 +112,8 @@ export default function ItemEdit() {
 
   const [images, setImages] = useState<ImageWithChannel[]>([]);
   const [selectedImageChannel, setSelectedImageChannel] = useState("Website");
+  const [showChannelModal, setShowChannelModal] = useState(false);
+  const [tempFileInput, setTempFileInput] = useState<HTMLInputElement | null>(null);
 
   // Load dropdown data
   useEffect(() => {
@@ -391,23 +393,38 @@ export default function ItemEdit() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
 
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImages((prev) => [
-          ...prev,
-          {
-            file: file,
-            preview: event.target?.result as string,
-            channel: selectedImageChannel,
-          },
-        ]);
-      };
-      reader.readAsDataURL(file);
-    });
+    if (files.length > 0) {
+      // Show modal to select channel
+      setTempFileInput(e.target);
+      setShowChannelModal(true);
+
+      // Process files
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setImages((prev) => [
+            ...prev,
+            {
+              file: file,
+              preview: event.target?.result as string,
+              channel: selectedImageChannel,
+            },
+          ]);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const handleChannelSelect = (channel: string) => {
+    // Update the channel for newly uploaded images
+    setSelectedImageChannel(channel);
+    setShowChannelModal(false);
 
     // Reset input
-    e.target.value = "";
+    if (tempFileInput) {
+      tempFileInput.value = "";
+    }
   };
 
   const removeImage = (index: number) => {
@@ -1075,40 +1092,11 @@ export default function ItemEdit() {
 
           {/* Image Upload */}
           <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Images by Channel</h3>
-
-            {/* Channel Selector - PROMINENT */}
-            <div className="mb-6 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-300 rounded-lg p-4">
-              <label className="block text-sm font-bold text-gray-900 mb-3">
-                📁 Step 1: Select Channel
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {["Website", "Zomato", "Swiggy", "GS1"].map((channel) => (
-                  <button
-                    key={channel}
-                    type="button"
-                    onClick={() => setSelectedImageChannel(channel)}
-                    className={`px-4 py-3 rounded-lg font-semibold transition ${
-                      selectedImageChannel === channel
-                        ? "bg-purple-600 text-white shadow-lg scale-105"
-                        : "bg-white text-gray-700 border border-gray-300 hover:border-purple-400"
-                    }`}
-                  >
-                    {channel}
-                  </button>
-                ))}
-              </div>
-              <p className="text-xs text-gray-600 mt-3">
-                ✓ Selected: <strong>{selectedImageChannel}</strong> - Now upload images below
-              </p>
-            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">📸 Images by Channel</h3>
 
             {/* Upload Area */}
             <div className="mb-6">
-              <label className="block text-sm font-bold text-gray-900 mb-3">
-                📸 Step 2: Upload Images for {selectedImageChannel}
-              </label>
-              <div className="border-2 border-dashed border-purple-300 rounded-lg p-8 text-center bg-purple-50 hover:bg-purple-100 transition">
+              <div className="border-2 border-dashed border-purple-400 rounded-lg p-10 text-center bg-gradient-to-b from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 transition cursor-pointer">
                 <input
                   type="file"
                   multiple
@@ -1118,12 +1106,13 @@ export default function ItemEdit() {
                   id="image-input"
                 />
                 <label htmlFor="image-input" className="cursor-pointer block">
+                  <p className="text-3xl mb-2">📁</p>
                   <p className="text-gray-900 font-bold text-lg">
-                    Click to upload or drag images
+                    Click to upload images
                   </p>
-                  <p className="text-gray-600 text-sm mt-1">PNG, JPG up to 10MB</p>
-                  <p className="text-purple-600 text-xs mt-2 font-semibold">
-                    All uploaded images will be assigned to: <strong>{selectedImageChannel}</strong>
+                  <p className="text-gray-600 text-sm mt-2">PNG, JPG up to 10MB</p>
+                  <p className="text-purple-600 text-xs mt-3 font-semibold">
+                    Select channel in the popup that appears
                   </p>
                 </label>
               </div>
@@ -1182,6 +1171,38 @@ export default function ItemEdit() {
               </div>
             )}
           </div>
+
+          {/* Channel Selection Modal */}
+          {showChannelModal && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 rounded-lg p-4">
+              <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                  📁 Select Channel for Images
+                </h2>
+
+                <p className="text-gray-600 text-center mb-6">
+                  Choose which channel these images will be uploaded to:
+                </p>
+
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  {["Website", "Zomato", "Swiggy", "GS1"].map((channel) => (
+                    <button
+                      key={channel}
+                      type="button"
+                      onClick={() => handleChannelSelect(channel)}
+                      className="px-4 py-3 rounded-lg font-semibold border-2 border-gray-300 hover:border-purple-600 hover:bg-purple-50 transition text-gray-700"
+                    >
+                      {channel}
+                    </button>
+                  ))}
+                </div>
+
+                <p className="text-xs text-gray-500 text-center">
+                  Click a channel to confirm upload
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Submit */}
           <div className="flex gap-3 border-t pt-6">
