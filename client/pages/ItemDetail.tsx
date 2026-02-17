@@ -905,6 +905,7 @@ export default function ItemDetail() {
                   swiggyData={salesData.swiggyData}
                   diningData={salesData.diningData}
                   parcelData={salesData.parcelData}
+                  saleType={item?.variations?.[0]?.saleType || "QTY"}
                 />
 
                 {/* Sales Data Table */}
