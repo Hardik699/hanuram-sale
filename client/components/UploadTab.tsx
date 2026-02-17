@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Upload, FileUp, AlertCircle, CheckCircle2, X } from "lucide-react";
+import { Upload, FileUp, AlertCircle, CheckCircle2, X, Trash2 } from "lucide-react";
 import * as XLSX from "xlsx";
 import { UPLOAD_FORMATS, validateFileFormat } from "@shared/formats";
 import type { UploadType } from "@shared/formats";
 import UploadLoader from "./UploadLoader";
 import ConfirmUploadDialog from "./ConfirmUploadDialog";
+import DeleteDataDialog from "./DeleteDataDialog";
 
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
@@ -41,6 +42,10 @@ export default function UploadTab({ type }: UploadTabProps) {
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [selectedValidRowIndices, setSelectedValidRowIndices] = useState<number[]>([]);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteMonth, setDeleteMonth] = useState<number | null>(null);
+  const [deleteYear, setDeleteYear] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
@@ -149,11 +154,18 @@ export default function UploadTab({ type }: UploadTabProps) {
   const validateData = async (data: any[]) => {
     try {
       setIsValidating(true);
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
       const response = await fetch("/api/upload/validate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, data })
+        body: JSON.stringify({ type, data }),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const error = await response.json();
@@ -179,7 +191,11 @@ export default function UploadTab({ type }: UploadTabProps) {
       setIsValidating(false);
     } catch (error) {
       console.error("Validation error:", error);
-      setMessage({ type: "error", text: "Failed to validate data" });
+      if (error instanceof TypeError && error.name === "AbortError") {
+        setMessage({ type: "error", text: "Validation took too long. Please try again with fewer rows." });
+      } else {
+        setMessage({ type: "error", text: `Failed to validate data: ${error instanceof Error ? error.message : "Unknown error"}` });
+      }
       setIsValidating(false);
     }
   };
@@ -239,8 +255,9 @@ export default function UploadTab({ type }: UploadTabProps) {
         setFileData(null);
         setSelectedMonth(null);
         setShowUploadForm(false);
+        setIsLoading(false);
 
-        // Fetch updated status without timeout
+        // Fetch updated status to refresh table immediately
         try {
           const statusResponse = await fetch(`/api/uploads?type=${type}&year=${selectedYear}`);
           if (statusResponse.ok) {
@@ -252,11 +269,6 @@ export default function UploadTab({ type }: UploadTabProps) {
         } catch (statusError) {
           console.error("Failed to refresh status:", statusError);
         }
-
-        // Auto-refresh page after 2 seconds
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
       } else {
         const errorText = result.error || `Upload failed with status ${response.status}`;
         console.error("Upload failed:", errorText);
@@ -333,8 +345,9 @@ export default function UploadTab({ type }: UploadTabProps) {
         setFileData(null);
         setSelectedMonth(null);
         setShowUploadForm(false);
+        setIsUpdatingExisting(false);
 
-        // Fetch updated status
+        // Fetch updated status to refresh table immediately
         try {
           const statusResponse = await fetch(`/api/uploads?type=${type}&year=${selectedYear}`);
           if (statusResponse.ok) {
@@ -346,11 +359,6 @@ export default function UploadTab({ type }: UploadTabProps) {
         } catch (statusError) {
           console.error("Failed to refresh status:", statusError);
         }
-
-        // Auto-refresh page after 2 seconds
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
       } else {
         const errorText = result.error || `Update failed with status ${response.status}`;
         console.error("Update failed:", errorText);
@@ -424,6 +432,63 @@ export default function UploadTab({ type }: UploadTabProps) {
     setMessage({ type: "success", text: "Demo file downloaded successfully!" });
   };
 
+  const handleDeleteData = async (password: string) => {
+    if (!deleteMonth || !deleteYear) {
+      setMessage({ type: "error", text: "Invalid month or year" });
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      console.log(`🗑️ Deleting ${type} data for ${deleteMonth}/${deleteYear}`);
+
+      const response = await fetch("/api/upload/delete", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type,
+          year: deleteYear,
+          month: deleteMonth,
+          password
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log("✅ Data deleted successfully");
+        setMessage({ type: "success", text: "Data deleted successfully!" });
+        setShowDeleteDialog(false);
+        setIsDeleting(false);
+
+        // Refresh month status
+        try {
+          const statusResponse = await fetch(`/api/uploads?type=${type}&year=${deleteYear}`);
+          if (statusResponse.ok) {
+            const data = await statusResponse.json();
+            if (data.data) {
+              setMonthsStatus(data.data);
+            }
+          }
+        } catch (statusError) {
+          console.error("Failed to refresh status:", statusError);
+        }
+      } else {
+        throw new Error(result.error || "Failed to delete data");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      setIsDeleting(false);
+      throw error;
+    }
+  };
+
+  const openDeleteDialog = (monthNum: number) => {
+    setDeleteMonth(monthNum);
+    setDeleteYear(selectedYear);
+    setShowDeleteDialog(true);
+  };
+
   return (
     <div className="space-y-6 sm:space-y-8">
       {/* Upload Loader Animation */}
@@ -440,6 +505,21 @@ export default function UploadTab({ type }: UploadTabProps) {
           setIsUpdatingExisting(false);
         }}
         isLoading={isUpdatingExisting}
+      />
+
+      {/* Delete Data Dialog */}
+      <DeleteDataDialog
+        isVisible={showDeleteDialog}
+        month={deleteMonth ? MONTHS[deleteMonth - 1] : ""}
+        year={deleteYear || selectedYear}
+        type={type}
+        onConfirm={handleDeleteData}
+        onCancel={() => {
+          setShowDeleteDialog(false);
+          setDeleteMonth(null);
+          setDeleteYear(null);
+        }}
+        isLoading={isDeleting}
       />
 
       {/* Upload Section */}
@@ -602,6 +682,7 @@ export default function UploadTab({ type }: UploadTabProps) {
               <tr className="bg-gray-50 border-b border-gray-200">
                 <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Month</th>
                 <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Status</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-semibold text-gray-700">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -631,6 +712,19 @@ export default function UploadTab({ type }: UploadTabProps) {
                           </>
                         )}
                       </span>
+                    </td>
+                    <td className="px-4 sm:px-6 py-3 sm:py-4 text-center">
+                      {isUploaded && (
+                        <button
+                          onClick={() => openDeleteDialog(monthNum)}
+                          disabled={isDeleting}
+                          className="inline-flex items-center gap-1 px-3 py-1 text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-50"
+                          title="Delete this month's data"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          <span className="text-xs sm:text-sm font-medium">Delete</span>
+                        </button>
+                      )}
                     </td>
                   </tr>
                 );

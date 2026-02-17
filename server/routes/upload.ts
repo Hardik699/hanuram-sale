@@ -326,6 +326,8 @@ export const handleValidateUpload: RequestHandler = async (req, res) => {
   try {
     const { type, data } = req.body;
 
+    console.log("📋 Validation request received:", { type, rowCount: Array.isArray(data) ? data.length : 0 });
+
     if (!type || !Array.isArray(data) || data.length === 0) {
       return res.status(400).json({ error: "Invalid request data" });
     }
@@ -334,11 +336,15 @@ export const handleValidateUpload: RequestHandler = async (req, res) => {
       return res.json({ success: true, validRows: data.slice(1), invalidRows: [] });
     }
 
+    console.log("🔗 Connecting to database for validation...");
     const db = await getDatabase();
     const itemsCollection = db.collection("items");
 
     // Get all items and build SAP code map
+    console.log("📊 Fetching items to build SAP code map...");
     const items = await itemsCollection.find({}).toArray();
+    console.log(`✅ Found ${items.length} items`);
+
     const sapCodeMap: { [key: string]: { itemId: string; variationId: string } } = {};
 
     for (const item of items) {
@@ -354,6 +360,8 @@ export const handleValidateUpload: RequestHandler = async (req, res) => {
       }
     }
 
+    console.log(`🔍 Built SAP code map with ${Object.keys(sapCodeMap).length} codes`);
+
     const headers = data[0] as string[];
     const dataRows = data.slice(1);
 
@@ -363,6 +371,8 @@ export const handleValidateUpload: RequestHandler = async (req, res) => {
 
     const restaurantIdx = getColumnIndex("restaurant_name");
     const sapCodeIdx = getColumnIndex("sap_code");
+
+    console.log(`📍 Column indices - restaurant: ${restaurantIdx}, sapCode: ${sapCodeIdx}`);
 
     const validRows = [];
     const invalidRows = [];
@@ -392,6 +402,8 @@ export const handleValidateUpload: RequestHandler = async (req, res) => {
       }
     }
 
+    console.log(`✅ Validation complete: ${validRows.length} valid, ${invalidRows.length} invalid rows`);
+
     res.json({
       success: true,
       validCount: validRows.length,
@@ -400,8 +412,55 @@ export const handleValidateUpload: RequestHandler = async (req, res) => {
       invalidRows,
     });
   } catch (error) {
-    console.error("Validation error:", error);
+    console.error("❌ Validation error:", error);
     const errorMessage = error instanceof Error ? error.message : "Failed to validate data";
+    res.status(500).json({ error: errorMessage });
+  }
+};
+
+// DELETE /api/upload/delete - Delete upload data for a specific month with password protection
+export const handleDeleteUpload: RequestHandler = async (req, res) => {
+  try {
+    const { type, year, month, password } = req.body;
+
+    // Validate required fields
+    if (!type || !year || !month || !password) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Simple password validation (in production, use bcrypt)
+    const DELETION_PASSWORD = process.env.DELETION_PASSWORD || "admin123";
+
+    if (password !== DELETION_PASSWORD) {
+      console.warn(`⚠️ Invalid deletion password attempt for ${type}/${year}/${month}`);
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    console.log(`🗑️ Deleting ${type} data for month ${month}/${year}`);
+
+    const db = await getDatabase();
+    const uploadsCollection = db.collection("uploads");
+
+    // Find and delete the upload record
+    const result = await uploadsCollection.deleteOne({
+      type,
+      year,
+      month
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "No data found for this month" });
+    }
+
+    console.log(`✅ Successfully deleted ${type} data for month ${month}/${year}`);
+
+    res.json({
+      success: true,
+      message: `Data for ${month}/${year} has been deleted successfully`
+    });
+  } catch (error) {
+    console.error("❌ Delete error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to delete data";
     res.status(500).json({ error: errorMessage });
   }
 };
