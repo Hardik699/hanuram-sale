@@ -439,11 +439,10 @@ export const handleDeleteUpload: RequestHandler = async (req, res) => {
     console.log(`🗑️ Deleting ${type} data for month ${month}/${year}`);
 
     const db = await getDatabase();
-    const uploadsCollection = db.collection("uploads");
+    const collection = db.collection(type);
 
     // Find and delete the upload record
-    const result = await uploadsCollection.deleteOne({
-      type,
+    const result = await collection.deleteOne({
       year,
       month
     });

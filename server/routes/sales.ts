@@ -177,6 +177,34 @@ function normalizeArea(area: string, orderType?: string): "zomato" | "swiggy" | 
   return "dining";
 }
 
+// Helper function to extract KG factor from variation value (e.g., "250 GM" -> 0.25)
+function getKgFactor(variationValue: string): number {
+  if (!variationValue) return 1;
+
+  const lower = variationValue.toLowerCase().trim();
+
+  // Check for grams
+  const gmMatch = lower.match(/(\d+\.?\d*)\s*(gm|gms|gram|grams)/);
+  if (gmMatch) {
+    const grams = parseFloat(gmMatch[1]);
+    return grams / 1000;
+  }
+
+  // Check for KG
+  const kgMatch = lower.match(/(\d+\.?\d*)\s*(kg|kgs|kilogram|kilograms)/);
+  if (kgMatch) {
+    return parseFloat(kgMatch[1]);
+  }
+
+  // Check for specific patterns like "100 Gms", "250Gm[O]", "500Gm[O]", "1 KG [P]"
+  if (lower.includes("100")) return 0.1;
+  if (lower.includes("250")) return 0.25;
+  if (lower.includes("500")) return 0.5;
+  if (lower.includes("1 kg") || lower.includes("1kg") || lower.includes("1 kg [p]")) return 1.0;
+
+  return 1; // Default to 1 if can't parse
+}
+
 // Helper function to parse date string (handles multiple formats)
 function parseDate(dateStr: string): Date | null {
   if (!dateStr) return null;
