@@ -163,14 +163,19 @@ export default function ItemEdit() {
               const basePrice = v.price || 0;
               const autoPrices = calculateAutoPrices(basePrice);
 
+              // Ensure all channels are initialized
+              const initialChannels = CHANNELS.reduce(
+                (acc, ch) => ({ ...acc, [ch]: v.channels?.[ch] ?? 0 }),
+                {} as Record<string, number>
+              );
+
               return {
                 id: v.id || Date.now().toString(),
                 name: v.name || "",
                 value: v.value || "",
                 area: v.area || "",
                 channels: {
-                  ...(v.channels ||
-                    CHANNELS.reduce((acc, ch) => ({ ...acc, [ch]: 0 }), {})),
+                  ...initialChannels,
                   // Override Zomato and Swiggy with auto-calculated prices
                   Zomato: autoPrices.Zomato,
                   Swiggy: autoPrices.Swiggy,
@@ -305,8 +310,13 @@ export default function ItemEdit() {
         // Auto-calculate Zomato and Swiggy prices when base price changes
         if (field === "price") {
           const autoPrices = calculateAutoPrices(value);
+          // Ensure all channels exist in the object before updating
+          const channelsWithDefaults = CHANNELS.reduce(
+            (acc, ch) => ({ ...acc, [ch]: updated.channels?.[ch] ?? 0 }),
+            {} as Record<string, number>
+          );
           updated.channels = {
-            ...updated.channels,
+            ...channelsWithDefaults,
             Zomato: autoPrices.Zomato,
             Swiggy: autoPrices.Swiggy,
           };
