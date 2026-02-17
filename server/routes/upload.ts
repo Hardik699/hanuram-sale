@@ -108,15 +108,7 @@ function parseExcelDate(serialDate: number): Date | null {
 function parseDate(dateStr: string): Date | null {
   if (!dateStr) return null;
 
-  // Try to parse as Excel serial number first
-  const numVal = parseFloat(dateStr);
-  if (!isNaN(numVal) && numVal > 0) {
-    const excelDate = parseExcelDate(numVal);
-    if (excelDate) {
-      return excelDate;
-    }
-  }
-
+  // Try YYYY-MM-DD format FIRST (from HTML date input)
   const isoMatch = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (isoMatch) {
     const year = parseInt(isoMatch[1]);
@@ -125,6 +117,7 @@ function parseDate(dateStr: string): Date | null {
     return new Date(year, month - 1, day);
   }
 
+  // Try other date formats
   const formats = [
     /(\d{2})-(\d{2})-(\d{4})/,
     /(\d{1,2})\/(\d{1,2})\/(\d{4})/,
@@ -140,6 +133,15 @@ function parseDate(dateStr: string): Date | null {
         day = parseInt(match[2]);
       }
       return new Date(year, month - 1, day);
+    }
+  }
+
+  // Try to parse as Excel serial number (as fallback)
+  const numVal = parseFloat(dateStr);
+  if (!isNaN(numVal) && numVal > 0 && numVal < 100000) {
+    const excelDate = parseExcelDate(numVal);
+    if (excelDate) {
+      return excelDate;
     }
   }
 

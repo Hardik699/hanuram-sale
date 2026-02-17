@@ -230,17 +230,7 @@ function parseExcelDate(serialDate: number): Date | null {
 function parseDate(dateStr: string): Date | null {
   if (!dateStr) return null;
 
-  // Try to parse as Excel serial number first
-  const numVal = parseFloat(dateStr);
-  if (!isNaN(numVal) && numVal > 0) {
-    const excelDate = parseExcelDate(numVal);
-    if (excelDate) {
-      console.log(`  📅 Parsed Excel date ${dateStr} → ${excelDate.toISOString().split('T')[0]}`);
-      return excelDate;
-    }
-  }
-
-  // Try YYYY-MM-DD format (from HTML date input)
+  // Try YYYY-MM-DD format FIRST (from HTML date input)
   const isoMatch = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (isoMatch) {
     const year = parseInt(isoMatch[1]);
@@ -268,6 +258,17 @@ function parseDate(dateStr: string): Date | null {
         day = parseInt(match[2]);
       }
       return new Date(Date.UTC(year, month - 1, day));
+    }
+  }
+
+  // Try to parse as Excel serial number (as fallback for actual numeric values)
+  const numVal = parseFloat(dateStr);
+  if (!isNaN(numVal) && numVal > 0 && numVal < 100000) {
+    // Only accept reasonable Excel serial numbers (reasonable range)
+    const excelDate = parseExcelDate(numVal);
+    if (excelDate) {
+      console.log(`  📅 Parsed Excel date ${dateStr} → ${excelDate.toISOString().split('T')[0]}`);
+      return excelDate;
     }
   }
 
