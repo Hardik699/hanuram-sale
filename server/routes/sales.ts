@@ -150,30 +150,37 @@ function normalizeArea(area: string, orderType?: string): "zomato" | "swiggy" | 
   const areaLower = area?.toLowerCase().trim() || "";
   const orderTypeLower = orderType?.toLowerCase().trim() || "";
 
-  // Check for Zomato variations
+  // Check for Zomato variations first (to avoid "delivery(parcel)" interfering)
   if (areaLower.includes("zomato")) {
     return "zomato";
   }
 
-  // Check for Swiggy variations
+  // Check for Swiggy variations first (to avoid "delivery(parcel)" interfering)
   if (areaLower.includes("swiggy")) {
     return "swiggy";
   }
 
-  // Check for Parcel/Delivery variations
-  if (areaLower.includes("parcel") || areaLower.includes("home delivery") || areaLower.includes("pickup")) {
+  // Check for Parcel/Delivery variations in area
+  if (areaLower === "parcel" ||
+      areaLower.includes("home delivery") ||
+      areaLower === "pickup" ||
+      areaLower.includes("dine out")) {
     return "parcel";
   }
 
-  // Check order type as fallback
-  if (orderTypeLower.includes("pickup") || orderTypeLower.includes("home delivery")) {
-    return "parcel";
-  }
-  if (orderTypeLower.includes("delivery")) {
+  // Check order type - ONLY if area didn't match above
+  // "Pick Up" and "Pickup" → parcel
+  if (orderTypeLower === "pick up" || orderTypeLower === "pickup" || orderTypeLower.includes("home delivery")) {
     return "parcel";
   }
 
-  // Default to dining
+  // "Delivery(Parcel)" with area NOT being zomato/swiggy → parcel
+  // But if area IS zomato/swiggy, they already returned above
+  if (orderTypeLower.includes("delivery(parcel)")) {
+    return "parcel";
+  }
+
+  // Default to dining for "Dine In" and other cases
   return "dining";
 }
 
@@ -205,12 +212,35 @@ function getKgFactor(variationValue: string): number {
   return 1; // Default to 1 if can't parse
 }
 
+// Helper function to parse Excel serial date
+function parseExcelDate(serialDate: number): Date | null {
+  if (!serialDate || isNaN(serialDate)) return null;
+
+  // Excel serial dates start from January 1, 1900 = 1
+  // There's a leap year bug in Excel (Feb 29, 1900 doesn't exist but Excel counts it)
+  const excelEpoch = new Date(1900, 0, 1).getTime();
+  const msPerDay = 24 * 60 * 60 * 1000;
+
+  // Account for Excel's leap year bug (dates after Feb 28, 1900 are off by 1)
+  let adjustedSerial = serialDate;
+  if (serialDate > 60) {
+    adjustedSerial = serialDate - 1; // Subtract 1 for the non-existent Feb 29, 1900
+  }
+
+  const timestamp = excelEpoch + (adjustedSerial - 1) * msPerDay;
+  const date = new Date(timestamp);
+
+  return isNaN(date.getTime()) ? null : date;
+}
+
 // Helper function to parse date string (handles multiple formats)
 function parseDate(dateStr: string): Date | null {
   if (!dateStr) return null;
 
-  // Try YYYY-MM-DD format first (from HTML date input)
-  const isoMatch = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const str = String(dateStr).trim();
+
+  // Try YYYY-MM-DD format FIRST (from HTML date input)
+  const isoMatch = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (isoMatch) {
     const year = parseInt(isoMatch[1]);
     const month = parseInt(isoMatch[2]);
@@ -221,27 +251,42 @@ function parseDate(dateStr: string): Date | null {
     return result;
   }
 
-  // Try other date formats
+  // Try other date formats (DD-MM-YYYY or DD/MM/YYYY)
   const formats = [
-    /(\d{2})-(\d{2})-(\d{4})/, // DD-MM-YYYY
-    /(\d{1,2})\/(\d{1,2})\/(\d{4})/, // MM/DD/YYYY or D/M/YYYY
+    { regex: /^(\d{2})-(\d{2})-(\d{4})$/, order: "DMY" }, // DD-MM-YYYY
+    { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, order: "DMY" }, // DD/MM/YYYY (most likely)
   ];
 
-  for (const format of formats) {
-    const match = dateStr.match(format);
+  for (const { regex, order } of formats) {
+    const match = str.match(regex);
     if (match) {
       let year, month, day;
-      if (match[3].length === 4) {
+      if (order === "DMY") {
+        day = parseInt(match[1]);
+        month = parseInt(match[2]);
         year = parseInt(match[3]);
-        month = parseInt(match[1]);
-        day = parseInt(match[2]);
       }
-      return new Date(Date.UTC(year, month - 1, day));
+      if (year >= 1900 && year <= 2099) {
+        return new Date(Date.UTC(year, month - 1, day));
+      }
+    }
+  }
+
+  // Only try to parse as Excel serial number if it contains NO "/" or "-" characters
+  if (!str.includes("/") && !str.includes("-")) {
+    const numVal = parseFloat(str);
+    if (!isNaN(numVal) && numVal > 0 && numVal < 100000) {
+      // Only accept reasonable Excel serial numbers
+      const excelDate = parseExcelDate(numVal);
+      if (excelDate) {
+        console.log(`  📅 Parsed Excel serial ${str} → ${excelDate.toISOString().split('T')[0]}`);
+        return excelDate;
+      }
     }
   }
 
   // Fallback: try native Date parsing
-  const date = new Date(dateStr);
+  const date = new Date(str);
   return isNaN(date.getTime()) ? null : date;
 }
 
@@ -782,6 +827,242 @@ export const handleDebugItemSalesRaw: RequestHandler = async (req, res) => {
   }
 };
 
+// GET /api/sales/debug-all/:itemId - Debug endpoint to see ALL data for item (no filters)
+export const handleDebugAllData: RequestHandler = async (req, res) => {
+  try {
+    const { itemId } = req.params;
+
+    if (!itemId) {
+      return res.status(400).json({ error: "itemId parameter required" });
+    }
+
+    const db = await getDatabase();
+    const itemsCollection = db.collection("items");
+    const item = await itemsCollection.findOne({ itemId });
+
+    if (!item) {
+      return res.json({
+        success: false,
+        error: `Item ${itemId} not found`,
+      });
+    }
+
+    // Build a map of SAP codes for this item
+    const sapCodeToVariation: { [sapCode: string]: string } = {};
+    if (item.variations && Array.isArray(item.variations)) {
+      item.variations.forEach((variation: any, idx: number) => {
+        if (variation.sapCode) {
+          const variationName = variation.value || variation.name || `Variation ${idx + 1}`;
+          sapCodeToVariation[variation.sapCode] = variationName;
+        }
+      });
+    }
+
+    const sapCodes = Object.keys(sapCodeToVariation);
+    console.log(`🔍 Debugging ALL data for item ${itemId} (NO DATE FILTERING)`);
+
+    // Summary by area
+    const summaryByArea: { [area: string]: number } = {};
+    const detailedRecords: any[] = [];
+
+    const getColumnIndex = (headers: string[], name: string) =>
+      headers.findIndex((h) => h.toLowerCase().trim() === name.toLowerCase().trim());
+
+    const petpoojaCollection = db.collection("petpooja");
+    const allPetpoojaData = await petpoojaCollection.find({}).toArray();
+
+    let totalAllRecords = 0;
+    let totalMatchingSapCode = 0;
+
+    for (const petpoojaDoc of allPetpoojaData) {
+      if (!Array.isArray(petpoojaDoc.data) || petpoojaDoc.data.length < 2) continue;
+
+      const headers = petpoojaDoc.data[0] as string[];
+      const dataRows = petpoojaDoc.data.slice(1);
+
+      const sapCodeIdx = getColumnIndex(headers, "sap_code");
+      const areaIdx = getColumnIndex(headers, "area");
+      const orderTypeIdx = getColumnIndex(headers, "order_type");
+      const quantityIdx = getColumnIndex(headers, "item_quantity");
+      const restaurantIdx = getColumnIndex(headers, "restaurant_name");
+
+      if (sapCodeIdx === -1) continue;
+
+      for (const row of dataRows) {
+        if (!Array.isArray(row)) continue;
+
+        totalAllRecords++;
+        const sapCode = row[sapCodeIdx]?.toString().trim() || "";
+
+        if (!sapCodeToVariation[sapCode]) continue;
+
+        totalMatchingSapCode++;
+
+        const quantity = quantityIdx !== -1 ? parseFloat(row[quantityIdx]?.toString() || "0") || 0 : 0;
+        const area = areaIdx !== -1 ? row[areaIdx]?.toString().trim() || "" : "";
+        const orderType = orderTypeIdx !== -1 ? row[orderTypeIdx]?.toString().trim() || "" : "";
+        const restaurant = restaurantIdx !== -1 ? row[restaurantIdx]?.toString().trim() || "" : "";
+        const variation = sapCodeToVariation[sapCode];
+
+        const normalizedArea = normalizeArea(area, orderType);
+
+        if (!summaryByArea[normalizedArea]) {
+          summaryByArea[normalizedArea] = 0;
+        }
+        summaryByArea[normalizedArea] += quantity;
+
+        if (normalizedArea === "parcel") {
+          detailedRecords.push({
+            sapCode,
+            variation,
+            area,
+            orderType,
+            quantity,
+            restaurant,
+            normalizedArea,
+          });
+        }
+      }
+    }
+
+    res.json({
+      success: true,
+      itemId,
+      itemName: (item as any).itemName,
+      totalAllRecords,
+      totalMatchingSapCode,
+      summaryByArea,
+      parcelRecordCount: detailedRecords.length,
+      parcelTotalQuantity: summaryByArea["parcel"] || 0,
+      parcelSample: detailedRecords.slice(0, 30),
+    });
+  } catch (error) {
+    console.error("Error in debug all data:", error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
+// GET /api/sales/debug-parcel/:itemId - Debug endpoint to see all rows being counted as Parcel
+export const handleDebugParcelData: RequestHandler = async (req, res) => {
+  try {
+    const { itemId } = req.params;
+
+    if (!itemId) {
+      return res.status(400).json({ error: "itemId parameter required" });
+    }
+
+    const db = await getDatabase();
+    const itemsCollection = db.collection("items");
+    const item = await itemsCollection.findOne({ itemId });
+
+    if (!item) {
+      return res.json({
+        success: false,
+        error: `Item ${itemId} not found`,
+      });
+    }
+
+    // Build a map of SAP codes for this item
+    const sapCodeToVariation: { [sapCode: string]: string } = {};
+    if (item.variations && Array.isArray(item.variations)) {
+      item.variations.forEach((variation: any, idx: number) => {
+        if (variation.sapCode) {
+          const variationName = variation.value || variation.name || `Variation ${idx + 1}`;
+          sapCodeToVariation[variation.sapCode] = variationName;
+        }
+      });
+    }
+
+    const sapCodes = Object.keys(sapCodeToVariation);
+    console.log(`🔍 Debugging Parcel data for item ${itemId}`);
+    console.log(`  SAP codes: ${sapCodes.join(", ")}`);
+
+    const parcelByVariation: { [variation: string]: number } = {};
+    const parcelRows: any[] = [];
+    let totalQuantity = 0;
+
+    const getColumnIndex = (headers: string[], name: string) =>
+      headers.findIndex((h) => h.toLowerCase().trim() === name.toLowerCase().trim());
+
+    const petpoojaCollection = db.collection("petpooja");
+    const allPetpoojaData = await petpoojaCollection.find({}).toArray();
+
+    for (const petpoojaDoc of allPetpoojaData) {
+      if (!Array.isArray(petpoojaDoc.data) || petpoojaDoc.data.length < 2) continue;
+
+      const headers = petpoojaDoc.data[0] as string[];
+      const dataRows = petpoojaDoc.data.slice(1);
+
+      const sapCodeIdx = getColumnIndex(headers, "sap_code");
+      const areaIdx = getColumnIndex(headers, "area");
+      const orderTypeIdx = getColumnIndex(headers, "order_type");
+      const quantityIdx = getColumnIndex(headers, "item_quantity");
+      const priceIdx = getColumnIndex(headers, "item_price");
+      const dateIdx = getColumnIndex(headers, "New Date");
+      const restaurantIdx = getColumnIndex(headers, "restaurant_name");
+
+      if (sapCodeIdx === -1) continue;
+
+      for (const row of dataRows) {
+        if (!Array.isArray(row)) continue;
+
+        const sapCode = row[sapCodeIdx]?.toString().trim() || "";
+        if (!sapCodeToVariation[sapCode]) continue;
+
+        const area = areaIdx !== -1 ? row[areaIdx]?.toString().trim() || "" : "";
+        const orderType = orderTypeIdx !== -1 ? row[orderTypeIdx]?.toString().trim() || "" : "";
+        const normalizedArea = normalizeArea(area, orderType);
+
+        // Only collect parcel rows
+        if (normalizedArea !== "parcel") continue;
+
+        const quantity = quantityIdx !== -1 ? parseFloat(row[quantityIdx]?.toString() || "0") || 0 : 0;
+        const price = priceIdx !== -1 ? parseFloat(row[priceIdx]?.toString() || "0") || 0 : 0;
+        const date = dateIdx !== -1 ? row[dateIdx]?.toString().trim() || "" : "";
+        const restaurant = restaurantIdx !== -1 ? row[restaurantIdx]?.toString().trim() || "" : "";
+        const variation = sapCodeToVariation[sapCode];
+
+        // Track by variation
+        if (!parcelByVariation[variation]) {
+          parcelByVariation[variation] = 0;
+        }
+        parcelByVariation[variation] += quantity;
+
+        parcelRows.push({
+          sapCode,
+          variation,
+          area,
+          orderType,
+          quantity,
+          price,
+          date,
+          restaurant,
+        });
+
+        totalQuantity += quantity;
+      }
+    }
+
+    res.json({
+      success: true,
+      itemId,
+      itemName: (item as any).itemName,
+      sapCodes,
+      totalParcelQuantity: totalQuantity,
+      parcelByVariation,
+      parcelRowCount: parcelRows.length,
+      parcelRows: parcelRows.slice(0, 50), // First 50 rows for inspection
+    });
+  } catch (error) {
+    console.error("Error in debug parcel data:", error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
 // GET /api/sales/restaurants - Get unique restaurant names from all sales data
 export const handleGetRestaurants: RequestHandler = async (req, res) => {
   try {
@@ -867,6 +1148,34 @@ export const handleResetItemSales: RequestHandler = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in handleResetItemSales:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    res.status(500).json({
+      success: false,
+      error: errorMessage,
+    });
+  }
+};
+
+// DELETE /api/sales/clear-all - DANGER: Clear all petpooja data
+export const handleClearAllPetpoojaData: RequestHandler = async (req, res) => {
+  try {
+    const db = await getDatabase();
+    const petpoojaCollection = db.collection("petpooja");
+
+    const result = await petpoojaCollection.deleteMany({});
+
+    console.log(
+      `🗑️ Deleted ${result.deletedCount} petpooja documents from database`,
+    );
+
+    res.json({
+      success: true,
+      message: `Cleared all petpooja data. Deleted ${result.deletedCount} document(s). Please re-upload your petpooja file to restore sales data.`,
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    console.error("Error clearing petpooja data:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
     res.status(500).json({
