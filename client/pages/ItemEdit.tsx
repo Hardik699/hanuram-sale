@@ -57,6 +57,7 @@ interface Variation {
   channels: Record<string, number>;
   price: number;
   sapCode: string;
+  gs1Code?: string;
   profitMargin: number;
   gs1Enabled?: boolean;
   salesHistory?: Array<{
@@ -189,6 +190,7 @@ export default function ItemEdit() {
                 },
                 price: basePrice,
                 sapCode: v.sapCode || "",
+                gs1Code: v.gs1Code || "",
                 profitMargin: v.profitMargin || 0,
                 gs1Enabled: gs1Enabled,
                 salesHistory: v.salesHistory || [],
@@ -302,6 +304,7 @@ export default function ItemEdit() {
       channels: CHANNELS.reduce((acc, ch) => ({ ...acc, [ch]: 0 }), {}),
       price: 0,
       sapCode: "",
+      gs1Code: "",
       profitMargin: 0,
       gs1Enabled: false,
       salesHistory: [],
@@ -929,8 +932,8 @@ export default function ItemEdit() {
                     })}
                   </div>
 
-                  {/* GS1 with Checkbox */}
-                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                  {/* GS1 with Checkbox and Code */}
+                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 space-y-3">
                     <div className="flex items-center gap-3">
                       <input
                         type="checkbox"
@@ -951,8 +954,15 @@ export default function ItemEdit() {
                       >
                         Enable GS1 Channel
                       </label>
-                      {variation.gs1Enabled && (
-                        <div className="flex-1">
+                    </div>
+
+                    {variation.gs1Enabled && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {/* GS1 Price */}
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
+                            GS1 Price (auto)
+                          </label>
                           <input
                             type="number"
                             value={variation.channels.GS1 || 0}
@@ -965,8 +975,28 @@ export default function ItemEdit() {
                             Auto +20% (rounded to 5)
                           </p>
                         </div>
-                      )}
-                    </div>
+
+                        {/* GS1 Code */}
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
+                            GS1 Code
+                          </label>
+                          <input
+                            type="text"
+                            value={variation.gs1Code || ""}
+                            onChange={(e) =>
+                              updateVariation(
+                                variation.id,
+                                "gs1Code",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Enter GS1 code"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
