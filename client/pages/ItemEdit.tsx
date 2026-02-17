@@ -201,10 +201,13 @@ export default function ItemEdit() {
                 area: v.area || "",
                 channels: {
                   ...initialChannels,
-                  // Override Zomato and Swiggy with auto-calculated prices
+                  // Base price for Dining and Parcel (if not already set)
+                  Dining: v.channels?.Dining ?? basePrice,
+                  Parcale: v.channels?.Parcale ?? basePrice,
+                  // Auto-calculated prices for Zomato and Swiggy (+15%)
                   Zomato: autoPrices.Zomato,
                   Swiggy: autoPrices.Swiggy,
-                  // Include GS1 if it's enabled
+                  // Include GS1 if it's enabled (+20%)
                   ...(gs1Enabled && { GS1: autoPrices.GS1 }),
                 },
                 price: basePrice,
@@ -321,7 +324,13 @@ export default function ItemEdit() {
       name: "",
       value: "",
       area: "",
-      channels: CHANNELS.reduce((acc, ch) => ({ ...acc, [ch]: 0 }), {}),
+      channels: {
+        Dining: 0,
+        Parcale: 0,
+        Swiggy: 0,
+        Zomato: 0,
+        GS1: 0,
+      },
       price: 0,
       sapCode: "",
       gs1Code: "",
@@ -340,7 +349,7 @@ export default function ItemEdit() {
 
         const updated = { ...v, [field]: value };
 
-        // Auto-calculate Zomato, Swiggy, and GS1 prices when base price changes
+        // Auto-calculate prices when base price changes
         if (field === "price") {
           const autoPrices = calculateAutoPrices(value);
           // Ensure all channels exist in the object before updating
@@ -350,10 +359,14 @@ export default function ItemEdit() {
           );
           updated.channels = {
             ...channelsWithDefaults,
+            // Base price for Dining and Parcel
+            Dining: value || 0,
+            Parcale: value || 0,
+            // Auto-calculated prices for Zomato and Swiggy (+15%)
             Zomato: autoPrices.Zomato,
             Swiggy: autoPrices.Swiggy,
           };
-          // Add GS1 price if GS1 is enabled
+          // Add GS1 price if GS1 is enabled (+20%)
           if (updated.gs1Enabled) {
             updated.channels.GS1 = autoPrices.GS1;
           }
