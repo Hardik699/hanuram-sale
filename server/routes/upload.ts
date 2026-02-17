@@ -108,8 +108,10 @@ function parseExcelDate(serialDate: number): Date | null {
 function parseDate(dateStr: string): Date | null {
   if (!dateStr) return null;
 
+  const str = String(dateStr).trim();
+
   // Try YYYY-MM-DD format FIRST (from HTML date input)
-  const isoMatch = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const isoMatch = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (isoMatch) {
     const year = parseInt(isoMatch[1]);
     const month = parseInt(isoMatch[2]);
@@ -117,35 +119,39 @@ function parseDate(dateStr: string): Date | null {
     return new Date(year, month - 1, day);
   }
 
-  // Try other date formats
+  // Try other date formats (DD-MM-YYYY or DD/MM/YYYY)
   const formats = [
-    /(\d{2})-(\d{2})-(\d{4})/,
-    /(\d{1,2})\/(\d{1,2})\/(\d{4})/,
+    { regex: /^(\d{2})-(\d{2})-(\d{4})$/, order: "DMY" }, // DD-MM-YYYY
+    { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, order: "DMY" }, // DD/MM/YYYY
   ];
 
-  for (const format of formats) {
-    const match = dateStr.match(format);
+  for (const { regex, order } of formats) {
+    const match = str.match(regex);
     if (match) {
       let year, month, day;
-      if (match[3].length === 4) {
+      if (order === "DMY") {
+        day = parseInt(match[1]);
+        month = parseInt(match[2]);
         year = parseInt(match[3]);
-        month = parseInt(match[1]);
-        day = parseInt(match[2]);
       }
-      return new Date(year, month - 1, day);
+      if (year >= 1900 && year <= 2099) {
+        return new Date(year, month - 1, day);
+      }
     }
   }
 
-  // Try to parse as Excel serial number (as fallback)
-  const numVal = parseFloat(dateStr);
-  if (!isNaN(numVal) && numVal > 0 && numVal < 100000) {
-    const excelDate = parseExcelDate(numVal);
-    if (excelDate) {
-      return excelDate;
+  // Only try to parse as Excel serial number if it contains NO "/" or "-" characters
+  if (!str.includes("/") && !str.includes("-")) {
+    const numVal = parseFloat(str);
+    if (!isNaN(numVal) && numVal > 0 && numVal < 100000) {
+      const excelDate = parseExcelDate(numVal);
+      if (excelDate) {
+        return excelDate;
+      }
     }
   }
 
-  const date = new Date(dateStr);
+  const date = new Date(str);
   return isNaN(date.getTime()) ? null : date;
 }
 
