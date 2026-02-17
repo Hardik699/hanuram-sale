@@ -21,6 +21,7 @@ import {
   handleSetItemSapCode,
   handleBatchSetSapCodes,
   handleMatchSapCodes,
+  handleAutoMatchVariationSapCodes,
 } from "./routes/sap-matching";
 import {
   handleSapDebugInfo,
@@ -86,6 +87,7 @@ export function createServer() {
   app.get("/api/sap/items-with-codes", handleGetItemsWithSapCodes);
   app.post("/api/sap/set-item-code", handleSetItemSapCode);
   app.post("/api/sap/batch-set-codes", handleBatchSetSapCodes);
+  app.post("/api/sap/auto-match-variations", handleAutoMatchVariationSapCodes);
   app.get("/api/sap/match-analysis", handleMatchSapCodes);
   app.get("/api/sap/debug-info", handleSapDebugInfo);
   app.get("/api/sap/debug-sales", handleDebugSalesForItem);
