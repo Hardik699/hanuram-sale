@@ -30,20 +30,23 @@ const VARIATION_VALUES = [
 
 // Helper function to calculate auto pricing
 const calculateAutoPrices = (basePrice: number) => {
-  if (basePrice <= 0) return { Zomato: 0, Swiggy: 0 };
-
-  // Add 15% markup
-  const priceWith15Percent = basePrice * 1.15;
+  if (basePrice <= 0) return { Zomato: 0, Swiggy: 0, GS1: 0 };
 
   // Round to nearest 5
   const roundToNearest5 = (price: number) => {
     return Math.round(price / 5) * 5;
   };
 
+  // Add 15% markup for Zomato and Swiggy
+  const priceWith15Percent = basePrice * 1.15;
   const autoPriceZomato = roundToNearest5(priceWith15Percent);
   const autoPriceSwiggy = roundToNearest5(priceWith15Percent);
 
-  return { Zomato: autoPriceZomato, Swiggy: autoPriceSwiggy };
+  // Add 20% markup for GS1
+  const priceWith20Percent = basePrice * 1.20;
+  const autoPriceGS1 = roundToNearest5(priceWith20Percent);
+
+  return { Zomato: autoPriceZomato, Swiggy: autoPriceSwiggy, GS1: autoPriceGS1 };
 };
 
 interface Variation {
@@ -55,6 +58,7 @@ interface Variation {
   price: number;
   sapCode: string;
   profitMargin: number;
+  gs1Enabled?: boolean;
   salesHistory?: Array<{
     date: string;
     channel: "Dining" | "Parcel" | "Online";
@@ -162,6 +166,7 @@ export default function ItemEdit() {
             foundItem.variations.map((v: any) => {
               const basePrice = v.price || 0;
               const autoPrices = calculateAutoPrices(basePrice);
+              const gs1Enabled = v.channels?.GS1 && v.channels.GS1 > 0 ? true : false;
 
               // Ensure all channels are initialized
               const initialChannels = CHANNELS.reduce(
@@ -179,10 +184,13 @@ export default function ItemEdit() {
                   // Override Zomato and Swiggy with auto-calculated prices
                   Zomato: autoPrices.Zomato,
                   Swiggy: autoPrices.Swiggy,
+                  // Include GS1 if it's enabled
+                  ...(gs1Enabled && { GS1: autoPrices.GS1 }),
                 },
                 price: basePrice,
                 sapCode: v.sapCode || "",
                 profitMargin: v.profitMargin || 0,
+                gs1Enabled: gs1Enabled,
                 salesHistory: v.salesHistory || [],
               };
             }),
@@ -295,6 +303,7 @@ export default function ItemEdit() {
       price: 0,
       sapCode: "",
       profitMargin: 0,
+      gs1Enabled: false,
       salesHistory: [],
     };
     setVariations([...variations, newVariation]);
@@ -307,7 +316,7 @@ export default function ItemEdit() {
 
         const updated = { ...v, [field]: value };
 
-        // Auto-calculate Zomato and Swiggy prices when base price changes
+        // Auto-calculate Zomato, Swiggy, and GS1 prices when base price changes
         if (field === "price") {
           const autoPrices = calculateAutoPrices(value);
           // Ensure all channels exist in the object before updating
@@ -320,6 +329,22 @@ export default function ItemEdit() {
             Zomato: autoPrices.Zomato,
             Swiggy: autoPrices.Swiggy,
           };
+          // Add GS1 price if GS1 is enabled
+          if (updated.gs1Enabled) {
+            updated.channels.GS1 = autoPrices.GS1;
+          }
+        }
+
+        // When GS1 is toggled, calculate or clear GS1 price
+        if (field === "gs1Enabled") {
+          if (value) {
+            // Enable GS1: calculate auto price
+            const autoPrices = calculateAutoPrices(updated.price);
+            updated.channels.GS1 = autoPrices.GS1;
+          } else {
+            // Disable GS1: set to 0
+            updated.channels.GS1 = 0;
+          }
         }
 
         return updated;
@@ -853,16 +878,19 @@ export default function ItemEdit() {
 
                 {/* Channel Prices */}
                 <div className="mb-4">
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex justify-between items-center mb-3">
                     <label className="block text-sm font-medium text-gray-700">
                       Channel Prices
                     </label>
-                    <p className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                      Zomato & Swiggy: auto +15% (rounded to 5)
-                    </p>
+                    <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded space-y-1">
+                      <p>Zomato & Swiggy: auto +15% (rounded to 5)</p>
+                      <p>GS1: auto +20% (rounded to 5) - Optional</p>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {CHANNELS.map((channel) => {
+
+                  {/* Standard Channels (excluding GS1) */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                    {CHANNELS.filter((ch) => ch !== "GS1").map((channel) => {
                       const isAutoCalculated = ["Zomato", "Swiggy"].includes(
                         channel,
                       );
@@ -899,6 +927,46 @@ export default function ItemEdit() {
                         </div>
                       );
                     })}
+                  </div>
+
+                  {/* GS1 with Checkbox */}
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        id={`gs1-checkbox-${variation.id}`}
+                        checked={variation.gs1Enabled || false}
+                        onChange={(e) =>
+                          updateVariation(
+                            variation.id,
+                            "gs1Enabled",
+                            e.target.checked,
+                          )
+                        }
+                        className="w-4 h-4 border-gray-300 rounded focus:ring-2 focus:ring-purple-600 cursor-pointer"
+                      />
+                      <label
+                        htmlFor={`gs1-checkbox-${variation.id}`}
+                        className="text-sm font-medium text-gray-700 cursor-pointer flex-1"
+                      >
+                        Enable GS1 Channel
+                      </label>
+                      {variation.gs1Enabled && (
+                        <div className="flex-1">
+                          <input
+                            type="number"
+                            value={variation.channels.GS1 || 0}
+                            placeholder="Auto: 0"
+                            step="0.01"
+                            disabled
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-blue-50 text-gray-500 cursor-not-allowed"
+                          />
+                          <p className="text-xs text-blue-600 mt-1">
+                            Auto +20% (rounded to 5)
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
