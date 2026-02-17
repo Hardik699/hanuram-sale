@@ -103,12 +103,8 @@ export default function ItemsTable({ items }: ItemsTableProps) {
 
               {/* Sub-header for Channels - Show all variations */}
               {allVariations.length > 0 && (
-                <tr className="bg-gray-50 border-b border-gray-300 text-xs whitespace-nowrap">
-                  <th className="px-2 sm:px-4 py-3 sticky left-0 z-20 bg-gray-50 w-10"></th>
-                  <th className="px-2 sm:px-4 py-3 sticky left-10 z-20 bg-gray-50"></th>
-                  <th className="px-2 sm:px-4 py-3 sticky left-20 z-20 bg-gray-50 hidden sm:table-cell"></th>
-                  <th className="px-2 sm:px-4 py-3 sticky left-32 z-20 bg-gray-50 hidden md:table-cell"></th>
-                  <th className="px-2 sm:px-4 py-3 sticky left-44 z-20 bg-gray-50 hidden lg:table-cell"></th>
+                <tr className="bg-slate-50 border-b border-gray-300 text-xs whitespace-nowrap">
+                  <th colSpan={5} className="px-2 sm:px-4 py-0 sticky left-10 z-20 bg-slate-50"></th>
                   {allVariations.map((variation, idx) => (
                     <React.Fragment key={`${variation.name}-${variation.value}`}>
                       {CHANNELS.map((channel) => (
