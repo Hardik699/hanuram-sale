@@ -182,10 +182,8 @@ export const handleUpload: RequestHandler = async (req, res) => {
       status: "uploaded"
     });
 
-    // If it's petpooja data, process and add to item variations
-    if (type === "petpooja") {
-      await processPetpoojaData(db, finalData);
-    }
+    // Data is stored in petpooja collection and will be fetched directly from DB when needed
+    // No need to process and duplicate data in item variations
 
     res.json({
       success: true,
@@ -200,145 +198,6 @@ export const handleUpload: RequestHandler = async (req, res) => {
   }
 };
 
-// Process petpooja data and add to item variations
-async function processPetpoojaData(db: any, data: any[]): Promise<void> {
-  try {
-    console.log("📊 Processing Petpooja data...");
-
-    const headers = data[0] as string[];
-    const dataRows = data.slice(1);
-
-    // Find column indices
-    const getColumnIndex = (name: string) =>
-      headers.findIndex((h) => h.toLowerCase().trim() === name.toLowerCase().trim());
-
-    const restaurantIdx = getColumnIndex("restaurant_name");
-    const dateIdx = getColumnIndex("New Date");
-    const timeIdx = getColumnIndex("Time");
-    const areaIdx = getColumnIndex("area");
-    const orderTypeIdx = getColumnIndex("order_type");
-    const categoryIdx = getColumnIndex("category_name");
-    const sapCodeIdx = getColumnIndex("sap_code");
-    const priceIdx = getColumnIndex("item_price");
-    const quantityIdx = getColumnIndex("item_quantity");
-
-    if (
-      restaurantIdx === -1 ||
-      dateIdx === -1 ||
-      areaIdx === -1 ||
-      sapCodeIdx === -1 ||
-      priceIdx === -1 ||
-      quantityIdx === -1
-    ) {
-      console.warn("Missing required columns in uploaded data");
-      return;
-    }
-
-    // orderTypeIdx is optional, used as fallback for area mapping
-
-    // Get all items
-    const itemsCollection = db.collection("items");
-    const items = await itemsCollection.find({}).toArray();
-
-    // Build a map of sapCode -> itemId + variationId
-    const sapCodeMap: { [key: string]: { itemId: string; variationId: string } } = {};
-    for (const item of items) {
-      if (item.variations && Array.isArray(item.variations)) {
-        item.variations.forEach((v: any, idx: number) => {
-          if (v.sapCode) {
-            sapCodeMap[v.sapCode] = {
-              itemId: item.itemId,
-              variationId: idx.toString(),
-            };
-          }
-        });
-      }
-    }
-
-    console.log(`📝 Found ${Object.keys(sapCodeMap).length} SAP codes in items`);
-
-    // Process each row
-    let processedCount = 0;
-    const errors: string[] = [];
-
-    for (const row of dataRows) {
-      if (!Array.isArray(row) || row.length === 0) continue;
-
-      const restaurant = row[restaurantIdx]?.toString().trim() || "";
-      const dateStr = row[dateIdx]?.toString().trim() || "";
-      const time = row[timeIdx]?.toString().trim() || "";
-      const area = row[areaIdx]?.toString().trim() || "";
-      const orderType = orderTypeIdx !== -1 ? row[orderTypeIdx]?.toString().trim() || "" : "";
-      const category = row[categoryIdx]?.toString().trim() || "";
-      const sapCode = row[sapCodeIdx]?.toString().trim() || "";
-      const price = parseFloat(row[priceIdx]?.toString() || "0") || 0;
-      const quantity = parseFloat(row[quantityIdx]?.toString() || "0") || 0;
-
-      // Skip if restaurant is empty
-      if (!restaurant) {
-        errors.push(`Row skipped: no restaurant name`);
-        continue;
-      }
-
-      // Check if sap code matches
-      if (!sapCodeMap[sapCode]) {
-        errors.push(`Row skipped: SAP code "${sapCode}" not found in items`);
-        continue;
-      }
-
-      // Parse date
-      const rowDate = parseDate(dateStr);
-      if (!rowDate) {
-        errors.push(`Row skipped: invalid date "${dateStr}"`);
-        continue;
-      }
-
-      // Normalize area (with order_type as fallback)
-      const normalizedArea = normalizeArea(area, orderType);
-
-      // Debug: Log area detection for first few rows
-      if (processedCount < 3) {
-        console.log(`  Row ${processedCount + 1}: area="${area}" → normalizedArea="${normalizedArea}"`);
-      }
-
-      // Get item and variation info
-      const { itemId, variationId } = sapCodeMap[sapCode];
-
-      // Add sales record to variation
-      const dateFormatted = rowDate.toISOString().split('T')[0]; // YYYY-MM-DD
-      const saleRecord = {
-        date: dateFormatted,
-        time: time || "",
-        area: normalizedArea,
-        restaurant,
-        quantity: Math.round(quantity),
-        value: Math.round(price * quantity),
-        category,
-      };
-
-      // Update the variation's salesHistory
-      await itemsCollection.updateOne(
-        { itemId },
-        {
-          $push: {
-            [`variations.${variationId}.salesHistory`]: saleRecord,
-          },
-        }
-      );
-
-      processedCount++;
-    }
-
-    console.log(`✅ Processed ${processedCount} sales records and added to item variations`);
-    if (errors.length > 0 && errors.length <= 10) {
-      console.log(`⚠️  Errors during processing: ${errors.slice(0, 10).join("; ")}`);
-    } else if (errors.length > 10) {
-      console.log(`⚠️  Encountered ${errors.length} errors during processing (showing first 10 above)`);
-    }
-  } catch (error) {
-    console.error("Error processing petpooja data:", error);
-  }
-}
 
 export const handleGetUploads: RequestHandler = async (req, res) => {
   try {
