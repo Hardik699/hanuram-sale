@@ -63,7 +63,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200 text-xs sm:text-sm whitespace-nowrap">
                 {/* Checkbox - Sticky */}
-                <th className="px-2 sm:px-4 py-3 text-left w-10 sticky left-0 z-20 bg-gray-700">
+                <th className="px-2 sm:px-4 py-3 text-left w-10 sticky left-0 z-20 bg-slate-700">
                   <input
                     type="checkbox"
                     checked={
@@ -76,16 +76,16 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 </th>
 
                 {/* Basic Info - Sticky */}
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-gray-700 sticky left-10 z-20">
+                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 sticky left-10 z-20">
                   Item ID
                 </th>
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-gray-700 hidden sm:table-cell">
+                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 hidden sm:table-cell">
                   Group
                 </th>
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-gray-700 hidden md:table-cell">
+                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 hidden md:table-cell">
                   Category
                 </th>
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-gray-700 hidden lg:table-cell">
+                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 hidden lg:table-cell">
                   Item Name
                 </th>
 
@@ -94,7 +94,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   <th
                     key={`${variation.name}-${variation.value}`}
                     colSpan={4}
-                    className={`px-3 sm:px-4 py-4 text-center text-sm font-bold text-white border-l-2 border-white bg-blue-500`}
+                    className={`px-3 sm:px-4 py-4 text-center text-sm font-bold text-white border-l-2 border-white bg-slate-700`}
                   >
                     {variation.value}
                   </th>
@@ -110,7 +110,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                       {CHANNELS.map((channel) => (
                         <th
                           key={`${variation.value}-${channel}`}
-                          className={`px-3 sm:px-4 py-3 text-center font-semibold text-white border-r border-white bg-blue-400`}
+                          className={`px-3 sm:px-4 py-3 text-center font-semibold text-white border-r border-white bg-slate-600`}
                         >
                           {channel}
                         </th>
@@ -170,7 +170,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                         {CHANNELS.map((channel) => (
                           <td
                             key={`${item.itemId}-${variation.value}-${channel}`}
-                            className={`px-3 sm:px-4 py-3 text-center font-semibold border-r border-white bg-blue-50 text-blue-900`}
+                            className={`px-3 sm:px-4 py-3 text-center font-semibold border-r border-white bg-slate-50 text-slate-900`}
                           >
                             {itemVariation && itemVariation.channels[channel]
                               ? `₹${itemVariation.channels[channel]}`
