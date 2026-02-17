@@ -55,6 +55,7 @@ import {
   handleGetRestaurants,
   handleResetItemSales,
   handleDebugItemSalesRaw,
+  handleDebugParcelData,
 } from "./routes/sales";
 
 export function createServer() {
@@ -131,6 +132,7 @@ export function createServer() {
 
   // Sales routes
   app.get("/api/sales/debug-raw", handleDebugItemSalesRaw);
+  app.get("/api/sales/debug-parcel/:itemId", handleDebugParcelData);
   app.get("/api/sales", handleGetSales);
   app.get("/api/sales/restaurants", handleGetRestaurants);
   app.get("/api/sales/summary", handleGetSalesSummary);

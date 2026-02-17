@@ -782,6 +782,125 @@ export const handleDebugItemSalesRaw: RequestHandler = async (req, res) => {
   }
 };
 
+// GET /api/sales/debug-parcel/:itemId - Debug endpoint to see all rows being counted as Parcel
+export const handleDebugParcelData: RequestHandler = async (req, res) => {
+  try {
+    const { itemId } = req.params;
+
+    if (!itemId) {
+      return res.status(400).json({ error: "itemId parameter required" });
+    }
+
+    const db = await getDatabase();
+    const itemsCollection = db.collection("items");
+    const item = await itemsCollection.findOne({ itemId });
+
+    if (!item) {
+      return res.json({
+        success: false,
+        error: `Item ${itemId} not found`,
+      });
+    }
+
+    // Build a map of SAP codes for this item
+    const sapCodeToVariation: { [sapCode: string]: string } = {};
+    if (item.variations && Array.isArray(item.variations)) {
+      item.variations.forEach((variation: any, idx: number) => {
+        if (variation.sapCode) {
+          const variationName = variation.value || variation.name || `Variation ${idx + 1}`;
+          sapCodeToVariation[variation.sapCode] = variationName;
+        }
+      });
+    }
+
+    const sapCodes = Object.keys(sapCodeToVariation);
+    console.log(`🔍 Debugging Parcel data for item ${itemId}`);
+    console.log(`  SAP codes: ${sapCodes.join(", ")}`);
+
+    const parcelByVariation: { [variation: string]: number } = {};
+    const parcelRows: any[] = [];
+    let totalQuantity = 0;
+
+    const getColumnIndex = (headers: string[], name: string) =>
+      headers.findIndex((h) => h.toLowerCase().trim() === name.toLowerCase().trim());
+
+    const petpoojaCollection = db.collection("petpooja");
+    const allPetpoojaData = await petpoojaCollection.find({}).toArray();
+
+    for (const petpoojaDoc of allPetpoojaData) {
+      if (!Array.isArray(petpoojaDoc.data) || petpoojaDoc.data.length < 2) continue;
+
+      const headers = petpoojaDoc.data[0] as string[];
+      const dataRows = petpoojaDoc.data.slice(1);
+
+      const sapCodeIdx = getColumnIndex(headers, "sap_code");
+      const areaIdx = getColumnIndex(headers, "area");
+      const orderTypeIdx = getColumnIndex(headers, "order_type");
+      const quantityIdx = getColumnIndex(headers, "item_quantity");
+      const priceIdx = getColumnIndex(headers, "item_price");
+      const dateIdx = getColumnIndex(headers, "New Date");
+      const restaurantIdx = getColumnIndex(headers, "restaurant_name");
+
+      if (sapCodeIdx === -1) continue;
+
+      for (const row of dataRows) {
+        if (!Array.isArray(row)) continue;
+
+        const sapCode = row[sapCodeIdx]?.toString().trim() || "";
+        if (!sapCodeToVariation[sapCode]) continue;
+
+        const area = areaIdx !== -1 ? row[areaIdx]?.toString().trim() || "" : "";
+        const orderType = orderTypeIdx !== -1 ? row[orderTypeIdx]?.toString().trim() || "" : "";
+        const normalizedArea = normalizeArea(area, orderType);
+
+        // Only collect parcel rows
+        if (normalizedArea !== "parcel") continue;
+
+        const quantity = quantityIdx !== -1 ? parseFloat(row[quantityIdx]?.toString() || "0") || 0 : 0;
+        const price = priceIdx !== -1 ? parseFloat(row[priceIdx]?.toString() || "0") || 0 : 0;
+        const date = dateIdx !== -1 ? row[dateIdx]?.toString().trim() || "" : "";
+        const restaurant = restaurantIdx !== -1 ? row[restaurantIdx]?.toString().trim() || "" : "";
+        const variation = sapCodeToVariation[sapCode];
+
+        // Track by variation
+        if (!parcelByVariation[variation]) {
+          parcelByVariation[variation] = 0;
+        }
+        parcelByVariation[variation] += quantity;
+
+        parcelRows.push({
+          sapCode,
+          variation,
+          area,
+          orderType,
+          quantity,
+          price,
+          date,
+          restaurant,
+        });
+
+        totalQuantity += quantity;
+      }
+    }
+
+    res.json({
+      success: true,
+      itemId,
+      itemName: (item as any).itemName,
+      sapCodes,
+      totalParcelQuantity: totalQuantity,
+      parcelByVariation,
+      parcelRowCount: parcelRows.length,
+      parcelRows: parcelRows.slice(0, 50), // First 50 rows for inspection
+    });
+  } catch (error) {
+    console.error("Error in debug parcel data:", error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
 // GET /api/sales/restaurants - Get unique restaurant names from all sales data
 export const handleGetRestaurants: RequestHandler = async (req, res) => {
   try {
