@@ -417,3 +417,50 @@ export const handleValidateUpload: RequestHandler = async (req, res) => {
     res.status(500).json({ error: errorMessage });
   }
 };
+
+// DELETE /api/upload/delete - Delete upload data for a specific month with password protection
+export const handleDeleteUpload: RequestHandler = async (req, res) => {
+  try {
+    const { type, year, month, password } = req.body;
+
+    // Validate required fields
+    if (!type || !year || !month || !password) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Simple password validation (in production, use bcrypt)
+    const DELETION_PASSWORD = process.env.DELETION_PASSWORD || "admin123";
+
+    if (password !== DELETION_PASSWORD) {
+      console.warn(`⚠️ Invalid deletion password attempt for ${type}/${year}/${month}`);
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    console.log(`🗑️ Deleting ${type} data for month ${month}/${year}`);
+
+    const db = await getDatabase();
+    const uploadsCollection = db.collection("uploads");
+
+    // Find and delete the upload record
+    const result = await uploadsCollection.deleteOne({
+      type,
+      year,
+      month
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "No data found for this month" });
+    }
+
+    console.log(`✅ Successfully deleted ${type} data for month ${month}/${year}`);
+
+    res.json({
+      success: true,
+      message: `Data for ${month}/${year} has been deleted successfully`
+    });
+  } catch (error) {
+    console.error("❌ Delete error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to delete data";
+    res.status(500).json({ error: errorMessage });
+  }
+};

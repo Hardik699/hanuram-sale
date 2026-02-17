@@ -8,6 +8,7 @@ import {
   handleUpdateUpload,
   handleGetData,
   handleValidateUpload,
+  handleDeleteUpload,
 } from "./routes/upload";
 import {
   handleDebugItemSales,
@@ -107,6 +108,7 @@ export function createServer() {
 
   // Upload routes
   app.post("/api/upload/validate", handleValidateUpload);
+  app.delete("/api/upload/delete", handleDeleteUpload);
   app.post("/api/upload", handleUpload);
   app.get("/api/uploads", handleGetUploads);
   app.put("/api/upload", handleUpdateUpload);
