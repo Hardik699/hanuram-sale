@@ -56,6 +56,7 @@ import {
   handleResetItemSales,
   handleDebugItemSalesRaw,
   handleDebugParcelData,
+  handleClearAllPetpoojaData,
 } from "./routes/sales";
 
 export function createServer() {
@@ -140,6 +141,7 @@ export function createServer() {
   app.get("/api/sales/monthly/:itemId", handleGetMonthlySales);
   app.get("/api/sales/daily/:itemId/:month", handleGetDailySales);
   app.delete("/api/sales/item/:itemId", handleResetItemSales);
+  app.delete("/api/sales/clear-all", handleClearAllPetpoojaData);
   app.post("/api/sales", handleRecordSale);
 
   // Error handling middleware

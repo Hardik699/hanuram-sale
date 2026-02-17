@@ -994,3 +994,31 @@ export const handleResetItemSales: RequestHandler = async (req, res) => {
     });
   }
 };
+
+// DELETE /api/sales/clear-all - DANGER: Clear all petpooja data
+export const handleClearAllPetpoojaData: RequestHandler = async (req, res) => {
+  try {
+    const db = await getDatabase();
+    const petpoojaCollection = db.collection("petpooja");
+
+    const result = await petpoojaCollection.deleteMany({});
+
+    console.log(
+      `🗑️ Deleted ${result.deletedCount} petpooja documents from database`,
+    );
+
+    res.json({
+      success: true,
+      message: `Cleared all petpooja data. Deleted ${result.deletedCount} document(s). Please re-upload your petpooja file to restore sales data.`,
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    console.error("Error clearing petpooja data:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    res.status(500).json({
+      success: false,
+      error: errorMessage,
+    });
+  }
+};
