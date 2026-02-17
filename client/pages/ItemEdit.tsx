@@ -101,8 +101,16 @@ export default function ItemEdit() {
   const [newCategory, setNewCategory] = useState("");
   const [newHsnCode, setNewHsnCode] = useState("");
   const [newVariationValue, setNewVariationValue] = useState("");
-  const [images, setImages] = useState<File[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+
+  // Images with channel info
+  interface ImageWithChannel {
+    file?: File;
+    preview: string;
+    channel: string;
+  }
+
+  const [images, setImages] = useState<ImageWithChannel[]>([]);
+  const [selectedImageChannel, setSelectedImageChannel] = useState("Website");
 
   // Load dropdown data
   useEffect(() => {
@@ -156,9 +164,17 @@ export default function ItemEdit() {
         setItemType(foundItem.itemType || "Goods");
         setUnitType(foundItem.unitType || "Single Count");
 
-        // Load existing images
+        // Load existing images with channel info
         if (foundItem.images && Array.isArray(foundItem.images)) {
-          setImagePreviews(foundItem.images);
+          const imageList = foundItem.images.map((img: any) => {
+            // Handle both old format (string) and new format (object with url and channel)
+            if (typeof img === "string") {
+              return { preview: img, channel: "Website" };
+            } else {
+              return { preview: img.url || img.preview, channel: img.channel || "Website" };
+            }
+          });
+          setImages(imageList);
         }
 
         // Load variations with auto-calculated prices
@@ -371,20 +387,36 @@ export default function ItemEdit() {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setImages([...images, ...files]);
 
     files.forEach((file) => {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setImagePreviews((prev) => [...prev, event.target?.result as string]);
+        setImages((prev) => [
+          ...prev,
+          {
+            file: file,
+            preview: event.target?.result as string,
+            channel: selectedImageChannel,
+          },
+        ]);
       };
       reader.readAsDataURL(file);
     });
+
+    // Reset input
+    e.target.value = "";
   };
 
   const removeImage = (index: number) => {
     setImages(images.filter((_, i) => i !== index));
-    setImagePreviews(imagePreviews.filter((_, i) => i !== index));
+  };
+
+  const updateImageChannel = (index: number, channel: string) => {
+    setImages(
+      images.map((img, i) =>
+        i === index ? { ...img, channel } : img
+      )
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -394,6 +426,12 @@ export default function ItemEdit() {
       alert("Please fill all required fields");
       return;
     }
+
+    // Format images with channel info
+    const imageData = images.map((img) => ({
+      url: img.preview,
+      channel: img.channel,
+    }));
 
     const updatedItem = {
       itemId,
@@ -408,7 +446,7 @@ export default function ItemEdit() {
       itemType,
       unitType,
       variations,
-      images: imagePreviews,
+      images: imageData,
     };
 
     try {
@@ -1014,8 +1052,30 @@ export default function ItemEdit() {
 
           {/* Image Upload */}
           <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Images</h3>
-            <div className="mb-4 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Images by Channel</h3>
+
+            {/* Channel Selector */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Select Channel for Images
+              </label>
+              <select
+                value={selectedImageChannel}
+                onChange={(e) => setSelectedImageChannel(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              >
+                <option value="Website">Website</option>
+                <option value="Zomato">Zomato</option>
+                <option value="Swiggy">Swiggy</option>
+                <option value="GS1">GS1</option>
+              </select>
+              <p className="text-xs text-gray-500 mt-1">
+                Select a channel, then upload images for that channel
+              </p>
+            </div>
+
+            {/* Upload Area */}
+            <div className="mb-4 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50">
               <input
                 type="file"
                 multiple
@@ -1026,31 +1086,62 @@ export default function ItemEdit() {
               />
               <label htmlFor="image-input" className="cursor-pointer block">
                 <p className="text-gray-700 font-medium">
-                  Click to upload or drag images
+                  Click to upload or drag images for <strong>{selectedImageChannel}</strong>
                 </p>
                 <p className="text-gray-500 text-sm">PNG, JPG up to 10MB</p>
               </label>
             </div>
 
-            {/* Image Previews */}
-            {imagePreviews.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {imagePreviews.map((preview, idx) => (
-                  <div key={idx} className="relative group">
-                    <img
-                      src={preview}
-                      alt={`Preview ${idx}`}
-                      className="w-full h-32 object-cover rounded-lg"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(idx)}
-                      className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
+            {/* Image Previews Grouped by Channel */}
+            {images.length > 0 && (
+              <div className="space-y-6">
+                {["Website", "Zomato", "Swiggy", "GS1"]
+                  .filter((channel) => images.some((img) => img.channel === channel))
+                  .map((channel) => (
+                    <div key={channel}>
+                      <h4 className="text-sm font-semibold text-gray-900 mb-3">
+                        {channel} Images ({images.filter((img) => img.channel === channel).length})
+                      </h4>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        {images
+                          .map((img, idx) => ({ img, idx }))
+                          .filter(({ img }) => img.channel === channel)
+                          .map(({ img, idx }) => (
+                            <div key={idx} className="relative group">
+                              <img
+                                src={img.preview}
+                                alt={`${channel} Preview ${idx}`}
+                                className="w-full h-32 object-cover rounded-lg"
+                              />
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg flex flex-col items-center justify-center gap-2">
+                                <select
+                                  value={img.channel}
+                                  onChange={(e) =>
+                                    updateImageChannel(
+                                      images.findIndex((i) => i === img),
+                                      e.target.value
+                                    )
+                                  }
+                                  className="text-xs px-2 py-1 rounded bg-white border border-gray-300"
+                                >
+                                  <option value="Website">Website</option>
+                                  <option value="Zomato">Zomato</option>
+                                  <option value="Swiggy">Swiggy</option>
+                                  <option value="GS1">GS1</option>
+                                </select>
+                                <button
+                                  type="button"
+                                  onClick={() => removeImage(images.findIndex((i) => i === img))}
+                                  className="bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  ))}
               </div>
             )}
           </div>
