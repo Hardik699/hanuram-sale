@@ -89,25 +89,25 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   Item Name
                 </th>
 
-                {/* Variation Columns - Hidden on small screens */}
-                {allVariations.slice(0, 2).map((variation) => (
+                {/* Variation Columns - Show all variations */}
+                {allVariations.map((variation) => (
                   <th
                     key={`${variation.name}-${variation.value}`}
                     colSpan={2}
-                    className="px-2 sm:px-4 py-3 text-center text-xs font-semibold text-gray-700 border-l border-gray-200 hidden md:table-cell"
+                    className="px-2 sm:px-4 py-3 text-center text-xs font-semibold text-gray-700 border-l border-gray-200"
                   >
                     {variation.value}
                   </th>
                 ))}
               </tr>
 
-              {/* Sub-header for Channels - Hidden on small screens */}
+              {/* Sub-header for Channels - Show all variations */}
               {allVariations.length > 0 && (
-                <tr className="bg-gray-50 border-b border-gray-200 hidden md:table-row">
-                  <th colSpan={4} className="px-2 sm:px-4 py-3"></th>
-                  {allVariations.slice(0, 2).map((variation) => (
+                <tr className="bg-gray-50 border-b border-gray-200">
+                  <th colSpan={5} className="px-2 sm:px-4 py-3"></th>
+                  {allVariations.map((variation) => (
                     <React.Fragment key={`${variation.name}-${variation.value}`}>
-                      {CHANNELS.slice(0, 2).map((channel) => (
+                      {CHANNELS.map((channel) => (
                         <th
                           key={`${variation.value}-${channel}`}
                           className="px-2 sm:px-4 py-3 text-center text-xs font-medium text-gray-600 border-l border-gray-200"
@@ -156,8 +156,8 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                     {item.itemName}
                   </td>
 
-                  {/* Variation Prices - Only show first 2 variations on mobile */}
-                  {allVariations.slice(0, 2).map((variation) => {
+                  {/* Variation Prices - Show all variations and channels */}
+                  {allVariations.map((variation) => {
                     const itemVariation = item.variations.find(
                       (v: any) =>
                         v.name === variation.name && v.value === variation.value
@@ -167,10 +167,10 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                       <React.Fragment
                         key={`${item.itemId}-${variation.value}`}
                       >
-                        {CHANNELS.slice(0, 2).map((channel) => (
+                        {CHANNELS.map((channel) => (
                           <td
                             key={`${item.itemId}-${variation.value}-${channel}`}
-                            className="px-2 sm:px-4 py-3 text-center font-medium text-gray-900 border-l border-gray-200 hidden md:table-cell"
+                            className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm font-medium text-gray-900 border-l border-gray-200"
                           >
                             {itemVariation
                               ? `₹${itemVariation.channels[channel] || "-"}`
