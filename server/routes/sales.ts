@@ -150,30 +150,37 @@ function normalizeArea(area: string, orderType?: string): "zomato" | "swiggy" | 
   const areaLower = area?.toLowerCase().trim() || "";
   const orderTypeLower = orderType?.toLowerCase().trim() || "";
 
-  // Check for Zomato variations
+  // Check for Zomato variations first (to avoid "delivery(parcel)" interfering)
   if (areaLower.includes("zomato")) {
     return "zomato";
   }
 
-  // Check for Swiggy variations
+  // Check for Swiggy variations first (to avoid "delivery(parcel)" interfering)
   if (areaLower.includes("swiggy")) {
     return "swiggy";
   }
 
-  // Check for Parcel/Delivery variations
-  if (areaLower.includes("parcel") || areaLower.includes("home delivery") || areaLower.includes("pickup")) {
+  // Check for Parcel/Delivery variations in area
+  if (areaLower === "parcel" ||
+      areaLower.includes("home delivery") ||
+      areaLower === "pickup" ||
+      areaLower.includes("dine out")) {
     return "parcel";
   }
 
-  // Check order type as fallback
-  if (orderTypeLower.includes("pickup") || orderTypeLower.includes("home delivery")) {
-    return "parcel";
-  }
-  if (orderTypeLower.includes("delivery")) {
+  // Check order type - ONLY if area didn't match above
+  // "Pick Up" and "Pickup" → parcel
+  if (orderTypeLower === "pick up" || orderTypeLower === "pickup" || orderTypeLower.includes("home delivery")) {
     return "parcel";
   }
 
-  // Default to dining
+  // "Delivery(Parcel)" with area NOT being zomato/swiggy → parcel
+  // But if area IS zomato/swiggy, they already returned above
+  if (orderTypeLower.includes("delivery(parcel)")) {
+    return "parcel";
+  }
+
+  // Default to dining for "Dine In" and other cases
   return "dining";
 }
 
