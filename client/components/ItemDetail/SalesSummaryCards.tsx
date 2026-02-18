@@ -145,7 +145,7 @@ export default function SalesSummaryCards({
   return (
     <div>
       <div className="flex items-center gap-2 mb-4">
-        <TrendingUp className="w-5 h-5 text-purple-600" />
+        <TrendingUp className="w-5 h-5 text-blue-600" />
         <h2 className="text-xl font-bold text-gray-900">
           Sales Summary by Area
         </h2>

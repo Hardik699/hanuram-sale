@@ -33,7 +33,7 @@ export default function Login() {
           {/* Header */}
           <div className="bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-12">
             <h1 className="text-3xl font-bold text-white text-center">Data Portal</h1>
-            <p className="text-purple-100 text-center mt-2">Upload Management System</p>
+            <p className="text-blue-100 text-center mt-2">Upload Management System</p>
           </div>
 
           {/* Form */}
@@ -54,7 +54,7 @@ export default function Login() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter username"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
                 disabled={isLoading}
               />
             </div>
@@ -69,7 +69,7 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
                 disabled={isLoading}
               />
             </div>

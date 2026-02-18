@@ -67,9 +67,9 @@ export default function ItemsTable({ items }: ItemsTableProps) {
           <table className="w-full min-w-full">
             {/* Table Header */}
             <thead>
-              <tr className="bg-gradient-to-r from-purple-50 to-purple-100 border-b border-purple-200 text-xs sm:text-sm whitespace-nowrap">
+              <tr className="bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200 text-xs sm:text-sm whitespace-nowrap">
                 {/* Checkbox - Sticky */}
-                <th className="px-2 sm:px-4 py-4 text-left w-10 sticky left-0 z-20 bg-gradient-to-r from-purple-50 to-purple-100">
+                <th className="px-2 sm:px-4 py-4 text-left w-10 sticky left-0 z-20 bg-gradient-to-r from-blue-50 to-blue-100">
                   <input
                     type="checkbox"
                     checked={
@@ -77,21 +77,21 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                       selectedRows.size === paginatedItems.length
                     }
                     onChange={toggleSelectAll}
-                    className="w-4 h-4 cursor-pointer accent-purple-600"
+                    className="w-4 h-4 cursor-pointer accent-blue-600"
                   />
                 </th>
 
                 {/* Basic Info - Sticky */}
-                <th className="px-2 sm:px-4 py-4 text-left font-semibold text-gray-900 bg-gradient-to-r from-purple-50 to-purple-100 sticky left-10 z-20">
+                <th className="px-2 sm:px-4 py-4 text-left font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-100 sticky left-10 z-20">
                   Item ID
                 </th>
-                <th className="px-2 sm:px-4 py-4 text-left font-semibold text-gray-900 bg-gradient-to-r from-purple-50 to-purple-100 hidden sm:table-cell">
+                <th className="px-2 sm:px-4 py-4 text-left font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-100 hidden sm:table-cell">
                   Group
                 </th>
-                <th className="px-2 sm:px-4 py-4 text-left font-semibold text-gray-900 bg-gradient-to-r from-purple-50 to-purple-100 hidden md:table-cell">
+                <th className="px-2 sm:px-4 py-4 text-left font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-100 hidden md:table-cell">
                   Category
                 </th>
-                <th className="px-2 sm:px-4 py-4 text-left font-semibold text-gray-900 bg-gradient-to-r from-purple-50 to-purple-100 hidden lg:table-cell">
+                <th className="px-2 sm:px-4 py-4 text-left font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-100 hidden lg:table-cell">
                   Item Name
                 </th>
 
@@ -100,7 +100,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   <th
                     key={`${variation.name}-${variation.value}`}
                     colSpan={4}
-                    className={`px-3 sm:px-4 py-4 text-center text-sm font-bold text-purple-900 border-l border-purple-200 bg-gradient-to-r from-purple-50 to-purple-100`}
+                    className={`px-3 sm:px-4 py-4 text-center text-sm font-bold text-blue-900 border-l border-blue-200 bg-gradient-to-r from-blue-50 to-blue-100`}
                   >
                     {variation.value}
                   </th>
@@ -109,14 +109,14 @@ export default function ItemsTable({ items }: ItemsTableProps) {
 
               {/* Sub-header for Channels - Show all variations */}
               {allVariations.length > 0 && (
-                <tr className="bg-purple-100 border-b border-purple-200 text-xs whitespace-nowrap">
-                  <th colSpan={5} className="px-2 sm:px-4 py-0 sticky left-10 z-20 bg-purple-100"></th>
+                <tr className="bg-blue-100 border-b border-blue-200 text-xs whitespace-nowrap">
+                  <th colSpan={5} className="px-2 sm:px-4 py-0 sticky left-10 z-20 bg-blue-100"></th>
                   {allVariations.map((variation, idx) => (
                     <React.Fragment key={`${variation.name}-${variation.value}`}>
                       {CHANNELS.map((channel) => (
                         <th
                           key={`${variation.value}-${channel}`}
-                          className={`px-3 sm:px-4 py-3 text-center font-semibold text-gray-700 border-r border-purple-200 bg-purple-100`}
+                          className={`px-3 sm:px-4 py-3 text-center font-semibold text-gray-700 border-r border-blue-200 bg-blue-100`}
                         >
                           {channel}
                         </th>
@@ -133,8 +133,8 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 <tr
                   key={item.itemId}
                   onClick={() => navigate(`/items/${item.itemId}`)}
-                  className={`border-b border-gray-100 hover:bg-purple-50 transition cursor-pointer text-xs sm:text-sm whitespace-nowrap ${
-                    selectedRows.has(item.itemId) ? "bg-purple-100" : "bg-white"
+                  className={`border-b border-gray-100 hover:bg-blue-50 transition cursor-pointer text-xs sm:text-sm whitespace-nowrap ${
+                    selectedRows.has(item.itemId) ? "bg-blue-100" : "bg-white"
                   }`}
                 >
                   {/* Checkbox - Sticky */}
@@ -143,7 +143,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                       type="checkbox"
                       checked={selectedRows.has(item.itemId)}
                       onChange={() => toggleRowSelection(item.itemId)}
-                      className="w-4 h-4 accent-purple-600"
+                      className="w-4 h-4 accent-blue-600"
                     />
                   </td>
 
@@ -220,7 +220,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   onClick={() => setCurrentPage(idx)}
                   className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg text-xs sm:text-sm font-medium transition ${
                     currentPage === idx
-                      ? "bg-purple-600 text-white shadow-md"
+                      ? "bg-blue-600 text-white shadow-md"
                       : "hover:bg-gray-200 text-gray-700"
                   }`}
                 >

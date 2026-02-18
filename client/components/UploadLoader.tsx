@@ -57,21 +57,21 @@ export default function UploadLoader({ isVisible, progress = 0 }: UploadLoaderPr
         {/* Animated dots */}
         <div className="flex justify-center gap-2 mt-8">
           <div
-            className="w-2 h-2 rounded-full bg-purple-600"
+            className="w-2 h-2 rounded-full bg-blue-600"
             style={{
               animation: "dot-bounce 1.4s infinite",
               animationDelay: "0s"
             }}
           ></div>
           <div
-            className="w-2 h-2 rounded-full bg-purple-600"
+            className="w-2 h-2 rounded-full bg-blue-600"
             style={{
               animation: "dot-bounce 1.4s infinite",
               animationDelay: "0.2s"
             }}
           ></div>
           <div
-            className="w-2 h-2 rounded-full bg-purple-600"
+            className="w-2 h-2 rounded-full bg-blue-600"
             style={{
               animation: "dot-bounce 1.4s infinite",
               animationDelay: "0.4s"

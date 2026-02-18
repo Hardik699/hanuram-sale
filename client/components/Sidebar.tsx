@@ -36,7 +36,7 @@ export default function Sidebar() {
                 to={item.href}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
                   isActive
-                    ? "bg-purple-600 text-white"
+                    ? "bg-blue-600 text-white"
                     : "text-gray-300 hover:bg-gray-800"
                 }`}
               >

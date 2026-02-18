@@ -600,7 +600,7 @@ export default function UploadTab({ type }: UploadTabProps) {
       {/* Upload Section */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
         <div className="flex items-center gap-3 mb-6">
-          <Upload className="w-6 h-6 text-purple-600" />
+          <Upload className="w-6 h-6 text-blue-600" />
           <h2 className="text-xl font-bold text-gray-900">Upload Data</h2>
         </div>
 

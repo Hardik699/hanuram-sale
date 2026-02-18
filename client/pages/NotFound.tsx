@@ -23,7 +23,7 @@ const NotFound = () => {
           {/* Header */}
           <div className="bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-16 text-center">
             <h1 className="text-7xl font-bold text-white mb-4">404</h1>
-            <p className="text-purple-100 text-lg">Page Not Found</p>
+            <p className="text-blue-100 text-lg">Page Not Found</p>
           </div>
 
           {/* Content */}
@@ -53,7 +53,7 @@ const NotFound = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => navigate("/")}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold transition"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition"
               >
                 <Home className="w-4 h-4" />
                 Home

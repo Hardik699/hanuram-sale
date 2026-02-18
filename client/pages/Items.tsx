@@ -159,8 +159,8 @@ export default function Items() {
             Manage your product items and variations
           </p>
           {loading && (
-            <div className="mt-3 flex items-center gap-2 text-purple-600 text-xs font-medium">
-              <div className="w-3 h-3 bg-purple-600 rounded-full animate-pulse"></div>
+            <div className="mt-3 flex items-center gap-2 text-blue-600 text-xs font-medium">
+              <div className="w-3 h-3 bg-blue-600 rounded-full animate-pulse"></div>
               Loading items from database...
             </div>
           )}
@@ -179,7 +179,7 @@ export default function Items() {
           <button
             onClick={() => setShowForm(true)}
             disabled={loading}
-            className="flex items-center gap-2 px-4 sm:px-6 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition text-xs sm:text-sm shadow-md hover:shadow-lg"
+            className="flex items-center gap-2 px-4 sm:px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition text-xs sm:text-sm shadow-md hover:shadow-lg"
           >
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">Add Item</span>
@@ -203,8 +203,8 @@ export default function Items() {
       {/* Items Table */}
       {loading ? (
         <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 mb-4 bg-purple-100 rounded-full">
-            <div className="w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+          <div className="inline-flex items-center justify-center w-12 h-12 mb-4 bg-blue-100 rounded-full">
+            <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
           <p className="text-gray-600 font-medium">Loading items from database...</p>
           <p className="text-gray-400 text-xs mt-2">This may take a moment</p>
