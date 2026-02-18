@@ -100,6 +100,11 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
+  // Helper to capitalize first letter of each word
+  const toTitleCase = (str: string) => {
+    return str.replace(/\b\w/g, (l) => l.toUpperCase());
+  };
+
   // Load groups, categories, HSN codes, and variation values from MongoDB API
   useEffect(() => {
     const loadDropdownData = async () => {
@@ -382,7 +387,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
             <input
               type="text"
               value={itemName}
-              onChange={(e) => setItemName(e.target.value)}
+              onChange={(e) => setItemName(toTitleCase(e.target.value))}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
               required
             />
@@ -397,18 +402,6 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
               value={shortCode}
               disabled
               className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Description
-            </label>
-            <input
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
             />
           </div>
 
@@ -510,7 +503,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                 <input
                   type="text"
                   value={newGroup}
-                  onChange={(e) => setNewGroup(e.target.value)}
+                  onChange={(e) => setNewGroup(toTitleCase(e.target.value))}
                   placeholder="Enter new group"
                   autoFocus
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -557,7 +550,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                 <input
                   type="text"
                   value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value)}
+                  onChange={(e) => setNewCategory(toTitleCase(e.target.value))}
                   placeholder="Enter new category"
                   autoFocus
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -624,6 +617,18 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
           </div>
         </div>
 
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Description
+          </label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(toTitleCase(e.target.value))}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 min-h-[100px]"
+            placeholder="Enter item description"
+          />
+        </div>
+
         {/* Variations Section */}
         <div className="border-t pt-6">
           <div className="flex justify-between items-center mb-4">
@@ -677,7 +682,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                         <input
                           type="text"
                           value={newVariationValue}
-                          onChange={(e) => setNewVariationValue(e.target.value)}
+                          onChange={(e) => setNewVariationValue(toTitleCase(e.target.value))}
                           placeholder="e.g., 300 Gms, 1.5 L"
                           autoFocus
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"

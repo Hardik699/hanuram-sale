@@ -572,12 +572,12 @@ export default function ItemDetail() {
       {/* Header with Tabs */}
       <div className="bg-white rounded-t-xl border border-gray-200 border-b-0 p-6 mb-0">
         <div className="flex justify-between items-start mb-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {item.itemName}
-            </h1>
-            <p className="text-gray-600">{item.description}</p>
-          </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2 capitalize">
+                {item.itemName}
+              </h1>
+              <p className="text-gray-600 first-letter:capitalize">{item.description}</p>
+            </div>
           <div className="flex gap-2">
             <button
               onClick={() => navigate(`/items/${itemId}/edit`)}
@@ -755,6 +755,17 @@ export default function ItemDetail() {
                   </p>
                 </div>
               </div>
+
+              {item.description && (
+                <div className="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                    Description
+                  </p>
+                  <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap first-letter:capitalize">
+                    {item.description}
+                  </p>
+                </div>
+              )}
 
               {/* Variations Section */}
               {item.variations && item.variations.length > 0 && (
