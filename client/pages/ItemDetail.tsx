@@ -10,20 +10,23 @@ console.log("📄 ItemDetail module loaded");
 
 // Helper function to calculate auto pricing
 const calculateAutoPrices = (basePrice: number) => {
-  if (basePrice <= 0) return { Zomato: 0, Swiggy: 0 };
-
-  // Add 15% markup
-  const priceWith15Percent = basePrice * 1.15;
+  if (basePrice <= 0) return { Zomato: 0, Swiggy: 0, GS1: 0 };
 
   // Round to nearest 5
   const roundToNearest5 = (price: number) => {
     return Math.round(price / 5) * 5;
   };
 
+  // Add 15% markup for Zomato and Swiggy
+  const priceWith15Percent = basePrice * 1.15;
   const autoPriceZomato = roundToNearest5(priceWith15Percent);
   const autoPriceSwiggy = roundToNearest5(priceWith15Percent);
 
-  return { Zomato: autoPriceZomato, Swiggy: autoPriceSwiggy };
+  // Add 20% markup for GS1
+  const priceWith20Percent = basePrice * 1.20;
+  const autoPriceGS1 = roundToNearest5(priceWith20Percent);
+
+  return { Zomato: autoPriceZomato, Swiggy: autoPriceSwiggy, GS1: autoPriceGS1 };
 };
 
 export default function ItemDetail() {
@@ -569,12 +572,12 @@ export default function ItemDetail() {
       {/* Header with Tabs */}
       <div className="bg-white rounded-t-xl border border-gray-200 border-b-0 p-6 mb-0">
         <div className="flex justify-between items-start mb-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {item.itemName}
-            </h1>
-            <p className="text-gray-600">{item.description}</p>
-          </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2 capitalize">
+                {item.itemName}
+              </h1>
+              <p className="text-gray-600 first-letter:capitalize">{item.description}</p>
+            </div>
           <div className="flex gap-2">
             <button
               onClick={() => navigate(`/items/${itemId}/edit`)}
@@ -753,6 +756,17 @@ export default function ItemDetail() {
                 </div>
               </div>
 
+              {item.description && (
+                <div className="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                    Description
+                  </p>
+                  <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap first-letter:capitalize">
+                    {item.description}
+                  </p>
+                </div>
+              )}
+
               {/* Variations Section */}
               {item.variations && item.variations.length > 0 && (
                 <div>
@@ -814,6 +828,7 @@ export default function ItemDetail() {
                               const isAutoCalculated = [
                                 "Zomato",
                                 "Swiggy",
+                                "GS1",
                               ].includes(channel);
                               let displayPrice =
                                 variation.channels[channel] || "-";
@@ -824,10 +839,13 @@ export default function ItemDetail() {
                                 const autoPrices = calculateAutoPrices(
                                   variation.price,
                                 );
-                                displayPrice =
-                                  channel === "Zomato"
-                                    ? autoPrices.Zomato
-                                    : autoPrices.Swiggy;
+                                if (channel === "Zomato") {
+                                  displayPrice = autoPrices.Zomato;
+                                } else if (channel === "Swiggy") {
+                                  displayPrice = autoPrices.Swiggy;
+                                } else if (channel === "GS1") {
+                                  displayPrice = autoPrices.GS1;
+                                }
                                 bgColor = "bg-blue-50";
                               }
 

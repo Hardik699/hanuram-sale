@@ -117,4 +117,9 @@
     overflow-x: auto;
     white-space: pre;
   }
+
+  input[type="text"],
+  textarea {
+    text-transform: capitalize;
+  }
 }

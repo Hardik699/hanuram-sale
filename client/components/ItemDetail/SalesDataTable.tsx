@@ -171,10 +171,15 @@ export default function SalesDataTable({ data, itemName, saleType = "QTY" }: Sal
             </p>
           </div>
           <div className="text-left sm:text-right">
-            <p className="text-3xl font-black text-purple-700">
-              {totals.totalQty.toFixed(2)}
-              <span className="text-sm ml-1 uppercase">{saleType === "KG" ? "KG" : "qty"}</span>
-            </p>
+            <div className="flex flex-col sm:items-end">
+              <p className="text-3xl font-black text-purple-700">
+                {totals.totalQty.toFixed(2)}
+                <span className="text-sm ml-1 uppercase">{saleType === "KG" ? "KG" : "qty"}</span>
+              </p>
+              <p className="text-xl font-bold text-blue-700">
+                ₹{totals.totalValue.toLocaleString()}
+              </p>
+            </div>
             <p className="text-xs text-purple-500 font-semibold mt-1">
               (Zomato + Swiggy + Dining + Parcel)
             </p>

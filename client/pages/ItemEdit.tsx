@@ -103,6 +103,11 @@ export default function ItemEdit() {
   const [newHsnCode, setNewHsnCode] = useState("");
   const [newVariationValue, setNewVariationValue] = useState("");
 
+  // Helper to capitalize first letter of each word
+  const toTitleCase = (str: string) => {
+    return str.replace(/\b\w/g, (l) => l.toUpperCase());
+  };
+
   // Images with channel info
   interface ImageWithChannel {
     file?: File;
@@ -581,7 +586,7 @@ export default function ItemEdit() {
               <input
                 type="text"
                 value={itemName}
-                onChange={(e) => setItemName(e.target.value)}
+                onChange={(e) => setItemName(toTitleCase(e.target.value))}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                 required
               />
@@ -596,18 +601,6 @@ export default function ItemEdit() {
                 value={shortCode}
                 disabled
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
-              </label>
-              <input
-                type="text"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
               />
             </div>
 
@@ -709,7 +702,7 @@ export default function ItemEdit() {
                   <input
                     type="text"
                     value={newGroup}
-                    onChange={(e) => setNewGroup(e.target.value)}
+                    onChange={(e) => setNewGroup(toTitleCase(e.target.value))}
                     placeholder="Enter new group"
                     autoFocus
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -756,7 +749,7 @@ export default function ItemEdit() {
                   <input
                     type="text"
                     value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value)}
+                    onChange={(e) => setNewCategory(toTitleCase(e.target.value))}
                     placeholder="Enter new category"
                     autoFocus
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -823,6 +816,18 @@ export default function ItemEdit() {
             </div>
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Description
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(toTitleCase(e.target.value))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 min-h-[100px]"
+              placeholder="Enter item description"
+            />
+          </div>
+
           {/* Variations Section */}
           <div className="border-t pt-6">
             <div className="flex justify-between items-center mb-4">
@@ -879,7 +884,7 @@ export default function ItemEdit() {
                             type="text"
                             value={newVariationValue}
                             onChange={(e) =>
-                              setNewVariationValue(e.target.value)
+                              setNewVariationValue(toTitleCase(e.target.value))
                             }
                             placeholder="e.g., 300 Gms, 1.5 L"
                             autoFocus
