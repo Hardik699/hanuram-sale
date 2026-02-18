@@ -519,7 +519,7 @@ export default function ItemEdit() {
       <div className="flex-1 p-6 sm:p-8">
         <button
           onClick={() => navigate(`/items/${itemId}`)}
-          className="flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-6 font-medium"
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 font-medium"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Item
@@ -536,7 +536,7 @@ export default function ItemEdit() {
       <div className="flex-1 p-6 sm:p-8">
         <button
           onClick={() => navigate("/items")}
-          className="flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-6 font-medium"
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 font-medium"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Items
@@ -555,7 +555,7 @@ export default function ItemEdit() {
     <div className="flex-1 p-6 sm:p-8">
       <button
         onClick={() => navigate(`/items/${itemId}`)}
-        className="flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-6 font-medium"
+        className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 font-medium"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Item
@@ -587,7 +587,7 @@ export default function ItemEdit() {
                 type="text"
                 value={itemName}
                 onChange={(e) => setItemName(toTitleCase(e.target.value))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                 required
               />
             </div>
@@ -612,7 +612,7 @@ export default function ItemEdit() {
                 <select
                   value={hsnCode}
                   onChange={(e) => setHsnCode(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                 >
                   <option value="">Select HSN Code</option>
                   {hsnCodes.map((code) => (
@@ -657,7 +657,7 @@ export default function ItemEdit() {
               <select
                 value={gst}
                 onChange={(e) => setGst(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                 <option value="">Select GST</option>
                 {GST_OPTIONS.map((option) => (
@@ -679,7 +679,7 @@ export default function ItemEdit() {
                 <select
                   value={group}
                   onChange={(e) => setGroup(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   required
                 >
                   <option value="">Select Group</option>
@@ -726,7 +726,7 @@ export default function ItemEdit() {
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   required
                 >
                   <option value="">Select Category</option>
@@ -777,7 +777,7 @@ export default function ItemEdit() {
                 value={profitMargin}
                 onChange={(e) => setProfitMargin(e.target.value)}
                 step="0.01"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
 
@@ -788,7 +788,7 @@ export default function ItemEdit() {
               <select
                 value={itemType}
                 onChange={(e) => setItemType(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                 {ITEM_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -805,7 +805,7 @@ export default function ItemEdit() {
               <select
                 value={unitType}
                 onChange={(e) => setUnitType(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                 {UNIT_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -823,7 +823,7 @@ export default function ItemEdit() {
             <textarea
               value={description}
               onChange={(e) => setDescription(toTitleCase(e.target.value))}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 min-h-[100px]"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 min-h-[100px]"
               placeholder="Enter item description"
             />
           </div>
@@ -860,7 +860,7 @@ export default function ItemEdit() {
                         onChange={(e) =>
                           updateVariation(variation.id, "value", e.target.value)
                         }
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       >
                         <option value="">Select Variation</option>
                         {variationValues.map((val) => (
@@ -917,7 +917,7 @@ export default function ItemEdit() {
                       }
                       placeholder="0"
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </div>
 
@@ -931,7 +931,7 @@ export default function ItemEdit() {
                       onChange={(e) =>
                         updateVariation(variation.id, "sapCode", e.target.value)
                       }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </div>
 
@@ -950,7 +950,7 @@ export default function ItemEdit() {
                         )
                       }
                       step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </div>
 
@@ -967,7 +967,7 @@ export default function ItemEdit() {
                           e.target.value as "QTY" | "KG"
                         )
                       }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
                       <option value="QTY">QTY (Quantity)</option>
                       <option value="KG">KG (Kilogram)</option>
@@ -1017,7 +1017,7 @@ export default function ItemEdit() {
                             placeholder="0"
                             step="0.01"
                             disabled={isAutoCalculated}
-                            className={`w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+                            className={`w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 ${
                               isAutoCalculated
                                 ? "bg-blue-50 text-gray-500 cursor-not-allowed"
                                 : ""
@@ -1042,7 +1042,7 @@ export default function ItemEdit() {
                             e.target.checked,
                           )
                         }
-                        className="w-4 h-4 border-gray-300 rounded focus:ring-2 focus:ring-purple-600 cursor-pointer"
+                        className="w-4 h-4 border-gray-300 rounded focus:ring-2 focus:ring-blue-600 cursor-pointer"
                       />
                       <label
                         htmlFor={`gs1-checkbox-${variation.id}`}
@@ -1088,7 +1088,7 @@ export default function ItemEdit() {
                               )
                             }
                             placeholder="Enter GS1 code"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                           />
                         </div>
                       </div>
@@ -1129,7 +1129,7 @@ export default function ItemEdit() {
                     Click to upload images
                   </p>
                   <p className="text-gray-600 text-sm mt-2">PNG, JPG up to 10MB</p>
-                  <p className="text-purple-600 text-xs mt-3 font-semibold">
+                  <p className="text-blue-600 text-xs mt-3 font-semibold">
                     Select channel in the popup that appears
                   </p>
                 </label>

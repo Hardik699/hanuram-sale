@@ -66,7 +66,7 @@ export default function SalesDataTable({ data, itemName, saleType = "QTY" }: Sal
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
       <div className="flex items-center gap-2 mb-4">
-        <BarChart3 className="w-5 h-5 text-purple-600" />
+        <BarChart3 className="w-5 h-5 text-blue-600" />
         <h2 className="text-xl font-bold text-gray-900">Item-wise & Variation-wise Data</h2>
       </div>
 
@@ -172,7 +172,7 @@ export default function SalesDataTable({ data, itemName, saleType = "QTY" }: Sal
           </div>
           <div className="text-left sm:text-right">
             <div className="flex flex-col sm:items-end">
-              <p className="text-3xl font-black text-purple-700">
+              <p className="text-3xl font-black text-blue-700">
                 {totals.totalQty.toFixed(2)}
                 <span className="text-sm ml-1 uppercase">{saleType === "KG" ? "KG" : "qty"}</span>
               </p>
@@ -180,7 +180,7 @@ export default function SalesDataTable({ data, itemName, saleType = "QTY" }: Sal
                 ₹{totals.totalValue.toLocaleString()}
               </p>
             </div>
-            <p className="text-xs text-purple-500 font-semibold mt-1">
+            <p className="text-xs text-blue-500 font-semibold mt-1">
               (Zomato + Swiggy + Dining + Parcel)
             </p>
           </div>

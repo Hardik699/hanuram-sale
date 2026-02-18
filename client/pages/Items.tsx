@@ -150,37 +150,40 @@ export default function Items() {
   return (
     <div className="flex-1 p-6 sm:p-8">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-start gap-6 mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
             Items
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-gray-600 text-sm">
             Manage your product items and variations
           </p>
           {loading && (
-            <p className="text-gray-400 text-xs mt-2">
-              Loading items from MongoDB...
-            </p>
+            <div className="mt-3 flex items-center gap-2 text-blue-600 text-xs font-medium">
+              <div className="w-3 h-3 bg-blue-600 rounded-full animate-pulse"></div>
+              Loading items from database...
+            </div>
           )}
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 sm:gap-3 flex-shrink-0">
           {items.length > 0 && !loading && (
             <button
               onClick={handleDownload}
-              className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-medium transition text-sm sm:text-base"
+              className="flex items-center gap-2 px-4 sm:px-6 py-2.5 bg-blue-50 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-100 hover:border-blue-300 font-medium transition text-xs sm:text-sm shadow-sm hover:shadow-md"
+              title="Download items as CSV"
             >
               <Download className="w-4 h-4" />
-              Download
+              <span className="hidden sm:inline">Download</span>
             </button>
           )}
           <button
             onClick={() => setShowForm(true)}
             disabled={loading}
-            className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 font-medium transition text-sm sm:text-base"
+            className="flex items-center gap-2 px-4 sm:px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition text-xs sm:text-sm shadow-md hover:shadow-lg"
           >
             <Plus className="w-4 h-4" />
-            Add Item
+            <span className="hidden sm:inline">Add Item</span>
+            <span className="sm:hidden">Add</span>
           </button>
         </div>
       </div>
@@ -199,8 +202,12 @@ export default function Items() {
 
       {/* Items Table */}
       {loading ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
-          <p className="text-gray-500">Loading items from MongoDB...</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+          <div className="inline-flex items-center justify-center w-12 h-12 mb-4 bg-blue-100 rounded-full">
+            <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+          <p className="text-gray-600 font-medium">Loading items from database...</p>
+          <p className="text-gray-400 text-xs mt-2">This may take a moment</p>
         </div>
       ) : (
         <ItemsTable items={items} />
