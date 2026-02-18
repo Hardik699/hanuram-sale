@@ -91,7 +91,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 <th className="px-2 sm:px-4 py-4 text-left font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-100 hidden md:table-cell">
                   Category
                 </th>
-                <th className="px-2 sm:px-4 py-4 text-left font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-100 hidden lg:table-cell">
+                <th className="px-2 sm:px-4 py-4 text-left font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-100 hidden lg:table-cell sticky z-20" style={{ left: '15rem' }}>
                   Item Name
                 </th>
 
@@ -169,10 +169,10 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   <td className="px-2 sm:px-4 py-4 text-gray-700 bg-inherit hidden sm:table-cell">
                     {item.group}
                   </td>
-                  <td className="px-2 sm:px-4 py-4 text-gray-700 hidden md:table-cell">
+                  <td className="px-2 sm:px-4 py-4 text-gray-700 hidden md:table-cell bg-inherit">
                     {item.category}
                   </td>
-                  <td className="px-2 sm:px-4 py-4 text-gray-900 font-medium hidden lg:table-cell max-w-xs truncate">
+                  <td className="px-2 sm:px-4 py-4 text-gray-900 font-medium hidden lg:table-cell max-w-xs truncate sticky z-10 bg-inherit" style={{ left: '15rem' }}>
                     {item.itemName}
                   </td>
 
