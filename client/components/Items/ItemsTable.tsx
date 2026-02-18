@@ -100,9 +100,16 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   <th
                     key={`${variation.name}-${variation.value}`}
                     colSpan={4}
-                    className={`px-3 sm:px-4 py-4 text-center text-sm font-bold text-blue-900 border-l border-blue-200 bg-gradient-to-r from-blue-50 to-blue-100`}
+                    className={`px-3 sm:px-4 py-4 text-center text-sm font-bold text-white border-l-2 border-blue-300 ${
+                      idx % 2 === 0
+                        ? "bg-gradient-to-r from-blue-600 to-blue-500"
+                        : "bg-gradient-to-r from-blue-500 to-blue-600"
+                    }`}
                   >
-                    {variation.value}
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-xs opacity-90 font-semibold">{variation.name}</span>
+                      <span className="text-base">{variation.value}</span>
+                    </div>
                   </th>
                 ))}
               </tr>
@@ -113,12 +120,19 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   <th colSpan={5} className="px-2 sm:px-4 py-0 sticky left-10 z-20 bg-blue-100"></th>
                   {allVariations.map((variation, idx) => (
                     <React.Fragment key={`${variation.name}-${variation.value}`}>
-                      {CHANNELS.map((channel) => (
+                      {CHANNELS.map((channel, channelIdx) => (
                         <th
                           key={`${variation.value}-${channel}`}
-                          className={`px-3 sm:px-4 py-3 text-center font-semibold text-gray-700 border-r border-blue-200 bg-blue-100`}
+                          className={`px-3 sm:px-4 py-3 text-center font-semibold text-gray-700 border-r border-blue-200 ${
+                            channelIdx % 2 === 0 ? "bg-blue-100" : "bg-blue-50"
+                          }`}
                         >
-                          {channel}
+                          <div className="flex flex-col items-center gap-1">
+                            <span className="text-xs bg-blue-600 text-white px-1.5 py-0.5 rounded-full font-bold">
+                              {channelIdx + 1}
+                            </span>
+                            <span>{channel}</span>
+                          </div>
                         </th>
                       ))}
                     </React.Fragment>
@@ -173,14 +187,20 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                       <React.Fragment
                         key={`${item.itemId}-${variation.value}`}
                       >
-                        {CHANNELS.map((channel) => (
+                        {CHANNELS.map((channel, channelIdx) => (
                           <td
                             key={`${item.itemId}-${variation.value}-${channel}`}
-                            className={`px-3 sm:px-4 py-4 text-center font-semibold border-r border-gray-100 bg-inherit text-gray-900`}
+                            className={`px-3 sm:px-4 py-4 text-center border-r border-gray-100 transition-colors ${
+                              channelIdx % 2 === 0
+                                ? "bg-blue-50/40 hover:bg-blue-50"
+                                : "bg-white hover:bg-gray-50"
+                            }`}
                           >
-                            {itemVariation && itemVariation.channels[channel]
-                              ? `₹${itemVariation.channels[channel]}`
-                              : "-"}
+                            <span className="font-bold text-gray-900">
+                              {itemVariation && itemVariation.channels[channel]
+                                ? `₹${itemVariation.channels[channel]}`
+                                : "-"}
+                            </span>
                           </td>
                         ))}
                       </React.Fragment>
