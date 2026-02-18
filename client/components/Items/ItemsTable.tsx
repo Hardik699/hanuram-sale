@@ -63,7 +63,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
     <div className="space-y-4">
       {/* Responsive Table */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        <div className="overflow-x-auto">
           <table className="w-full min-w-full">
             {/* Table Header */}
             <thead>
