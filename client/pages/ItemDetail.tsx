@@ -10,20 +10,23 @@ console.log("📄 ItemDetail module loaded");
 
 // Helper function to calculate auto pricing
 const calculateAutoPrices = (basePrice: number) => {
-  if (basePrice <= 0) return { Zomato: 0, Swiggy: 0 };
-
-  // Add 15% markup
-  const priceWith15Percent = basePrice * 1.15;
+  if (basePrice <= 0) return { Zomato: 0, Swiggy: 0, GS1: 0 };
 
   // Round to nearest 5
   const roundToNearest5 = (price: number) => {
     return Math.round(price / 5) * 5;
   };
 
+  // Add 15% markup for Zomato and Swiggy
+  const priceWith15Percent = basePrice * 1.15;
   const autoPriceZomato = roundToNearest5(priceWith15Percent);
   const autoPriceSwiggy = roundToNearest5(priceWith15Percent);
 
-  return { Zomato: autoPriceZomato, Swiggy: autoPriceSwiggy };
+  // Add 20% markup for GS1
+  const priceWith20Percent = basePrice * 1.20;
+  const autoPriceGS1 = roundToNearest5(priceWith20Percent);
+
+  return { Zomato: autoPriceZomato, Swiggy: autoPriceSwiggy, GS1: autoPriceGS1 };
 };
 
 export default function ItemDetail() {
@@ -814,6 +817,7 @@ export default function ItemDetail() {
                               const isAutoCalculated = [
                                 "Zomato",
                                 "Swiggy",
+                                "GS1",
                               ].includes(channel);
                               let displayPrice =
                                 variation.channels[channel] || "-";
@@ -824,10 +828,13 @@ export default function ItemDetail() {
                                 const autoPrices = calculateAutoPrices(
                                   variation.price,
                                 );
-                                displayPrice =
-                                  channel === "Zomato"
-                                    ? autoPrices.Zomato
-                                    : autoPrices.Swiggy;
+                                if (channel === "Zomato") {
+                                  displayPrice = autoPrices.Zomato;
+                                } else if (channel === "Swiggy") {
+                                  displayPrice = autoPrices.Swiggy;
+                                } else if (channel === "GS1") {
+                                  displayPrice = autoPrices.GS1;
+                                }
                                 bgColor = "bg-blue-50";
                               }
 
