@@ -625,9 +625,9 @@ export default function ItemEdit() {
       </button>
 
       <div className="bg-white rounded-xl border border-gray-200 p-6 sm:p-8">
-        {/* Area-wise Price Summary Row */}
+        {/* Area-wise Price Summary Row (Vertical Stack per Area) */}
         {variations.length > 0 && (
-          <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+          <div className="flex flex-wrap gap-2 mb-6 mt-3">
             {CHANNELS.map(channel => {
               const variation = variations[0];
               let price = variation.channels[channel];
@@ -644,9 +644,16 @@ export default function ItemEdit() {
               if (!price) return null;
 
               return (
-                <div key={channel} className="flex items-center gap-1.5 text-sm">
-                  <span className="font-semibold text-gray-500 uppercase text-[9px] tracking-wider">{channel}</span>
-                  <span className="font-bold text-purple-700">₹{price}</span>
+                <div key={channel} className="flex flex-col items-center min-w-[80px] bg-white px-3 py-2 rounded-lg border border-purple-100 shadow-sm">
+                  <span className="text-[10px] font-bold text-purple-600 truncate max-w-[70px] mb-0.5" title={variation.value}>
+                    {variation.value}
+                  </span>
+                  <span className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                    {channel}
+                  </span>
+                  <span className="text-sm font-black text-gray-900">
+                    ₹{price}
+                  </span>
                 </div>
               );
             })}
@@ -1138,42 +1145,42 @@ export default function ItemEdit() {
                         {/* Standard Channels (excluding GS1) */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
                           {CHANNELS.filter((ch) => ch !== "GS1").map((channel) => {
-                            const isAutoCalculated = ["Zomato", "Swiggy"].includes(
-                              channel,
-                            );
-                            return (
-                              <div key={channel}>
-                                <label className="text-xs text-gray-600 block mb-1">
-                                  {channel}
-                                  {isAutoCalculated && (
-                                    <span className="text-blue-600 font-semibold">
-                                      {" "}
-                                      (auto)
-                                    </span>
-                                  )}
-                                </label>
-                                <input
-                                  type="number"
-                                  value={variation.channels[channel] || 0}
-                                  onChange={(e) =>
-                                    updateChannelPrice(
-                                      variation.id,
-                                      channel,
-                                      parseFloat(e.target.value) || 0,
-                                    )
-                                  }
-                                  placeholder="0"
-                                  step="0.01"
-                                  disabled={isAutoCalculated}
-                                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 ${
-                                    isAutoCalculated
-                                      ? "bg-blue-50 text-gray-500 cursor-not-allowed"
-                                      : ""
-                                  }`}
-                                />
-                              </div>
-                            );
-                          })}
+                      const isAutoCalculated = ["Zomato", "Swiggy"].includes(
+                        channel,
+                      );
+                      return (
+                        <div key={channel} className="flex flex-col">
+                          <div className="flex flex-col mb-1 text-center bg-gray-50 rounded p-1 border border-gray-100">
+                             <span className="text-[9px] font-bold text-purple-600 truncate" title={variation.value}>{variation.value}</span>
+                             <span className="text-[8px] font-semibold text-gray-500 uppercase tracking-tight leading-none">
+                              {channel}
+                              {isAutoCalculated && (
+                                <span className="text-blue-600 ml-1">(auto)</span>
+                              )}
+                             </span>
+                          </div>
+                          <input
+                            type="number"
+                            value={variation.channels[channel] || 0}
+                            onChange={(e) =>
+                              updateChannelPrice(
+                                variation.id,
+                                channel,
+                                parseFloat(e.target.value) || 0,
+                              )
+                            }
+                            placeholder="0"
+                            step="0.01"
+                            disabled={isAutoCalculated}
+                            className={`w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+                              isAutoCalculated
+                                ? "bg-blue-50 text-gray-500 cursor-not-allowed font-bold"
+                                : ""
+                            }`}
+                          />
+                        </div>
+                      );
+                    })}
                         </div>
 
                         {/* GS1 with Checkbox and Code */}
@@ -1201,46 +1208,47 @@ export default function ItemEdit() {
                           </div>
 
                           {variation.gs1Enabled && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                              {/* GS1 Price */}
-                              <div>
-                                <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
-                                  GS1 Price (auto)
-                                </label>
-                                <input
-                                  type="number"
-                                  value={variation.channels.GS1 || 0}
-                                  placeholder="Auto: 0"
-                                  step="0.01"
-                                  disabled
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-blue-50 text-gray-500 cursor-not-allowed"
-                                />
-                                <p className="text-xs text-blue-600 mt-1">
-                                  Auto +20% (rounded to 5)
-                                </p>
-                              </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {/* GS1 Price */}
+                        <div>
+                          <div className="flex flex-col mb-1 text-center bg-blue-50 rounded p-1 border border-blue-100">
+                             <span className="text-[9px] font-bold text-purple-600 truncate">{variation.value}</span>
+                             <span className="text-[8px] font-semibold text-gray-500 uppercase tracking-tight leading-none">GS1 (auto)</span>
+                          </div>
+                          <input
+                            type="number"
+                            value={variation.channels.GS1 || 0}
+                            placeholder="Auto: 0"
+                            step="0.01"
+                            disabled
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-blue-50 text-gray-500 cursor-not-allowed font-bold"
+                          />
+                          <p className="text-[10px] text-blue-600 mt-1 italic">
+                            Auto +20% (rounded to 5)
+                          </p>
+                        </div>
 
-                              {/* GS1 Code */}
-                              <div>
-                                <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
-                                  GS1 Code
-                                </label>
-                                <input
-                                  type="text"
-                                  value={variation.gs1Code || ""}
-                                  onChange={(e) =>
-                                    updateVariation(
-                                      variation.id,
-                                      "gs1Code",
-                                      e.target.value,
-                                    )
-                                  }
-                                  placeholder="Enter GS1 code"
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                />
-                                </div>
-                              </div>
-                            )}
+                        {/* GS1 Code */}
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
+                            GS1 Code
+                          </label>
+                          <input
+                            type="text"
+                            value={variation.gs1Code || ""}
+                            onChange={(e) =>
+                              updateVariation(
+                                variation.id,
+                                "gs1Code",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Enter GS1 code"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
+                          />
+                        </div>
+                      </div>
+                    )}
                           </div>
                         </div>
 

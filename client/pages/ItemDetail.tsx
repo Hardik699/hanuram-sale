@@ -576,14 +576,13 @@ export default function ItemDetail() {
               <h1 className="text-3xl font-bold text-gray-900 mb-1 capitalize">
                 {item.itemName}
               </h1>
-              {/* Area-wise Price Summary Row */}
+              {/* Area-wise Price Summary Row (Vertical Stack per Area) */}
               {item.variations && item.variations.length > 0 && (
-                <div className="flex flex-wrap gap-x-4 gap-y-1 mb-2">
+                <div className="flex flex-wrap gap-2 mb-3 mt-2">
                   {["Dining", "Parcale", "Swiggy", "Zomato", "GS1"].map(channel => {
                     const variation = item.variations[0];
                     let price = variation.channels?.[channel];
 
-                    // If channel price not explicitly set, calculate it for auto-channels
                     if (!price || price === 0) {
                       if (["Zomato", "Swiggy", "GS1"].includes(channel)) {
                         const autoPrices = calculateAutoPrices(variation.price || 0);
@@ -596,9 +595,16 @@ export default function ItemDetail() {
                     if (!price) return null;
 
                     return (
-                      <div key={channel} className="flex items-center gap-1.5 text-sm bg-gray-50 px-2 py-0.5 rounded border border-gray-100">
-                        <span className="font-semibold text-gray-500 uppercase text-[9px] tracking-wider">{channel}</span>
-                        <span className="font-bold text-purple-700">₹{price}</span>
+                      <div key={channel} className="flex flex-col items-center min-w-[80px] bg-white px-3 py-2 rounded-lg border border-purple-100 shadow-sm">
+                        <span className="text-[10px] font-bold text-purple-600 truncate max-w-[70px] mb-0.5" title={variation.value}>
+                          {variation.value}
+                        </span>
+                        <span className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                          {channel}
+                        </span>
+                        <span className="text-sm font-black text-gray-900">
+                          ₹{price}
+                        </span>
                       </div>
                     );
                   })}
@@ -889,18 +895,21 @@ export default function ItemDetail() {
                           return (
                             <div
                               key={channel}
-                              className={`rounded-lg p-3 text-center border ${isAutoCalculated ? "bg-blue-50 border-blue-200" : "bg-gray-50 border-gray-100"}`}
+                              className={`rounded-lg p-3 text-center border ${isAutoCalculated ? "bg-blue-50 border-blue-200" : "bg-gray-50 border-gray-100 shadow-sm"}`}
                             >
-                              <p className="text-xs text-gray-600 mb-1">
+                              <p className="text-[10px] font-bold text-purple-600 mb-0.5 truncate" title={variation.value}>
+                                {variation.value}
+                              </p>
+                              <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
                                 {channel}
                                 {isAutoCalculated && (
-                                  <span className="text-blue-600 font-semibold block text-[10px]">
+                                  <span className="text-blue-600 block text-[8px]">
                                     (auto)
                                   </span>
                                 )}
                               </p>
                               <p
-                                className={`text-base font-bold ${isAutoCalculated ? "text-blue-700" : "text-gray-900"}`}
+                                className={`text-sm font-black ${isAutoCalculated ? "text-blue-700" : "text-gray-900"}`}
                               >
                                 ₹{displayPrice}
                               </p>
