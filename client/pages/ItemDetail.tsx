@@ -37,7 +37,7 @@ export default function ItemDetail() {
   const [item, setItem] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"details" | "sales">("details");
+  const [activeTab, setActiveTab] = useState<"details" | "sales" | "variations">("details");
 
   // Initialize with default date range (last 365 days)
   const getDefaultDateRange = () => {
@@ -573,9 +573,37 @@ export default function ItemDetail() {
       <div className="bg-white rounded-t-xl border border-gray-200 border-b-0 p-6 mb-0">
         <div className="flex justify-between items-start mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2 capitalize">
+              <h1 className="text-3xl font-bold text-gray-900 mb-1 capitalize">
                 {item.itemName}
               </h1>
+              {/* Area-wise Price Summary Row */}
+              {item.variations && item.variations.length > 0 && (
+                <div className="flex flex-wrap gap-x-4 gap-y-1 mb-2">
+                  {["Dining", "Parcale", "Swiggy", "Zomato", "GS1"].map(channel => {
+                    const variation = item.variations[0];
+                    let price = variation.channels?.[channel];
+
+                    // If channel price not explicitly set, calculate it for auto-channels
+                    if (!price || price === 0) {
+                      if (["Zomato", "Swiggy", "GS1"].includes(channel)) {
+                        const autoPrices = calculateAutoPrices(variation.price || 0);
+                        price = autoPrices[channel as keyof typeof autoPrices];
+                      } else {
+                        price = variation.price;
+                      }
+                    }
+
+                    if (!price) return null;
+
+                    return (
+                      <div key={channel} className="flex items-center gap-1.5 text-sm bg-gray-50 px-2 py-0.5 rounded border border-gray-100">
+                        <span className="font-semibold text-gray-500 uppercase text-[9px] tracking-wider">{channel}</span>
+                        <span className="font-bold text-purple-700">₹{price}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
               <p className="text-gray-600 first-letter:capitalize">{item.description}</p>
             </div>
           <div className="flex gap-2">
@@ -614,6 +642,16 @@ export default function ItemDetail() {
             Item Details
           </button>
           <button
+            onClick={() => setActiveTab("variations")}
+            className={`px-4 py-2 font-semibold border-b-2 transition ${
+              activeTab === "variations"
+                ? "border-purple-600 text-purple-600"
+                : "border-transparent text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Variations
+          </button>
+          <button
             onClick={() => setActiveTab("sales")}
             className={`px-4 py-2 font-semibold border-b-2 transition ${
               activeTab === "sales"
@@ -638,7 +676,7 @@ export default function ItemDetail() {
                   <div className="space-y-2 p-4">
                     <div className="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center">
                       <img
-                        src={item.images[0]}
+                        src={typeof item.images[0] === 'string' ? item.images[0] : (item.images[0].url || item.images[0].preview)}
                         alt={item.itemName}
                         className="w-full h-full object-cover rounded-lg"
                       />
@@ -647,13 +685,13 @@ export default function ItemDetail() {
                       <div className="grid grid-cols-3 gap-2">
                         {item.images
                           .slice(1)
-                          .map((img: string, idx: number) => (
+                          .map((img: any, idx: number) => (
                             <div
                               key={idx}
                               className="w-full h-20 bg-gray-100 rounded-lg flex items-center justify-center"
                             >
                               <img
-                                src={img}
+                                src={typeof img === 'string' ? img : (img.url || img.preview)}
                                 alt={`${item.itemName} ${idx + 2}`}
                                 className="w-full h-full object-cover rounded-lg"
                               />
@@ -766,119 +804,119 @@ export default function ItemDetail() {
                   </p>
                 </div>
               )}
-
-              {/* Variations Section */}
-              {item.variations && item.variations.length > 0 && (
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900 mb-4">
-                    Variations
-                  </h2>
-
-                  <div className="space-y-4">
-                    {item.variations.map((variation: any, idx: number) => (
-                      <div
-                        key={idx}
-                        className="border border-gray-200 rounded-lg p-4"
-                      >
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
-                          <div>
-                            <p className="text-xs font-semibold text-gray-500 uppercase">
-                              Variation Value
-                            </p>
-                            <p className="text-base font-semibold text-gray-900 mt-1">
-                              {variation.value}
-                            </p>
-                          </div>
-
-                          <div>
-                            <p className="text-xs font-semibold text-gray-500 uppercase">
-                              Price
-                            </p>
-                            <p className="text-base font-semibold text-gray-900 mt-1">
-                              ₹{variation.price}
-                            </p>
-                          </div>
-
-                          <div>
-                            <p className="text-xs font-semibold text-gray-500 uppercase">
-                              SAP Code
-                            </p>
-                            <p className="text-base font-semibold text-gray-900 mt-1">
-                              {variation.sapCode || "-"}
-                            </p>
-                          </div>
-
-                          <div>
-                            <p className="text-xs font-semibold text-gray-500 uppercase">
-                              Profit Margin (%)
-                            </p>
-                            <p className="text-base font-semibold text-gray-900 mt-1">
-                              {variation.profitMargin || 0}%
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Channel Prices */}
-                        <div>
-                          <p className="text-xs font-semibold text-gray-500 uppercase mb-3">
-                            Channel Prices
-                          </p>
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                            {CHANNELS.map((channel) => {
-                              const isAutoCalculated = [
-                                "Zomato",
-                                "Swiggy",
-                                "GS1",
-                              ].includes(channel);
-                              let displayPrice =
-                                variation.channels[channel] || "-";
-                              let bgColor = "bg-gray-50";
-
-                              // Show auto-calculated prices for Zomato and Swiggy
-                              if (isAutoCalculated && variation.price) {
-                                const autoPrices = calculateAutoPrices(
-                                  variation.price,
-                                );
-                                if (channel === "Zomato") {
-                                  displayPrice = autoPrices.Zomato;
-                                } else if (channel === "Swiggy") {
-                                  displayPrice = autoPrices.Swiggy;
-                                } else if (channel === "GS1") {
-                                  displayPrice = autoPrices.GS1;
-                                }
-                                bgColor = "bg-blue-50";
-                              }
-
-                              return (
-                                <div
-                                  key={channel}
-                                  className={`${bgColor} rounded-lg p-3 text-center border ${isAutoCalculated ? "border-blue-200" : "border-transparent"}`}
-                                >
-                                  <p className="text-xs text-gray-600 mb-1">
-                                    {channel}
-                                    {isAutoCalculated && (
-                                      <span className="text-blue-600 font-semibold">
-                                        {" "}
-                                        (auto)
-                                      </span>
-                                    )}
-                                  </p>
-                                  <p
-                                    className={`text-base font-bold ${isAutoCalculated ? "text-blue-700" : "text-gray-900"}`}
-                                  >
-                                    ₹{displayPrice}
-                                  </p>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
+          </div>
+        ) : activeTab === "variations" ? (
+          /* Variations Tab Content */
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Variations ({item.variations?.length || 0})
+            </h2>
+
+            {item.variations && item.variations.length > 0 ? (
+              <div className="space-y-4">
+                {item.variations.map((variation: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
+                  >
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase">
+                          Variation Value
+                        </p>
+                        <p className="text-base font-semibold text-gray-900 mt-1">
+                          {variation.value}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase">
+                          Base Price
+                        </p>
+                        <p className="text-base font-semibold text-gray-900 mt-1">
+                          ₹{variation.price}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase">
+                          SAP Code
+                        </p>
+                        <p className="text-base font-semibold text-gray-900 mt-1">
+                          {variation.sapCode || "-"}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase">
+                          Profit Margin (%)
+                        </p>
+                        <p className="text-base font-semibold text-gray-900 mt-1">
+                          {variation.profitMargin || 0}%
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase">
+                          Sale Type
+                        </p>
+                        <p className="text-base font-semibold text-gray-900 mt-1">
+                          {variation.saleType || "QTY"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Channel Prices */}
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500 uppercase mb-3">
+                        Channel Prices (Area-wise)
+                      </p>
+                      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        {["Dining", "Parcale", "Swiggy", "Zomato", "GS1"].map((channel) => {
+                          const isAutoCalculated = ["Zomato", "Swiggy", "GS1"].includes(channel);
+                          let displayPrice = variation.channels?.[channel];
+
+                          if (!displayPrice || displayPrice === 0) {
+                            if (isAutoCalculated && variation.price) {
+                              const autoPrices = calculateAutoPrices(variation.price);
+                              displayPrice = autoPrices[channel as keyof typeof autoPrices];
+                            } else {
+                              displayPrice = variation.price || "-";
+                            }
+                          }
+
+                          return (
+                            <div
+                              key={channel}
+                              className={`rounded-lg p-3 text-center border ${isAutoCalculated ? "bg-blue-50 border-blue-200" : "bg-gray-50 border-gray-100"}`}
+                            >
+                              <p className="text-xs text-gray-600 mb-1">
+                                {channel}
+                                {isAutoCalculated && (
+                                  <span className="text-blue-600 font-semibold block text-[10px]">
+                                    (auto)
+                                  </span>
+                                )}
+                              </p>
+                              <p
+                                className={`text-base font-bold ${isAutoCalculated ? "text-blue-700" : "text-gray-900"}`}
+                              >
+                                ₹{displayPrice}
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
+                <p className="text-gray-500">No variations found for this item.</p>
+              </div>
+            )}
           </div>
         ) : (
           /* Sales Tab Content */

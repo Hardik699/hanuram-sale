@@ -92,6 +92,8 @@ export default function ItemEdit() {
   const [unitType, setUnitType] = useState("Single Count");
   const [variations, setVariations] = useState<Variation[]>([]);
 
+  const [activeTab, setActiveTab] = useState<"general" | "variations" | "images">("general");
+
   const [groups, setGroups] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [hsnCodes, setHsnCodes] = useState<string[]>(HSN_CODES);
@@ -623,640 +625,721 @@ export default function ItemEdit() {
       </button>
 
       <div className="bg-white rounded-xl border border-gray-200 p-6 sm:p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Edit Item</h1>
+        {/* Area-wise Price Summary Row */}
+        {variations.length > 0 && (
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+            {CHANNELS.map(channel => {
+              const variation = variations[0];
+              let price = variation.channels[channel];
+
+              if (!price || price === 0) {
+                if (["Zomato", "Swiggy", "GS1"].includes(channel)) {
+                  const autoPrices = calculateAutoPrices(variation.price || 0);
+                  price = autoPrices[channel as keyof typeof autoPrices];
+                } else {
+                  price = variation.price;
+                }
+              }
+
+              if (!price) return null;
+
+              return (
+                <div key={channel} className="flex items-center gap-1.5 text-sm">
+                  <span className="font-semibold text-gray-500 uppercase text-[9px] tracking-wider">{channel}</span>
+                  <span className="font-bold text-purple-700">₹{price}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Form Tabs */}
+        <div className="flex gap-4 border-b border-gray-200 mb-8">
+          <button
+            type="button"
+            onClick={() => setActiveTab("general")}
+            className={`px-4 py-2 font-semibold border-b-2 transition ${
+              activeTab === "general"
+                ? "border-purple-600 text-purple-600"
+                : "border-transparent text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            General Info
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("variations")}
+            className={`px-4 py-2 font-semibold border-b-2 transition ${
+              activeTab === "variations"
+                ? "border-purple-600 text-purple-600"
+                : "border-transparent text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Variations ({variations.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("images")}
+            className={`px-4 py-2 font-semibold border-b-2 transition ${
+              activeTab === "images"
+                ? "border-purple-600 text-purple-600"
+                : "border-transparent text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Images ({images.length})
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Basic Info */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Item ID (Read-only)
-              </label>
-              <input
-                type="text"
-                value={itemId}
-                disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Item Name *
-              </label>
-              <input
-                type="text"
-                value={itemName}
-                onChange={(e) => setItemName(toTitleCase(e.target.value))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Short Code (Read-only)
-              </label>
-              <input
-                type="text"
-                value={shortCode}
-                disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                HSN Code
-              </label>
-              <div className="flex gap-2">
-                <select
-                  value={hsnCode}
-                  onChange={(e) => setHsnCode(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                >
-                  <option value="">Select HSN Code</option>
-                  {hsnCodes.map((code) => (
-                    <option key={code} value={code}>
-                      {code}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  onClick={() => setNewHsnCode("")}
-                  className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
-                >
-                  +
-                </button>
-              </div>
-              {newHsnCode !== null && newHsnCode !== undefined && (
-                <div className="mt-2 flex gap-2">
+          {activeTab === "general" && (
+            <div className="space-y-6 animate-in fade-in duration-300">
+              {/* Basic Info */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Item ID (Read-only)
+                  </label>
                   <input
                     type="text"
-                    value={newHsnCode}
-                    onChange={(e) => setNewHsnCode(e.target.value)}
-                    placeholder="Enter new HSN Code"
-                    autoFocus
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    value={itemId}
+                    disabled
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
                   />
-                  <button
-                    type="button"
-                    onClick={addHsnCode}
-                    className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
-                  >
-                    Add
-                  </button>
                 </div>
-              )}
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                GST (%)
-              </label>
-              <select
-                value={gst}
-                onChange={(e) => setGst(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-              >
-                <option value="">Select GST</option>
-                {GST_OPTIONS.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Group & Category */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Group *
-              </label>
-              <div className="flex gap-2">
-                <select
-                  value={group}
-                  onChange={(e) => setGroup(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                  required
-                >
-                  <option value="">Select Group</option>
-                  {groups.map((g) => (
-                    <option key={g} value={g}>
-                      {g}
-                    </option>
-                  ))}
-                </select>
-                {group && (
-                  <button
-                    type="button"
-                    onClick={() => openEditGroupModal(group)}
-                    className="px-3 py-2 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 font-semibold"
-                    title="Edit selected group"
-                  >
-                    ✏️
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setNewGroup("")}
-                  className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
-                >
-                  +
-                </button>
-              </div>
-              {newGroup !== null && newGroup !== undefined && (
-                <div className="mt-2 flex gap-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Item Name *
+                  </label>
                   <input
                     type="text"
-                    value={newGroup}
-                    onChange={(e) => setNewGroup(toTitleCase(e.target.value))}
-                    placeholder="Enter new group"
-                    autoFocus
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    value={itemName}
+                    onChange={(e) => setItemName(toTitleCase(e.target.value))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    required
                   />
-                  <button
-                    type="button"
-                    onClick={addGroup}
-                    className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
-                  >
-                    Add
-                  </button>
                 </div>
-              )}
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Category *
-              </label>
-              <div className="flex gap-2">
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                  required
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  onClick={() => setNewCategory("")}
-                  className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
-                >
-                  +
-                </button>
-              </div>
-              {newCategory !== null && newCategory !== undefined && (
-                <div className="mt-2 flex gap-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Short Code (Read-only)
+                  </label>
                   <input
                     type="text"
-                    value={newCategory}
-                    onChange={(e) => setNewCategory(toTitleCase(e.target.value))}
-                    placeholder="Enter new category"
-                    autoFocus
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    value={shortCode}
+                    disabled
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
                   />
-                  <button
-                    type="button"
-                    onClick={addCategory}
-                    className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
-                  >
-                    Add
-                  </button>
                 </div>
-              )}
-            </div>
-          </div>
 
-          {/* Item Type & Unit Type */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Profit Margin (%)
-              </label>
-              <input
-                type="number"
-                value={profitMargin}
-                onChange={(e) => setProfitMargin(e.target.value)}
-                step="0.01"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Item Type
-              </label>
-              <select
-                value={itemType}
-                onChange={(e) => setItemType(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-              >
-                {ITEM_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Unit Type
-              </label>
-              <select
-                value={unitType}
-                onChange={(e) => setUnitType(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-              >
-                {UNIT_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Description
-            </label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(toTitleCase(e.target.value))}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 min-h-[100px]"
-              placeholder="Enter item description"
-            />
-          </div>
-
-          {/* Variations Section */}
-          <div className="border-t pt-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Variations
-              </h3>
-              <button
-                type="button"
-                onClick={addVariation}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                <Plus className="w-4 h-4" />
-                Add Variation
-              </button>
-            </div>
-
-            {variations.map((variation) => (
-              <div
-                key={variation.id}
-                className="mb-6 p-4 border border-gray-200 rounded-lg"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Variation Value
-                    </label>
-                    <div className="flex gap-2">
-                      <select
-                        value={variation.value}
-                        onChange={(e) =>
-                          updateVariation(variation.id, "value", e.target.value)
-                        }
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                      >
-                        <option value="">Select Variation</option>
-                        {variationValues.map((val) => (
-                          <option key={val} value={val}>
-                            {val}
-                          </option>
-                        ))}
-                      </select>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    HSN Code
+                  </label>
+                  <div className="flex gap-2">
+                    <select
+                      value={hsnCode}
+                      onChange={(e) => setHsnCode(e.target.value)}
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    >
+                      <option value="">Select HSN Code</option>
+                      {hsnCodes.map((code) => (
+                        <option key={code} value={code}>
+                          {code}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={() => setNewHsnCode("")}
+                      className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
+                    >
+                      +
+                    </button>
+                  </div>
+                  {newHsnCode !== null && newHsnCode !== undefined && (
+                    <div className="mt-2 flex gap-2">
+                      <input
+                        type="text"
+                        value={newHsnCode}
+                        onChange={(e) => setNewHsnCode(e.target.value)}
+                        placeholder="Enter new HSN Code"
+                        autoFocus
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      />
                       <button
                         type="button"
-                        onClick={() => setNewVariationValue("")}
-                        className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
+                        onClick={addHsnCode}
+                        className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
                       >
-                        +
+                        Add
                       </button>
                     </div>
-                    {newVariationValue !== null &&
-                      newVariationValue !== undefined && (
-                        <div className="mt-2 flex gap-2">
-                          <input
-                            type="text"
-                            value={newVariationValue}
-                            onChange={(e) =>
-                              setNewVariationValue(toTitleCase(e.target.value))
-                            }
-                            placeholder="e.g., 300 Gms, 1.5 L"
-                            autoFocus
-                            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                          />
-                          <button
-                            type="button"
-                            onClick={addVariationValue}
-                            className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
-                          >
-                            Add
-                          </button>
-                        </div>
-                      )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Price
-                    </label>
-                    <input
-                      type="number"
-                      value={variation.price || 0}
-                      onChange={(e) =>
-                        updateVariation(
-                          variation.id,
-                          "price",
-                          parseFloat(e.target.value) || 0,
-                        )
-                      }
-                      placeholder="0"
-                      step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      SAP Code
-                    </label>
-                    <input
-                      type="text"
-                      value={variation.sapCode}
-                      onChange={(e) =>
-                        updateVariation(variation.id, "sapCode", e.target.value)
-                      }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Profit Margin (%)
-                    </label>
-                    <input
-                      type="number"
-                      value={variation.profitMargin || 0}
-                      onChange={(e) =>
-                        updateVariation(
-                          variation.id,
-                          "profitMargin",
-                          parseFloat(e.target.value) || 0,
-                        )
-                      }
-                      step="0.01"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Sale Type
-                    </label>
-                    <select
-                      value={variation.saleType || "QTY"}
-                      onChange={(e) =>
-                        updateVariation(
-                          variation.id,
-                          "saleType",
-                          e.target.value as "QTY" | "KG"
-                        )
-                      }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                    >
-                      <option value="QTY">QTY (Quantity)</option>
-                      <option value="KG">KG (Kilogram)</option>
-                    </select>
-                    <p className="text-[10px] text-gray-500 mt-1 italic">
-                      {variation.saleType === "KG"
-                        ? "KG: Converts value (e.g. 250 Gms) to weight (0.25)"
-                        : "QTY: Counts each unit as 1.0"}
-                    </p>
-                  </div>
+                  )}
                 </div>
 
-                {/* Channel Prices */}
-                <div className="mb-4">
-                  <div className="flex justify-between items-center mb-3">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Channel Prices
-                    </label>
-                    <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded space-y-1">
-                      <p>Zomato & Swiggy: auto +15% (rounded to 5)</p>
-                      <p>GS1: auto +20% (rounded to 5) - Optional</p>
-                    </div>
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    GST (%)
+                  </label>
+                  <select
+                    value={gst}
+                    onChange={(e) => setGst(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  >
+                    <option value="">Select GST</option>
+                    {GST_OPTIONS.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
-                  {/* Standard Channels (excluding GS1) */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                    {CHANNELS.filter((ch) => ch !== "GS1").map((channel) => {
-                      const isAutoCalculated = ["Zomato", "Swiggy"].includes(
-                        channel,
-                      );
-                      return (
-                        <div key={channel}>
-                          <label className="text-xs text-gray-600 block mb-1">
-                            {channel}
-                            {isAutoCalculated && (
-                              <span className="text-blue-600 font-semibold">
-                                {" "}
-                                (auto)
-                              </span>
+              {/* Group & Category */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Group *
+                  </label>
+                  <div className="flex gap-2">
+                    <select
+                      value={group}
+                      onChange={(e) => setGroup(e.target.value)}
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                      required
+                    >
+                      <option value="">Select Group</option>
+                      {groups.map((g) => (
+                        <option key={g} value={g}>
+                          {g}
+                        </option>
+                      ))}
+                    </select>
+                    {group && (
+                      <button
+                        type="button"
+                        onClick={() => openEditGroupModal(group)}
+                        className="px-3 py-2 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 font-semibold"
+                        title="Edit selected group"
+                      >
+                        ✏️
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setNewGroup("")}
+                      className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
+                    >
+                      +
+                    </button>
+                  </div>
+                  {newGroup !== null && newGroup !== undefined && (
+                    <div className="mt-2 flex gap-2">
+                      <input
+                        type="text"
+                        value={newGroup}
+                        onChange={(e) => setNewGroup(toTitleCase(e.target.value))}
+                        placeholder="Enter new group"
+                        autoFocus
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      />
+                      <button
+                        type="button"
+                        onClick={addGroup}
+                        className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category *
+                  </label>
+                  <div className="flex gap-2">
+                    <select
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                      required
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={() => setNewCategory("")}
+                      className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
+                    >
+                      +
+                    </button>
+                  </div>
+                  {newCategory !== null && newCategory !== undefined && (
+                    <div className="mt-2 flex gap-2">
+                      <input
+                        type="text"
+                        value={newCategory}
+                        onChange={(e) => setNewCategory(toTitleCase(e.target.value))}
+                        placeholder="Enter new category"
+                        autoFocus
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      />
+                      <button
+                        type="button"
+                        onClick={addCategory}
+                        className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Item Type & Unit Type */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Profit Margin (%)
+                  </label>
+                  <input
+                    type="number"
+                    value={profitMargin}
+                    onChange={(e) => setProfitMargin(e.target.value)}
+                    step="0.01"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Item Type
+                  </label>
+                  <select
+                    value={itemType}
+                    onChange={(e) => setItemType(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  >
+                    {ITEM_TYPES.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Unit Type
+                  </label>
+                  <select
+                    value={unitType}
+                    onChange={(e) => setUnitType(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  >
+                    {UNIT_TYPES.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(toTitleCase(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 min-h-[100px]"
+                  placeholder="Enter item description"
+                />
+              </div>
+            </div>
+          )}
+
+          {activeTab === "variations" && (
+            <div className="space-y-6 animate-in slide-in-from-right duration-300">
+              {/* Variations Section */}
+              <div className="border-t pt-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Variations
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={addVariation}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Variation
+                  </button>
+                </div>
+
+                {variations.length > 0 ? (
+                  variations.map((variation) => (
+                    <div
+                      key={variation.id}
+                      className="mb-6 p-4 border border-gray-200 rounded-lg"
+                    >
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Variation Value
+                          </label>
+                          <div className="flex gap-2">
+                            <select
+                              value={variation.value}
+                              onChange={(e) =>
+                                updateVariation(variation.id, "value", e.target.value)
+                              }
+                              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            >
+                              <option value="">Select Variation</option>
+                              {variationValues.map((val) => (
+                                <option key={val} value={val}>
+                                  {val}
+                                </option>
+                              ))}
+                            </select>
+                            <button
+                              type="button"
+                              onClick={() => setNewVariationValue("")}
+                              className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
+                            >
+                              +
+                            </button>
+                          </div>
+                          {newVariationValue !== null &&
+                            newVariationValue !== undefined && (
+                              <div className="mt-2 flex gap-2">
+                                <input
+                                  type="text"
+                                  value={newVariationValue}
+                                  onChange={(e) =>
+                                    setNewVariationValue(toTitleCase(e.target.value))
+                                  }
+                                  placeholder="e.g., 300 Gms, 1.5 L"
+                                  autoFocus
+                                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={addVariationValue}
+                                  className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
+                                >
+                                  Add
+                                </button>
+                              </div>
                             )}
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Price
                           </label>
                           <input
                             type="number"
-                            value={variation.channels[channel] || 0}
+                            value={variation.price || 0}
                             onChange={(e) =>
-                              updateChannelPrice(
+                              updateVariation(
                                 variation.id,
-                                channel,
+                                "price",
                                 parseFloat(e.target.value) || 0,
                               )
                             }
                             placeholder="0"
                             step="0.01"
-                            disabled={isAutoCalculated}
-                            className={`w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 ${
-                              isAutoCalculated
-                                ? "bg-blue-50 text-gray-500 cursor-not-allowed"
-                                : ""
-                            }`}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                           />
                         </div>
-                      );
-                    })}
-                  </div>
 
-                  {/* GS1 with Checkbox and Code */}
-                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 space-y-3">
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        id={`gs1-checkbox-${variation.id}`}
-                        checked={variation.gs1Enabled || false}
-                        onChange={(e) =>
-                          updateVariation(
-                            variation.id,
-                            "gs1Enabled",
-                            e.target.checked,
-                          )
-                        }
-                        className="w-4 h-4 border-gray-300 rounded focus:ring-2 focus:ring-purple-600 cursor-pointer"
-                      />
-                      <label
-                        htmlFor={`gs1-checkbox-${variation.id}`}
-                        className="text-sm font-medium text-gray-700 cursor-pointer flex-1"
-                      >
-                        Enable GS1 Channel
-                      </label>
-                    </div>
-
-                    {variation.gs1Enabled && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {/* GS1 Price */}
                         <div>
-                          <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
-                            GS1 Price (auto)
-                          </label>
-                          <input
-                            type="number"
-                            value={variation.channels.GS1 || 0}
-                            placeholder="Auto: 0"
-                            step="0.01"
-                            disabled
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-blue-50 text-gray-500 cursor-not-allowed"
-                          />
-                          <p className="text-xs text-blue-600 mt-1">
-                            Auto +20% (rounded to 5)
-                          </p>
-                        </div>
-
-                        {/* GS1 Code */}
-                        <div>
-                          <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
-                            GS1 Code
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            SAP Code
                           </label>
                           <input
                             type="text"
-                            value={variation.gs1Code || ""}
+                            value={variation.sapCode}
+                            onChange={(e) =>
+                              updateVariation(variation.id, "sapCode", e.target.value)
+                            }
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Profit Margin (%)
+                          </label>
+                          <input
+                            type="number"
+                            value={variation.profitMargin || 0}
                             onChange={(e) =>
                               updateVariation(
                                 variation.id,
-                                "gs1Code",
-                                e.target.value,
+                                "profitMargin",
+                                parseFloat(e.target.value) || 0,
                               )
                             }
-                            placeholder="Enter GS1 code"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            step="0.01"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                           />
                         </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
 
-                <button
-                  type="button"
-                  onClick={() => removeVariation(variation.id)}
-                  className="flex items-center gap-2 text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
-
-          {/* Image Upload */}
-          <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">📸 Images by Channel</h3>
-
-            {/* Upload Area */}
-            <div className="mb-6">
-              <div className="border-2 border-dashed border-purple-400 rounded-lg p-10 text-center bg-gradient-to-b from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 transition cursor-pointer">
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                  id="image-input"
-                />
-                <label htmlFor="image-input" className="cursor-pointer block">
-                  <p className="text-3xl mb-2">📁</p>
-                  <p className="text-gray-900 font-bold text-lg">
-                    Click to upload images
-                  </p>
-                  <p className="text-gray-600 text-sm mt-2">PNG, JPG up to 10MB</p>
-                  <p className="text-purple-600 text-xs mt-3 font-semibold">
-                    Select channel in the popup that appears
-                  </p>
-                </label>
-              </div>
-            </div>
-
-            {/* Image Previews Grouped by Channel */}
-            {images.length > 0 && (
-              <div className="space-y-8 mt-8">
-                <h4 className="text-lg font-bold text-gray-900 mb-4">
-                  📷 Uploaded Images ({images.length})
-                </h4>
-                {["Website", "Zomato", "Swiggy", "GS1"]
-                  .filter((channel) => images.some((img) => img.channel === channel))
-                  .map((channel) => {
-                    const channelImages = images.filter((img) => img.channel === channel);
-                    return (
-                      <div key={channel} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                        <h4 className="text-sm font-bold text-gray-900 mb-4 pb-2 border-b border-gray-300">
-                          {channel === "Website" && "🌐"}
-                          {channel === "Zomato" && "🔴"}
-                          {channel === "Swiggy" && "🟠"}
-                          {channel === "GS1" && "📦"}
-                          {" "}
-                          {channel} ({channelImages.length})
-                        </h4>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                          {channelImages.map((img, idx) => (
-                            <div key={idx} className="relative group">
-                              <img
-                                src={img.preview}
-                                alt={`${channel} Preview ${idx}`}
-                                className="w-full h-40 object-cover rounded-lg shadow-md"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => removeImage(images.findIndex((i) => i === img))}
-                                className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 shadow-lg opacity-0 group-hover:opacity-100 transition"
-                                title="Delete image"
-                              >
-                                <X className="w-4 h-4" />
-                              </button>
-                            </div>
-                          ))}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Sale Type
+                          </label>
+                          <select
+                            value={variation.saleType || "QTY"}
+                            onChange={(e) =>
+                              updateVariation(
+                                variation.id,
+                                "saleType",
+                                e.target.value as "QTY" | "KG"
+                              )
+                            }
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                          >
+                            <option value="QTY">QTY (Quantity)</option>
+                            <option value="KG">KG (Kilogram)</option>
+                          </select>
+                          <p className="text-[10px] text-gray-500 mt-1 italic">
+                            {variation.saleType === "KG"
+                              ? "KG: Converts value (e.g. 250 Gms) to weight (0.25)"
+                              : "QTY: Counts each unit as 1.0"}
+                          </p>
                         </div>
                       </div>
-                    );
-                  })}
+
+                      {/* Channel Prices */}
+                      <div className="mb-4">
+                        <div className="flex justify-between items-center mb-3">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Channel Prices (Area-wise)
+                          </label>
+                          <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded space-y-1">
+                            <p>Zomato & Swiggy: auto +15% (rounded to 5)</p>
+                            <p>GS1: auto +20% (rounded to 5) - Optional</p>
+                          </div>
+                        </div>
+
+                        {/* Standard Channels (excluding GS1) */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                          {CHANNELS.filter((ch) => ch !== "GS1").map((channel) => {
+                            const isAutoCalculated = ["Zomato", "Swiggy"].includes(
+                              channel,
+                            );
+                            return (
+                              <div key={channel}>
+                                <label className="text-xs text-gray-600 block mb-1">
+                                  {channel}
+                                  {isAutoCalculated && (
+                                    <span className="text-blue-600 font-semibold">
+                                      {" "}
+                                      (auto)
+                                    </span>
+                                  )}
+                                </label>
+                                <input
+                                  type="number"
+                                  value={variation.channels[channel] || 0}
+                                  onChange={(e) =>
+                                    updateChannelPrice(
+                                      variation.id,
+                                      channel,
+                                      parseFloat(e.target.value) || 0,
+                                    )
+                                  }
+                                  placeholder="0"
+                                  step="0.01"
+                                  disabled={isAutoCalculated}
+                                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+                                    isAutoCalculated
+                                      ? "bg-blue-50 text-gray-500 cursor-not-allowed"
+                                      : ""
+                                  }`}
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* GS1 with Checkbox and Code */}
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 space-y-3">
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="checkbox"
+                              id={`gs1-checkbox-${variation.id}`}
+                              checked={variation.gs1Enabled || false}
+                              onChange={(e) =>
+                                updateVariation(
+                                  variation.id,
+                                  "gs1Enabled",
+                                  e.target.checked,
+                                )
+                              }
+                              className="w-4 h-4 border-gray-300 rounded focus:ring-2 focus:ring-purple-600 cursor-pointer"
+                            />
+                            <label
+                              htmlFor={`gs1-checkbox-${variation.id}`}
+                              className="text-sm font-medium text-gray-700 cursor-pointer flex-1"
+                            >
+                              Enable GS1 Channel
+                            </label>
+                          </div>
+
+                          {variation.gs1Enabled && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              {/* GS1 Price */}
+                              <div>
+                                <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
+                                  GS1 Price (auto)
+                                </label>
+                                <input
+                                  type="number"
+                                  value={variation.channels.GS1 || 0}
+                                  placeholder="Auto: 0"
+                                  step="0.01"
+                                  disabled
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-blue-50 text-gray-500 cursor-not-allowed"
+                                />
+                                <p className="text-xs text-blue-600 mt-1">
+                                  Auto +20% (rounded to 5)
+                                </p>
+                              </div>
+
+                              {/* GS1 Code */}
+                              <div>
+                                <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
+                                  GS1 Code
+                                </label>
+                                <input
+                                  type="text"
+                                  value={variation.gs1Code || ""}
+                                  onChange={(e) =>
+                                    updateVariation(
+                                      variation.id,
+                                      "gs1Code",
+                                      e.target.value,
+                                    )
+                                  }
+                                  placeholder="Enter GS1 code"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => removeVariation(variation.id)}
+                          className="flex items-center gap-2 text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Remove
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-8 text-center bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                      <p className="text-gray-500">No variations added yet. Click "Add Variation" to start.</p>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
-          </div>
+
+            {activeTab === "images" && (
+              <div className="space-y-6 animate-in slide-in-from-left duration-300">
+                {/* Image Upload */}
+                <div className="border-t pt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-6">📸 Images by Channel</h3>
+
+                  {/* Upload Area */}
+                  <div className="mb-6">
+                    <div className="border-2 border-dashed border-purple-400 rounded-lg p-10 text-center bg-gradient-to-b from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 transition cursor-pointer">
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        id="image-input"
+                      />
+                      <label htmlFor="image-input" className="cursor-pointer block">
+                        <p className="text-3xl mb-2">📁</p>
+                        <p className="text-gray-900 font-bold text-lg">
+                          Click to upload images
+                        </p>
+                        <p className="text-gray-600 text-sm mt-2">PNG, JPG up to 10MB</p>
+                        <p className="text-purple-600 text-xs mt-3 font-semibold">
+                          Select channel in the popup that appears
+                        </p>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Image Previews Grouped by Channel */}
+                  {images.length > 0 && (
+                    <div className="space-y-8 mt-8">
+                      <h4 className="text-lg font-bold text-gray-900 mb-4">
+                        📷 Uploaded Images ({images.length})
+                      </h4>
+                      {["Website", "Zomato", "Swiggy", "GS1"]
+                        .filter((channel) => images.some((img) => img.channel === channel))
+                        .map((channel) => {
+                          const channelImages = images.filter((img) => img.channel === channel);
+                          return (
+                            <div key={channel} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                              <h4 className="text-sm font-bold text-gray-900 mb-4 pb-2 border-b border-gray-300">
+                                {channel === "Website" && "🌐"}
+                                {channel === "Zomato" && "🔴"}
+                                {channel === "Swiggy" && "🟠"}
+                                {channel === "GS1" && "📦"}
+                                {" "}
+                                {channel} ({channelImages.length})
+                              </h4>
+                              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                {channelImages.map((img, idx) => (
+                                  <div key={idx} className="relative group">
+                                    <img
+                                      src={img.preview}
+                                      alt={`${channel} Preview ${idx}`}
+                                      className="w-full h-40 object-cover rounded-lg shadow-md"
+                                    />
+                                    <button
+                                      type="button"
+                                      onClick={() => removeImage(images.findIndex((i) => i === img))}
+                                      className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 shadow-lg opacity-0 group-hover:opacity-100 transition"
+                                      title="Delete image"
+                                    >
+                                      <X className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
           {/* Channel Selection Modal */}
           {showChannelModal && (

@@ -54,6 +54,7 @@ export default function UploadTab({ type }: UploadTabProps) {
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
+    let isCleanup = false;
 
     const fetchMonthStatus = async () => {
       try {
@@ -80,6 +81,9 @@ export default function UploadTab({ type }: UploadTabProps) {
         }
       } catch (error) {
         if (error instanceof Error && error.name === "AbortError") {
+          if (!isCleanup) {
+            console.error("❌ Fetch was aborted (timeout or cancelled)");
+          }
           return; // Ignore aborts
         }
         console.error("Failed to fetch month status:", error);
@@ -96,8 +100,10 @@ export default function UploadTab({ type }: UploadTabProps) {
     fetchMonthStatus();
 
     return () => {
+      isCleanup = true;
       isMounted = false;
-      controller.abort();
+      // Don't abort the controller during cleanup to avoid AbortError if something is still in flight
+      // This matches the pattern in ItemDetail.tsx that fixed similar AbortErrors
     };
   }, [type, selectedYear]);
 
