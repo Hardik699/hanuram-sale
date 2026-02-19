@@ -90,35 +90,10 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 </th>
 
                 {/* Variation Columns - Show all variations with better spacing */}
-                {allVariations.map((variation, idx) => (
-                  <th
-                    key={`${variation.name}-${variation.value}`}
-                    colSpan={4}
-                    className={`px-3 sm:px-4 py-4 text-center text-sm font-bold text-white border-l-2 border-white bg-slate-700`}
-                  >
-                    {variation.value}
-                  </th>
-                ))}
+                {/* Variations removed as per user request to simplify table */}
               </tr>
 
-              {/* Sub-header for Channels - Show all variations */}
-              {allVariations.length > 0 && (
-                <tr className="bg-slate-600 border-b border-gray-300 text-xs whitespace-nowrap">
-                  <th colSpan={5} className="px-2 sm:px-4 py-0 sticky left-10 z-20 bg-slate-600"></th>
-                  {allVariations.map((variation, idx) => (
-                    <React.Fragment key={`${variation.name}-${variation.value}`}>
-                      {CHANNELS.map((channel) => (
-                        <th
-                          key={`${variation.value}-${channel}`}
-                          className={`px-3 sm:px-4 py-3 text-center font-semibold text-white border-r border-white bg-slate-600`}
-                        >
-                          {channel}
-                        </th>
-                      ))}
-                    </React.Fragment>
-                  ))}
-                </tr>
-              )}
+              {/* Sub-header for Channels removed as per user request */}
             </thead>
 
             {/* Table Body */}
@@ -155,30 +130,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                     {item.category}
                   </td>
 
-                  {/* Variation Prices - Show all variations and channels */}
-                  {allVariations.map((variation, idx) => {
-                    const itemVariation = item.variations.find(
-                      (v: any) =>
-                        v.name === variation.name && v.value === variation.value
-                    );
-
-                    return (
-                      <React.Fragment
-                        key={`${item.itemId}-${variation.value}`}
-                      >
-                        {CHANNELS.map((channel) => (
-                          <td
-                            key={`${item.itemId}-${variation.value}-${channel}`}
-                            className={`px-3 sm:px-4 py-3 text-center font-semibold border-r border-white bg-slate-50 text-slate-900`}
-                          >
-                            {itemVariation && itemVariation.channels[channel]
-                              ? `₹${itemVariation.channels[channel]}`
-                              : "-"}
-                          </td>
-                        ))}
-                      </React.Fragment>
-                    );
-                  })}
+                  {/* Variation Prices removed as per user request */}
                 </tr>
               ))}
             </tbody>
