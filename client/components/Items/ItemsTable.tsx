@@ -77,16 +77,16 @@ export default function ItemsTable({ items }: ItemsTableProps) {
 
                 {/* Basic Info - Sticky */}
                 <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 sticky left-10 z-20">
-                  Item ID
+                  Item Name
                 </th>
                 <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 hidden sm:table-cell">
-                  Group
+                  Item ID
                 </th>
                 <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 hidden md:table-cell">
-                  Category
+                  Group
                 </th>
                 <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 hidden lg:table-cell">
-                  Item Name
+                  Category
                 </th>
 
                 {/* Variation Columns - Show all variations with better spacing */}
@@ -142,18 +142,17 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   </td>
 
                   {/* Basic Info - Sticky */}
-                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-bold bg-transparent sticky left-10 z-10">
-                    <span className="sm:hidden">ID: </span>
-                    {item.itemId}
+                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-bold bg-white sticky left-10 z-10 max-w-[150px] sm:max-w-xs truncate">
+                    {item.itemName}
                   </td>
                   <td className="px-2 sm:px-4 py-3 text-gray-700 bg-transparent hidden sm:table-cell">
-                    {item.group}
+                    {item.itemId}
                   </td>
                   <td className="px-2 sm:px-4 py-3 text-gray-700 hidden md:table-cell">
-                    {item.category}
+                    {item.group}
                   </td>
                   <td className="px-2 sm:px-4 py-3 text-gray-900 font-medium hidden lg:table-cell max-w-xs truncate">
-                    {item.itemName}
+                    {item.category}
                   </td>
 
                   {/* Variation Prices - Show all variations and channels */}

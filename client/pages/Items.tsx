@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Plus, Download } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Plus, Download, Search } from "lucide-react";
 import ItemForm from "@/components/Items/ItemForm";
 import ItemsTable from "@/components/Items/ItemsTable";
 
@@ -7,6 +7,20 @@ export default function Items() {
   const [showForm, setShowForm] = useState(false);
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Filter items based on search term
+  const filteredItems = useMemo(() => {
+    if (!searchTerm.trim()) return items;
+    const lowerSearch = searchTerm.toLowerCase();
+    return items.filter(
+      (item) =>
+        item.itemName?.toLowerCase().includes(lowerSearch) ||
+        item.itemId?.toLowerCase().includes(lowerSearch) ||
+        item.group?.toLowerCase().includes(lowerSearch) ||
+        item.category?.toLowerCase().includes(lowerSearch)
+    );
+  }, [items, searchTerm]);
 
   // Fetch items from MongoDB on component mount
   useEffect(() => {
@@ -164,7 +178,19 @@ export default function Items() {
             </p>
           )}
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 items-center">
+          {/* Search bar */}
+          <div className="relative w-full max-w-xs hidden sm:block">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search items..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 text-sm"
+            />
+          </div>
+
           {items.length > 0 && !loading && (
             <button
               onClick={handleDownload}
@@ -197,13 +223,25 @@ export default function Items() {
         </div>
       )}
 
+      {/* Search bar - Mobile only */}
+      <div className="mb-6 sm:hidden relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <input
+          type="text"
+          placeholder="Search items..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 text-sm"
+        />
+      </div>
+
       {/* Items Table */}
       {loading ? (
         <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
           <p className="text-gray-500">Loading items from MongoDB...</p>
         </div>
       ) : (
-        <ItemsTable items={items} />
+        <ItemsTable items={filteredItems} />
       )}
     </div>
   );
