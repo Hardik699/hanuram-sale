@@ -103,6 +103,13 @@ export default function ItemEdit() {
   const [newHsnCode, setNewHsnCode] = useState("");
   const [newVariationValue, setNewVariationValue] = useState("");
 
+  // Group editing
+  const [showEditGroupModal, setShowEditGroupModal] = useState(false);
+  const [editingGroupName, setEditingGroupName] = useState("");
+  const [groupCategories, setGroupCategories] = useState<string[]>([]);
+  const [newGroupCategory, setNewGroupCategory] = useState("");
+  const [selectedGroupForEdit, setSelectedGroupForEdit] = useState("");
+
   // Helper to capitalize first letter of each word
   const toTitleCase = (str: string) => {
     return str.replace(/\b\w/g, (l) => l.toUpperCase());
@@ -240,6 +247,60 @@ export default function ItemEdit() {
       fetchItem();
     }
   }, [itemId]);
+
+  const openEditGroupModal = async (groupName: string) => {
+    setSelectedGroupForEdit(groupName);
+    setEditingGroupName(groupName);
+    try {
+      const response = await fetch(`/api/items/groups/${encodeURIComponent(groupName)}`);
+      if (response.ok) {
+        const data = await response.json();
+        setGroupCategories(data.categories || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch group categories:", error);
+      setGroupCategories([]);
+    }
+    setShowEditGroupModal(true);
+  };
+
+  const saveGroupChanges = async () => {
+    try {
+      const response = await fetch(`/api/items/groups/${encodeURIComponent(selectedGroupForEdit)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          newName: editingGroupName,
+          categories: groupCategories
+        }),
+      });
+      if (response.ok) {
+        // Update groups array if name changed
+        if (editingGroupName !== selectedGroupForEdit) {
+          const updated = groups.map(g => g === selectedGroupForEdit ? editingGroupName : g);
+          setGroups(updated);
+          if (group === selectedGroupForEdit) {
+            setGroup(editingGroupName);
+          }
+        }
+        setShowEditGroupModal(false);
+        setNewGroupCategory("");
+      }
+    } catch (error) {
+      console.error("Failed to save group changes:", error);
+    }
+  };
+
+  const addCategoryToGroup = () => {
+    if (newGroupCategory.trim() && !groupCategories.includes(newGroupCategory)) {
+      setGroupCategories([...groupCategories, newGroupCategory]);
+      setNewGroupCategory("");
+    }
+  };
+
+  const removeCategoryFromGroup = (categoryName: string) => {
+    setGroupCategories(groupCategories.filter(c => c !== categoryName));
+  };
 
   const addGroup = async () => {
     if (newGroup.trim() && !groups.includes(newGroup)) {
@@ -689,6 +750,16 @@ export default function ItemEdit() {
                     </option>
                   ))}
                 </select>
+                {group && (
+                  <button
+                    type="button"
+                    onClick={() => openEditGroupModal(group)}
+                    className="px-3 py-2 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 font-semibold"
+                    title="Edit selected group"
+                  >
+                    ✏️
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setNewGroup("")}
@@ -1233,6 +1304,96 @@ export default function ItemEdit() {
             </button>
           </div>
         </form>
+
+        {/* Edit Group Modal */}
+        {showEditGroupModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                ✏️ Edit Group
+              </h2>
+
+              {/* Rename Group */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Group Name
+                </label>
+                <input
+                  type="text"
+                  value={editingGroupName}
+                  onChange={(e) => setEditingGroupName(toTitleCase(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                />
+              </div>
+
+              {/* Manage Categories */}
+              <div className="mb-6 border-t pt-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Categories in this Group
+                </h3>
+
+                {/* Add Category to Group */}
+                <div className="flex gap-2 mb-4">
+                  <input
+                    type="text"
+                    value={newGroupCategory}
+                    onChange={(e) => setNewGroupCategory(toTitleCase(e.target.value))}
+                    placeholder="Add new category"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                  <button
+                    type="button"
+                    onClick={addCategoryToGroup}
+                    className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
+                  >
+                    Add
+                  </button>
+                </div>
+
+                {/* List of Categories */}
+                <div className="space-y-2">
+                  {groupCategories.length > 0 ? (
+                    groupCategories.map((cat) => (
+                      <div
+                        key={cat}
+                        className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200"
+                      >
+                        <span className="text-sm text-gray-700">{cat}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeCategoryFromGroup(cat)}
+                          className="text-red-600 hover:bg-red-50 px-2 py-1 rounded transition text-sm"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500 italic">No categories yet</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Modal Actions */}
+              <div className="flex gap-3 border-t pt-4">
+                <button
+                  type="button"
+                  onClick={saveGroupChanges}
+                  className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold transition"
+                >
+                  Save Changes
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowEditGroupModal(false)}
+                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

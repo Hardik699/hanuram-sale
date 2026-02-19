@@ -459,3 +459,79 @@ export const handleAddVariationValue: RequestHandler = async (req, res) => {
     res.status(500).json({ error: "Failed to add variation value" });
   }
 };
+
+// Get group categories
+export const handleGetGroupCategories: RequestHandler = async (req, res) => {
+  try {
+    const { groupName } = req.params;
+
+    if (!groupName) {
+      return res.status(400).json({ error: "Group name is required" });
+    }
+
+    const db = await getDatabase();
+    const collection = db.collection("group_categories");
+
+    const groupData = await collection.findOne({ groupName: decodeURIComponent(groupName) });
+
+    if (!groupData) {
+      return res.json({ categories: [] });
+    }
+
+    res.json({ categories: groupData.categories || [] });
+  } catch (error) {
+    console.error("Error fetching group categories:", error);
+    res.status(500).json({ error: "Failed to fetch group categories" });
+  }
+};
+
+// Update a group
+export const handleUpdateGroup: RequestHandler = async (req, res) => {
+  try {
+    const { groupName } = req.params;
+    const { newName, categories } = req.body;
+
+    const decodedGroupName = decodeURIComponent(groupName);
+
+    const db = await getDatabase();
+    const dropdownsCollection = await getDropdownsCollection();
+    const groupCategoriesCollection = db.collection("group_categories");
+
+    // If group name is being changed, update it in the groups array
+    if (newName && newName !== decodedGroupName) {
+      await dropdownsCollection.updateOne(
+        { _id: "main" },
+        {
+          $pull: { groups: decodedGroupName },
+          $addToSet: { groups: newName },
+        },
+      );
+
+      // Also update the group categories mapping
+      await groupCategoriesCollection.updateOne(
+        { groupName: decodedGroupName },
+        { $set: { groupName: newName, categories: categories || [] } },
+        { upsert: true },
+      );
+
+      // Update all items that reference this group
+      const itemsCollection = await getItemsCollection();
+      await itemsCollection.updateMany(
+        { group: decodedGroupName },
+        { $set: { group: newName } },
+      );
+    } else {
+      // Just update the categories for the group
+      await groupCategoriesCollection.updateOne(
+        { groupName: decodedGroupName },
+        { $set: { categories: categories || [] } },
+        { upsert: true },
+      );
+    }
+
+    res.json({ message: "Group updated successfully" });
+  } catch (error) {
+    console.error("Error updating group:", error);
+    res.status(500).json({ error: "Failed to update group" });
+  }
+};
