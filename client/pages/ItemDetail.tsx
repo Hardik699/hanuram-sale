@@ -573,9 +573,43 @@ export default function ItemDetail() {
       <div className="bg-white rounded-t-xl border border-gray-200 border-b-0 p-6 mb-0">
         <div className="flex justify-between items-start mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2 capitalize">
+              <h1 className="text-3xl font-bold text-gray-900 mb-1 capitalize">
                 {item.itemName}
               </h1>
+              {/* Area-wise Price Summary Row (Vertical Stack per Area) */}
+              {item.variations && item.variations.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-3 mt-2">
+                  {["Dining", "Parcale", "Swiggy", "Zomato", "GS1"].map(channel => {
+                    const variation = item.variations[0];
+                    let price = variation.channels?.[channel];
+
+                    if (!price || price === 0) {
+                      if (["Zomato", "Swiggy", "GS1"].includes(channel)) {
+                        const autoPrices = calculateAutoPrices(variation.price || 0);
+                        price = autoPrices[channel as keyof typeof autoPrices];
+                      } else {
+                        price = variation.price;
+                      }
+                    }
+
+                    if (!price) return null;
+
+                    return (
+                      <div key={channel} className="flex flex-col items-center min-w-[80px] bg-white px-3 py-2 rounded-lg border border-purple-100 shadow-sm">
+                        <span className="text-[10px] font-bold text-purple-600 truncate max-w-[70px] mb-0.5" title={variation.value}>
+                          {variation.value}
+                        </span>
+                        <span className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                          {channel}
+                        </span>
+                        <span className="text-sm font-black text-gray-900">
+                          ₹{price}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
               <p className="text-gray-600 first-letter:capitalize">{item.description}</p>
             </div>
           <div className="flex gap-2">

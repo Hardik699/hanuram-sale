@@ -625,7 +625,42 @@ export default function ItemEdit() {
       </button>
 
       <div className="bg-white rounded-xl border border-gray-200 p-6 sm:p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Edit Item</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-1">Edit Item</h1>
+
+        {/* Area-wise Price Summary Row (Vertical Stack per Area) */}
+        {variations.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-6 mt-3">
+            {CHANNELS.map(channel => {
+              const variation = variations[0];
+              let price = variation.channels[channel];
+
+              if (!price || price === 0) {
+                if (["Zomato", "Swiggy", "GS1"].includes(channel)) {
+                  const autoPrices = calculateAutoPrices(variation.price || 0);
+                  price = autoPrices[channel as keyof typeof autoPrices];
+                } else {
+                  price = variation.price;
+                }
+              }
+
+              if (!price) return null;
+
+              return (
+                <div key={channel} className="flex flex-col items-center min-w-[80px] bg-white px-3 py-2 rounded-lg border border-purple-100 shadow-sm">
+                  <span className="text-[10px] font-bold text-purple-600 truncate max-w-[70px] mb-0.5" title={variation.value}>
+                    {variation.value}
+                  </span>
+                  <span className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                    {channel}
+                  </span>
+                  <span className="text-sm font-black text-gray-900">
+                    ₹{price}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Form Tabs */}
         <div className="flex gap-4 border-b border-gray-200 mb-8">

@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const CHANNELS = ["Dining", "Parcale", "Swiggy", "Zomato", "GS1"];
+const CHANNELS = ["Dining", "Parcale", "Swiggy", "Zomato"];
 
 // Helper function to calculate auto pricing
 const calculateAutoPrices = (basePrice: number) => {
@@ -138,45 +138,8 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   </td>
 
                   {/* Basic Info - Sticky */}
-                  <td className="px-2 sm:px-4 py-3 text-gray-900 bg-white sticky left-10 z-10 max-w-[150px] sm:max-w-xs overflow-visible">
-                    <div className="flex flex-col gap-2">
-                      <span className="font-bold truncate">{item.itemName}</span>
-
-                      {/* Area-wise Price Summary row */}
-                      {item.variations && item.variations.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {CHANNELS.map(channel => {
-                            const variation = item.variations[0];
-                            let price = variation.channels?.[channel];
-
-                            if (!price || price === 0) {
-                              if (["Zomato", "Swiggy", "GS1"].includes(channel)) {
-                                const autoPrices = calculateAutoPrices(variation.price || 0);
-                                price = autoPrices[channel as keyof typeof autoPrices];
-                              } else {
-                                price = variation.price;
-                              }
-                            }
-
-                            if (!price) return null;
-
-                            return (
-                              <div key={channel} className="flex flex-col items-center min-w-[50px] bg-gray-50 px-1.5 py-1 rounded border border-gray-100 shadow-sm scale-90 origin-left">
-                                <span className="text-[7px] font-bold text-purple-600 truncate max-w-[45px] leading-tight" title={variation.value}>
-                                  {variation.value}
-                                </span>
-                                <span className="text-[6px] font-semibold text-gray-500 uppercase tracking-tighter leading-tight">
-                                  {channel}
-                                </span>
-                                <span className="text-[9px] font-black text-gray-900 leading-tight">
-                                  ₹{price}
-                                </span>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
+                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-bold bg-white sticky left-10 z-10 max-w-[150px] sm:max-w-xs truncate">
+                    {item.itemName}
                   </td>
                   <td className="px-2 sm:px-4 py-3 text-gray-700 bg-transparent hidden sm:table-cell">
                     {item.itemId}
