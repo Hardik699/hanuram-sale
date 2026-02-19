@@ -105,24 +105,32 @@ export default function SalesDataTable({ data, itemName, saleType = "QTY" }: Sal
                 <td className="px-4 py-3 text-gray-600 font-mono">{row.sapCode || "-"}</td>
 
                 {/* Zomato */}
-                <td className="px-4 py-3 text-center text-gray-900">{row.zomato.quantity}</td>
+                <td className="px-4 py-3 text-center text-gray-900">
+                  {saleType === "KG" ? row.zomato.quantity.toFixed(2) : row.zomato.quantity}
+                </td>
                 <td className="px-4 py-3 text-center text-gray-900">₹{row.zomato.value.toLocaleString()}</td>
 
                 {/* Swiggy */}
-                <td className="px-4 py-3 text-center text-gray-900">{row.swiggy.quantity}</td>
+                <td className="px-4 py-3 text-center text-gray-900">
+                  {saleType === "KG" ? row.swiggy.quantity.toFixed(2) : row.swiggy.quantity}
+                </td>
                 <td className="px-4 py-3 text-center text-gray-900">₹{row.swiggy.value.toLocaleString()}</td>
 
                 {/* Dining */}
-                <td className="px-4 py-3 text-center text-gray-900">{row.dining.quantity}</td>
+                <td className="px-4 py-3 text-center text-gray-900">
+                  {saleType === "KG" ? row.dining.quantity.toFixed(2) : row.dining.quantity}
+                </td>
                 <td className="px-4 py-3 text-center text-gray-900">₹{row.dining.value.toLocaleString()}</td>
 
                 {/* Parcel */}
-                <td className="px-4 py-3 text-center text-gray-900">{row.parcel.quantity}</td>
+                <td className="px-4 py-3 text-center text-gray-900">
+                  {saleType === "KG" ? row.parcel.quantity.toFixed(2) : row.parcel.quantity}
+                </td>
                 <td className="px-4 py-3 text-center text-gray-900">₹{row.parcel.value.toLocaleString()}</td>
 
                 {/* Total */}
                 <td className="px-4 py-3 text-center font-semibold text-gray-900">
-                  {row.total.quantity}
+                  {saleType === "KG" ? row.total.quantity.toFixed(2) : row.total.quantity}
                 </td>
                 <td className="px-4 py-3 text-center font-semibold text-gray-900">
                   ₹{row.total.value.toLocaleString()}
@@ -137,23 +145,33 @@ export default function SalesDataTable({ data, itemName, saleType = "QTY" }: Sal
               </td>
 
               {/* Zomato */}
-              <td className="px-4 py-3 text-center">{totals.zomatoQty}</td>
+              <td className="px-4 py-3 text-center">
+                {saleType === "KG" ? totals.zomatoQty.toFixed(2) : totals.zomatoQty}
+              </td>
               <td className="px-4 py-3 text-center">₹{totals.zomatoValue.toLocaleString()}</td>
 
               {/* Swiggy */}
-              <td className="px-4 py-3 text-center">{totals.swiggyQty}</td>
+              <td className="px-4 py-3 text-center">
+                {saleType === "KG" ? totals.swiggyQty.toFixed(2) : totals.swiggyQty}
+              </td>
               <td className="px-4 py-3 text-center">₹{totals.swiggyValue.toLocaleString()}</td>
 
               {/* Dining */}
-              <td className="px-4 py-3 text-center">{totals.diningQty}</td>
+              <td className="px-4 py-3 text-center">
+                {saleType === "KG" ? totals.diningQty.toFixed(2) : totals.diningQty}
+              </td>
               <td className="px-4 py-3 text-center">₹{totals.diningValue.toLocaleString()}</td>
 
               {/* Parcel */}
-              <td className="px-4 py-3 text-center">{totals.parcelQty}</td>
+              <td className="px-4 py-3 text-center">
+                {saleType === "KG" ? totals.parcelQty.toFixed(2) : totals.parcelQty}
+              </td>
               <td className="px-4 py-3 text-center">₹{totals.parcelValue.toLocaleString()}</td>
 
               {/* Total */}
-              <td className="px-4 py-3 text-center">{totals.totalQty}</td>
+              <td className="px-4 py-3 text-center">
+                {saleType === "KG" ? totals.totalQty.toFixed(2) : totals.totalQty}
+              </td>
               <td className="px-4 py-3 text-center">₹{totals.totalValue.toLocaleString()}</td>
             </tr>
           </tfoot>

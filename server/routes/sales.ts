@@ -338,12 +338,15 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
     }
 
     // Build a map of SAP codes for this item
-    const sapCodeToVariation: { [sapCode: string]: string } = {};
+    const sapCodeToVariation: { [sapCode: string]: { name: string; saleType: string } } = {};
     if (item.variations && Array.isArray(item.variations)) {
       item.variations.forEach((variation: any, idx: number) => {
         if (variation.sapCode) {
           const variationName = variation.value || variation.name || `Variation ${idx + 1}`;
-          sapCodeToVariation[variation.sapCode] = variationName;
+          sapCodeToVariation[variation.sapCode] = {
+            name: variationName,
+            saleType: variation.saleType || "QTY",
+          };
         }
       });
     }
@@ -471,8 +474,10 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
           | "dining"
           | "parcel";
 
-        const variationName = sapCodeToVariation[sapCode];
-        const kgFactor = getKgFactor(variationName);
+        const variationInfo = sapCodeToVariation[sapCode];
+        const variationName = variationInfo.name;
+        const saleType = variationInfo.saleType;
+        const kgFactor = saleType === "KG" ? getKgFactor(variationName) : 1;
         const adjustedQuantity = quantity * kgFactor;
 
         // Aggregate by area & variation
@@ -737,12 +742,15 @@ export const handleDebugItemSalesRaw: RequestHandler = async (req, res) => {
     }
 
     // Build a map of SAP codes for this item
-    const sapCodeToVariation: { [sapCode: string]: string } = {};
+    const sapCodeToVariation: { [sapCode: string]: { name: string; saleType: string } } = {};
     if (item.variations && Array.isArray(item.variations)) {
       item.variations.forEach((variation: any, idx: number) => {
         if (variation.sapCode) {
           const variationName = variation.value || variation.name || `Variation ${idx + 1}`;
-          sapCodeToVariation[variation.sapCode] = variationName;
+          sapCodeToVariation[variation.sapCode] = {
+            name: variationName,
+            saleType: variation.saleType || "QTY",
+          };
         }
       });
     }
@@ -806,8 +814,10 @@ export const handleDebugItemSalesRaw: RequestHandler = async (req, res) => {
         const price = priceIdx !== -1 ? parseFloat(row[priceIdx]?.toString() || "0") || 0 : 0;
         const value = Math.round(quantity * price);
 
-        const variationName = sapCodeToVariation[sapCode];
-        const kgFactor = getKgFactor(variationName);
+        const variationInfo = sapCodeToVariation[sapCode];
+        const variationName = variationInfo.name;
+        const saleType = variationInfo.saleType;
+        const kgFactor = saleType === "KG" ? getKgFactor(variationName) : 1;
         const adjustedQuantity = quantity * kgFactor;
 
         if (!salesByArea[normalizedArea][variationName]) {
@@ -874,12 +884,15 @@ export const handleDebugAllData: RequestHandler = async (req, res) => {
     }
 
     // Build a map of SAP codes for this item
-    const sapCodeToVariation: { [sapCode: string]: string } = {};
+    const sapCodeToVariation: { [sapCode: string]: { name: string; saleType: string } } = {};
     if (item.variations && Array.isArray(item.variations)) {
       item.variations.forEach((variation: any, idx: number) => {
         if (variation.sapCode) {
           const variationName = variation.value || variation.name || `Variation ${idx + 1}`;
-          sapCodeToVariation[variation.sapCode] = variationName;
+          sapCodeToVariation[variation.sapCode] = {
+            name: variationName,
+            saleType: variation.saleType || "QTY",
+          };
         }
       });
     }
@@ -928,8 +941,10 @@ export const handleDebugAllData: RequestHandler = async (req, res) => {
         const area = areaIdx !== -1 ? row[areaIdx]?.toString().trim() || "" : "";
         const orderType = orderTypeIdx !== -1 ? row[orderTypeIdx]?.toString().trim() || "" : "";
         const restaurant = restaurantIdx !== -1 ? row[restaurantIdx]?.toString().trim() || "" : "";
-        const variation = sapCodeToVariation[sapCode];
-        const kgFactor = getKgFactor(variation);
+        const variationInfo = sapCodeToVariation[sapCode];
+        const variationName = variationInfo.name;
+        const saleType = variationInfo.saleType;
+        const kgFactor = saleType === "KG" ? getKgFactor(variationName) : 1;
         const adjustedQuantity = quantity * kgFactor;
 
         const normalizedArea = normalizeArea(area, orderType);
@@ -942,7 +957,7 @@ export const handleDebugAllData: RequestHandler = async (req, res) => {
         if (normalizedArea === "parcel") {
           detailedRecords.push({
             sapCode,
-            variation,
+            variation: variationName,
             area,
             orderType,
             quantity: adjustedQuantity,
@@ -993,12 +1008,15 @@ export const handleDebugParcelData: RequestHandler = async (req, res) => {
     }
 
     // Build a map of SAP codes for this item
-    const sapCodeToVariation: { [sapCode: string]: string } = {};
+    const sapCodeToVariation: { [sapCode: string]: { name: string; saleType: string } } = {};
     if (item.variations && Array.isArray(item.variations)) {
       item.variations.forEach((variation: any, idx: number) => {
         if (variation.sapCode) {
           const variationName = variation.value || variation.name || `Variation ${idx + 1}`;
-          sapCodeToVariation[variation.sapCode] = variationName;
+          sapCodeToVariation[variation.sapCode] = {
+            name: variationName,
+            saleType: variation.saleType || "QTY",
+          };
         }
       });
     }
@@ -1050,19 +1068,21 @@ export const handleDebugParcelData: RequestHandler = async (req, res) => {
         const price = priceIdx !== -1 ? parseFloat(row[priceIdx]?.toString() || "0") || 0 : 0;
         const date = dateIdx !== -1 ? row[dateIdx]?.toString().trim() || "" : "";
         const restaurant = restaurantIdx !== -1 ? row[restaurantIdx]?.toString().trim() || "" : "";
-        const variation = sapCodeToVariation[sapCode];
-        const kgFactor = getKgFactor(variation);
+        const variationInfo = sapCodeToVariation[sapCode];
+        const variationName = variationInfo.name;
+        const saleType = variationInfo.saleType;
+        const kgFactor = saleType === "KG" ? getKgFactor(variationName) : 1;
         const adjustedQuantity = quantity * kgFactor;
 
         // Track by variation
-        if (!parcelByVariation[variation]) {
-          parcelByVariation[variation] = 0;
+        if (!parcelByVariation[variationName]) {
+          parcelByVariation[variationName] = 0;
         }
-        parcelByVariation[variation] += adjustedQuantity;
+        parcelByVariation[variationName] += adjustedQuantity;
 
         parcelRows.push({
           sapCode,
-          variation,
+          variation: variationName,
           area,
           orderType,
           quantity: adjustedQuantity,

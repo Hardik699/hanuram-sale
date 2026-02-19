@@ -1043,6 +1043,11 @@ export default function ItemEdit() {
                       <option value="QTY">QTY (Quantity)</option>
                       <option value="KG">KG (Kilogram)</option>
                     </select>
+                    <p className="text-[10px] text-gray-500 mt-1 italic">
+                      {variation.saleType === "KG"
+                        ? "KG: Converts value (e.g. 250 Gms) to weight (0.25)"
+                        : "QTY: Counts each unit as 1.0"}
+                    </p>
                   </div>
                 </div>
 
