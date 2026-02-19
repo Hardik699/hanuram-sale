@@ -44,6 +44,8 @@ import {
   handleAddHsnCode,
   handleAddVariationValue,
   handleAddGS1Channel,
+  handleGetGroupCategories,
+  handleUpdateGroup,
 } from "./routes/items";
 import {
   handleGetSales,
@@ -122,6 +124,8 @@ export function createServer() {
   // Items routes - more specific routes first
   app.get("/api/items/dropdowns", handleGetDropdowns);
   app.post("/api/items/groups", handleAddGroup);
+  app.get("/api/items/groups/:groupName", handleGetGroupCategories);
+  app.put("/api/items/groups/:groupName", handleUpdateGroup);
   app.post("/api/items/categories", handleAddCategory);
   app.post("/api/items/hsn-codes", handleAddHsnCode);
   app.post("/api/items/variation-values", handleAddVariationValue);

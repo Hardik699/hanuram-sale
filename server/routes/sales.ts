@@ -395,6 +395,7 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
 
     let totalRecords = 0;
     let matchedRecords = 0;
+    let dateFilterSkipped = 0;
 
     // Helper to get column index
     const getColumnIndex = (headers: string[], name: string) =>
@@ -414,6 +415,12 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
       const quantityIdx = getColumnIndex(headers, "item_quantity");
       const priceIdx = getColumnIndex(headers, "item_price");
 
+      // Debug: Log missing columns
+      if (dateIdx === -1) {
+        console.warn("⚠️ WARNING: 'New Date' column not found in petpooja data");
+        console.warn("  Available headers:", headers.join(", "));
+      }
+
       if (sapCodeIdx === -1) continue;
 
       for (const row of dataRows) {
@@ -429,7 +436,21 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
         const recordDate = parseDate(dateStr);
 
         // Filter by date range
-        if (!recordDate || recordDate < start || recordDate > end) continue;
+        if (!recordDate || recordDate < start || recordDate > end) {
+          if (!recordDate) {
+            // Log a few examples of unparseable dates
+            if (dateFilterSkipped < 3) {
+              console.warn(`⚠️ Could not parse date: "${dateStr}"`);
+            }
+          } else {
+            // Log a few examples of dates outside range
+            if (dateFilterSkipped < 3) {
+              console.warn(`⚠️ Date outside range: ${recordDate.toISOString()} not in [${start.toISOString()}, ${end.toISOString()}]`);
+            }
+          }
+          dateFilterSkipped++;
+          continue;
+        }
 
         const restaurantName = restaurantIdx !== -1 ? row[restaurantIdx]?.toString().trim() || "Unknown" : "Unknown";
 
@@ -542,6 +563,7 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
     console.log(`✅ Sales data for ${itemId}:`, {
       totalRecords,
       matchedRecords,
+      dateFilterSkipped,
       zomato: salesData.zomatoData.quantity,
       swiggy: salesData.swiggyData.quantity,
       dining: salesData.diningData.quantity,
