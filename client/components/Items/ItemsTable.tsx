@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const CHANNELS = ["Dining", "Parcale", "Swiggy", "Zomato"];
-const ITEMS_PER_PAGE = 5;
 
 interface ItemsTableProps {
   items: any[];
@@ -12,12 +11,13 @@ interface ItemsTableProps {
 
 export default function ItemsTable({ items }: ItemsTableProps) {
   const navigate = useNavigate();
+  const [itemsPerPage, setItemsPerPage] = useState(15);
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
 
-  const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
-  const startIdx = currentPage * ITEMS_PER_PAGE;
-  const paginatedItems = items.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(items.length / itemsPerPage);
+  const startIdx = currentPage * itemsPerPage;
+  const paginatedItems = items.slice(startIdx, startIdx + itemsPerPage);
 
   const allVariations = Array.from(
     new Set(
@@ -187,12 +187,32 @@ export default function ItemsTable({ items }: ItemsTableProps) {
 
         {/* Footer with Pagination */}
         <div className="px-4 sm:px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="text-xs sm:text-sm text-gray-600">
-            {selectedRows.size > 0 && (
-              <span className="font-medium">{selectedRows.size} selected · </span>
-            )}
-            Showing {startIdx + 1} to{" "}
-            {Math.min(startIdx + ITEMS_PER_PAGE, items.length)} of {items.length}
+          <div className="flex items-center gap-4 flex-wrap justify-center sm:justify-start">
+            <div className="text-xs sm:text-sm text-gray-600">
+              {selectedRows.size > 0 && (
+                <span className="font-medium">{selectedRows.size} selected · </span>
+              )}
+              Showing {startIdx + 1} to{" "}
+              {Math.min(startIdx + itemsPerPage, items.length)} of {items.length}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs sm:text-sm text-gray-500">Rows:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(0);
+                }}
+                className="text-xs sm:text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+              >
+                {[5, 10, 15, 20, 30, 50].map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
