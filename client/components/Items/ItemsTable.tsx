@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const CHANNELS = ["Dining", "Parcale", "Swiggy", "Zomato"];
-const ITEMS_PER_PAGE = 5;
 
 interface ItemsTableProps {
   items: any[];
@@ -12,12 +11,13 @@ interface ItemsTableProps {
 
 export default function ItemsTable({ items }: ItemsTableProps) {
   const navigate = useNavigate();
+  const [itemsPerPage, setItemsPerPage] = useState(15);
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
 
-  const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
-  const startIdx = currentPage * ITEMS_PER_PAGE;
-  const paginatedItems = items.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(items.length / itemsPerPage);
+  const startIdx = currentPage * itemsPerPage;
+  const paginatedItems = items.slice(startIdx, startIdx + itemsPerPage);
 
   const allVariations = Array.from(
     new Set(
@@ -77,48 +77,23 @@ export default function ItemsTable({ items }: ItemsTableProps) {
 
                 {/* Basic Info - Sticky */}
                 <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 sticky left-10 z-20">
-                  Item ID
+                  Item Name
                 </th>
                 <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 hidden sm:table-cell">
-                  Group
+                  Item ID
                 </th>
                 <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 hidden md:table-cell">
-                  Category
+                  Group
                 </th>
                 <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 hidden lg:table-cell">
-                  Item Name
+                  Category
                 </th>
 
                 {/* Variation Columns - Show all variations with better spacing */}
-                {allVariations.map((variation, idx) => (
-                  <th
-                    key={`${variation.name}-${variation.value}`}
-                    colSpan={4}
-                    className={`px-3 sm:px-4 py-4 text-center text-sm font-bold text-white border-l-2 border-white bg-slate-700`}
-                  >
-                    {variation.value}
-                  </th>
-                ))}
+                {/* Variations removed as per user request to simplify table */}
               </tr>
 
-              {/* Sub-header for Channels - Show all variations */}
-              {allVariations.length > 0 && (
-                <tr className="bg-slate-600 border-b border-gray-300 text-xs whitespace-nowrap">
-                  <th colSpan={5} className="px-2 sm:px-4 py-0 sticky left-10 z-20 bg-slate-600"></th>
-                  {allVariations.map((variation, idx) => (
-                    <React.Fragment key={`${variation.name}-${variation.value}`}>
-                      {CHANNELS.map((channel) => (
-                        <th
-                          key={`${variation.value}-${channel}`}
-                          className={`px-3 sm:px-4 py-3 text-center font-semibold text-white border-r border-white bg-slate-600`}
-                        >
-                          {channel}
-                        </th>
-                      ))}
-                    </React.Fragment>
-                  ))}
-                </tr>
-              )}
+              {/* Sub-header for Channels removed as per user request */}
             </thead>
 
             {/* Table Body */}
@@ -142,44 +117,20 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   </td>
 
                   {/* Basic Info - Sticky */}
-                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-bold bg-transparent sticky left-10 z-10">
-                    <span className="sm:hidden">ID: </span>
-                    {item.itemId}
-                  </td>
-                  <td className="px-2 sm:px-4 py-3 text-gray-700 bg-transparent hidden sm:table-cell">
-                    {item.group}
-                  </td>
-                  <td className="px-2 sm:px-4 py-3 text-gray-700 hidden md:table-cell">
-                    {item.category}
-                  </td>
-                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-medium hidden lg:table-cell max-w-xs truncate">
+                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-bold bg-white sticky left-10 z-10 max-w-[150px] sm:max-w-xs truncate">
                     {item.itemName}
                   </td>
+                  <td className="px-2 sm:px-4 py-3 text-gray-700 bg-transparent hidden sm:table-cell">
+                    {item.itemId}
+                  </td>
+                  <td className="px-2 sm:px-4 py-3 text-gray-700 hidden md:table-cell">
+                    {item.group}
+                  </td>
+                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-medium hidden lg:table-cell max-w-xs truncate">
+                    {item.category}
+                  </td>
 
-                  {/* Variation Prices - Show all variations and channels */}
-                  {allVariations.map((variation, idx) => {
-                    const itemVariation = item.variations.find(
-                      (v: any) =>
-                        v.name === variation.name && v.value === variation.value
-                    );
-
-                    return (
-                      <React.Fragment
-                        key={`${item.itemId}-${variation.value}`}
-                      >
-                        {CHANNELS.map((channel) => (
-                          <td
-                            key={`${item.itemId}-${variation.value}-${channel}`}
-                            className={`px-3 sm:px-4 py-3 text-center font-semibold border-r border-white bg-slate-50 text-slate-900`}
-                          >
-                            {itemVariation && itemVariation.channels[channel]
-                              ? `₹${itemVariation.channels[channel]}`
-                              : "-"}
-                          </td>
-                        ))}
-                      </React.Fragment>
-                    );
-                  })}
+                  {/* Variation Prices removed as per user request */}
                 </tr>
               ))}
             </tbody>
@@ -188,12 +139,32 @@ export default function ItemsTable({ items }: ItemsTableProps) {
 
         {/* Footer with Pagination */}
         <div className="px-4 sm:px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="text-xs sm:text-sm text-gray-600">
-            {selectedRows.size > 0 && (
-              <span className="font-medium">{selectedRows.size} selected · </span>
-            )}
-            Showing {startIdx + 1} to{" "}
-            {Math.min(startIdx + ITEMS_PER_PAGE, items.length)} of {items.length}
+          <div className="flex items-center gap-4 flex-wrap justify-center sm:justify-start">
+            <div className="text-xs sm:text-sm text-gray-600">
+              {selectedRows.size > 0 && (
+                <span className="font-medium">{selectedRows.size} selected · </span>
+              )}
+              Showing {startIdx + 1} to{" "}
+              {Math.min(startIdx + itemsPerPage, items.length)} of {items.length}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs sm:text-sm text-gray-500">Rows:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(0);
+                }}
+                className="text-xs sm:text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+              >
+                {[5, 10, 15, 20, 30, 50].map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
