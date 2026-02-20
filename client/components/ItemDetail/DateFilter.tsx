@@ -48,45 +48,48 @@ export default function DateFilter({ onDateRangeChange }: DateFilterProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Calendar className="w-5 h-5 text-purple-600" />
-        <h3 className="text-lg font-bold text-gray-900">Date Range</h3>
+    <div className="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-3 xs:p-4 sm:p-6">
+      <div className="flex items-center gap-2 mb-3 xs:mb-4">
+        <Calendar className="w-4 xs:w-5 h-4 xs:h-5 text-purple-600" />
+        <h3 className="text-base xs:text-lg sm:text-lg font-bold text-gray-900">Date Range</h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 xs:gap-4 mb-3 xs:mb-4">
         {/* Start Date */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-xs xs:text-sm font-semibold text-gray-700 mb-2">
             Start Date
           </label>
           <input
             type="date"
             value={startDate}
             onChange={handleStartDateChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+            className="w-full px-3 py-2 text-xs xs:text-sm border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
           />
         </div>
 
         {/* End Date */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-xs xs:text-sm font-semibold text-gray-700 mb-2">
             End Date
           </label>
           <input
             type="date"
             value={endDate}
             onChange={handleEndDateChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+            className="w-full px-3 py-2 text-xs xs:text-sm border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
           />
         </div>
 
         {/* Summary */}
         <div className="flex items-end">
-          <div className="bg-purple-50 rounded-lg p-3 w-full">
-            <p className="text-xs font-semibold text-purple-700 uppercase">Selected Range</p>
-            <p className="text-sm font-semibold text-gray-900 mt-1">
-              {startDate} to {endDate}
+          <div className="bg-purple-50 rounded-lg p-2 xs:p-3 w-full border border-purple-100">
+            <p className="text-[8px] xs:text-xs font-semibold text-purple-700 uppercase">Selected Range</p>
+            <p className="text-xs xs:text-sm font-semibold text-gray-900 mt-1 truncate">
+              {startDate}
+            </p>
+            <p className="text-xs xs:text-sm font-semibold text-gray-900 truncate">
+              to {endDate}
             </p>
           </div>
         </div>
@@ -94,31 +97,31 @@ export default function DateFilter({ onDateRangeChange }: DateFilterProps) {
 
       {/* Preset Buttons */}
       <div>
-        <p className="text-xs font-semibold text-gray-600 uppercase mb-3">Quick Select</p>
-        <div className="flex flex-wrap gap-2">
+        <p className="text-[8px] xs:text-xs font-semibold text-gray-600 uppercase mb-2 xs:mb-3">Quick Select</p>
+        <div className="flex flex-wrap gap-1.5 xs:gap-2">
           <button
             onClick={() => handlePresetRange(7)}
-            className="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium transition"
+            className="px-2 xs:px-3 py-1.5 xs:py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg text-xs xs:text-sm font-medium transition"
           >
-            Last 7 days
+            7d
           </button>
           <button
             onClick={() => handlePresetRange(30)}
-            className="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium transition"
+            className="px-2 xs:px-3 py-1.5 xs:py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg text-xs xs:text-sm font-medium transition"
           >
-            Last 30 days
+            30d
           </button>
           <button
             onClick={() => handlePresetRange(90)}
-            className="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium transition"
+            className="px-2 xs:px-3 py-1.5 xs:py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg text-xs xs:text-sm font-medium transition"
           >
-            Last 90 days
+            90d
           </button>
           <button
             onClick={() => handlePresetRange(365)}
-            className="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium transition"
+            className="px-2 xs:px-3 py-1.5 xs:py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg text-xs xs:text-sm font-medium transition"
           >
-            Last Year
+            1y
           </button>
         </div>
       </div>

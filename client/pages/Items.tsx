@@ -162,14 +162,14 @@ export default function Items() {
   };
 
   return (
-    <div className="flex-1 p-6 sm:p-8">
+    <div className="flex-1 p-3 xs:p-4 sm:p-6 lg:p-8">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="w-full sm:w-auto">
+          <h1 className="text-xl xs:text-2xl sm:text-3xl font-bold text-gray-900">
             Items
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-gray-500 text-xs xs:text-sm mt-1">
             Manage your product items and variations
           </p>
           {loading && (
@@ -178,8 +178,8 @@ export default function Items() {
             </p>
           )}
         </div>
-        <div className="flex gap-3 items-center">
-          {/* Search bar */}
+        <div className="flex flex-col xs:flex-row gap-2 xs:gap-3 w-full sm:w-auto">
+          {/* Search bar - Desktop */}
           <div className="relative w-full max-w-xs hidden sm:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
@@ -187,26 +187,27 @@ export default function Items() {
               placeholder="Search items..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 text-sm"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 text-xs sm:text-sm"
             />
           </div>
 
           {items.length > 0 && !loading && (
             <button
               onClick={handleDownload}
-              className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-medium transition text-sm sm:text-base"
+              className="flex items-center justify-center gap-1.5 xs:gap-2 px-3 xs:px-4 sm:px-6 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 font-medium transition text-xs xs:text-sm sm:text-base whitespace-nowrap"
             >
-              <Download className="w-4 h-4" />
-              Download
+              <Download className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
+              <span className="hidden xs:inline">Download</span>
             </button>
           )}
           <button
             onClick={() => setShowForm(true)}
             disabled={loading}
-            className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 font-medium transition text-sm sm:text-base"
+            className="flex items-center justify-center gap-1.5 xs:gap-2 px-3 xs:px-4 sm:px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 font-medium transition text-xs xs:text-sm sm:text-base whitespace-nowrap"
           >
-            <Plus className="w-4 h-4" />
-            Add Item
+            <Plus className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
+            <span className="hidden xs:inline">Add Item</span>
+            <span className="xs:hidden">Add</span>
           </button>
         </div>
       </div>
@@ -224,7 +225,7 @@ export default function Items() {
       )}
 
       {/* Search bar - Mobile only */}
-      <div className="mb-6 sm:hidden relative">
+      <div className="mb-4 sm:hidden relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
         <input
           type="text"
@@ -237,8 +238,8 @@ export default function Items() {
 
       {/* Items Table */}
       {loading ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
-          <p className="text-gray-500">Loading items from MongoDB...</p>
+        <div className="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-4 sm:p-8 text-center">
+          <p className="text-gray-500 text-xs sm:text-sm">Loading items from MongoDB...</p>
         </div>
       ) : (
         <ItemsTable items={filteredItems} />
