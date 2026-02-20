@@ -4,9 +4,9 @@ import { Package } from "lucide-react";
 import UploadTab from "@/components/UploadTab";
 
 const UPLOAD_TYPES = [
-  { id: "petpooja", label: "Petpooja Upload", color: "from-purple-600 to-blue-600" },
-  { id: "pain_lebs", label: "Pain Labs Upload", color: "from-blue-600 to-cyan-600" },
-  { id: "website", label: "Website Upload", color: "from-cyan-600 to-green-600" }
+  { id: "petpooja", label: "Petpooja Upload", color: "from-primary to-accent-purple" },
+  { id: "pain_lebs", label: "Pain Labs Upload", color: "from-primary to-accent-teal" },
+  { id: "website", label: "Website Upload", color: "from-accent-teal to-accent-orange" }
 ];
 
 export default function Dashboard() {
@@ -25,7 +25,7 @@ export default function Dashboard() {
         </div>
         <button
           onClick={() => navigate("/items")}
-          className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg font-medium transition text-sm sm:text-base"
+          className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-gradient-to-r from-primary to-accent-purple text-white rounded-lg hover:shadow-lg font-medium transition text-sm sm:text-base"
         >
           <Package className="w-4 h-4" />
           Items Page

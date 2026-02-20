@@ -66,8 +66,15 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         brand: {
-          blue: "#6D8196",
+          blue: "#6366f1",
           gray: "#CBCBCB",
+        },
+        accent: {
+          orange: "hsl(var(--orange))",
+          teal: "hsl(var(--teal))",
+          purple: "hsl(var(--purple))",
+          pink: "hsl(var(--pink))",
+          blue: "hsl(var(--blue))",
         },
       },
       borderRadius: {

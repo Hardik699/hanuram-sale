@@ -18,14 +18,14 @@ export default function UploadLoader({ isVisible, progress = 0 }: UploadLoaderPr
         <div className="flex justify-center mb-6">
           <div className="relative w-24 h-24">
             {/* Outer rotating circle */}
-            <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-purple-600 border-r-purple-600 animate-spin"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary border-r-primary animate-spin"></div>
 
             {/* Middle pulsing circle */}
-            <div className="absolute inset-2 rounded-full border-2 border-purple-300 animate-pulse"></div>
+            <div className="absolute inset-2 rounded-full border-2 border-primary/40 animate-pulse"></div>
 
             {/* Inner icon */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <Upload className="w-10 h-10 text-purple-600 animate-bounce" style={{ animationDuration: "1.5s" }} />
+              <Upload className="w-10 h-10 text-primary animate-bounce" style={{ animationDuration: "1.5s" }} />
             </div>
           </div>
         </div>
@@ -42,7 +42,7 @@ export default function UploadLoader({ isVisible, progress = 0 }: UploadLoaderPr
         <div className="mb-2">
           <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-purple-600 to-blue-600 rounded-full transition-all duration-300"
+              className="h-full bg-gradient-to-r from-primary to-accent-teal rounded-full transition-all duration-300"
               style={{
                 width: `${normalizedProgress}%`
               }}
@@ -50,28 +50,28 @@ export default function UploadLoader({ isVisible, progress = 0 }: UploadLoaderPr
           </div>
           <div className="flex justify-between items-center mt-2">
             <span className="text-xs font-medium text-gray-600">Processing file...</span>
-            <span className="text-sm font-bold text-purple-600">{Math.round(normalizedProgress)}%</span>
+            <span className="text-sm font-bold text-primary">{Math.round(normalizedProgress)}%</span>
           </div>
         </div>
 
         {/* Animated dots */}
         <div className="flex justify-center gap-2 mt-8">
           <div
-            className="w-2 h-2 rounded-full bg-purple-600"
+            className="w-2 h-2 rounded-full bg-primary"
             style={{
               animation: "dot-bounce 1.4s infinite",
               animationDelay: "0s"
             }}
           ></div>
           <div
-            className="w-2 h-2 rounded-full bg-purple-600"
+            className="w-2 h-2 rounded-full bg-primary"
             style={{
               animation: "dot-bounce 1.4s infinite",
               animationDelay: "0.2s"
             }}
           ></div>
           <div
-            className="w-2 h-2 rounded-full bg-purple-600"
+            className="w-2 h-2 rounded-full bg-primary"
             style={{
               animation: "dot-bounce 1.4s infinite",
               animationDelay: "0.4s"

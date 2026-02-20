@@ -50,7 +50,7 @@ export default function DateFilter({ onDateRangeChange }: DateFilterProps) {
   return (
     <div className="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-3 xs:p-4 sm:p-6">
       <div className="flex items-center gap-2 mb-3 xs:mb-4">
-        <Calendar className="w-4 xs:w-5 h-4 xs:h-5 text-purple-600" />
+        <Calendar className="w-4 xs:w-5 h-4 xs:h-5 text-primary" />
         <h3 className="text-base xs:text-lg sm:text-lg font-bold text-gray-900">Date Range</h3>
       </div>
 
@@ -64,7 +64,7 @@ export default function DateFilter({ onDateRangeChange }: DateFilterProps) {
             type="date"
             value={startDate}
             onChange={handleStartDateChange}
-            className="w-full px-3 py-2 text-xs xs:text-sm border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+            className="w-full px-3 py-2 text-xs xs:text-sm border border-primary/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
           />
         </div>
 
@@ -77,14 +77,14 @@ export default function DateFilter({ onDateRangeChange }: DateFilterProps) {
             type="date"
             value={endDate}
             onChange={handleEndDateChange}
-            className="w-full px-3 py-2 text-xs xs:text-sm border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
+            className="w-full px-3 py-2 text-xs xs:text-sm border border-primary/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
           />
         </div>
 
         {/* Summary */}
         <div className="flex items-end">
-          <div className="bg-purple-50 rounded-lg p-2 xs:p-3 w-full border border-purple-100">
-            <p className="text-[8px] xs:text-xs font-semibold text-purple-700 uppercase">Selected Range</p>
+          <div className="bg-primary/5 rounded-lg p-2 xs:p-3 w-full border border-primary/20">
+            <p className="text-[8px] xs:text-xs font-semibold text-primary uppercase">Selected Range</p>
             <p className="text-xs xs:text-sm font-semibold text-gray-900 mt-1 truncate">
               {startDate}
             </p>
@@ -101,25 +101,25 @@ export default function DateFilter({ onDateRangeChange }: DateFilterProps) {
         <div className="flex flex-wrap gap-1.5 xs:gap-2">
           <button
             onClick={() => handlePresetRange(7)}
-            className="px-2 xs:px-3 py-1.5 xs:py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg text-xs xs:text-sm font-medium transition"
+            className="px-2 xs:px-3 py-1.5 xs:py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-xs xs:text-sm font-medium transition"
           >
             7d
           </button>
           <button
             onClick={() => handlePresetRange(30)}
-            className="px-2 xs:px-3 py-1.5 xs:py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg text-xs xs:text-sm font-medium transition"
+            className="px-2 xs:px-3 py-1.5 xs:py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-xs xs:text-sm font-medium transition"
           >
             30d
           </button>
           <button
             onClick={() => handlePresetRange(90)}
-            className="px-2 xs:px-3 py-1.5 xs:py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg text-xs xs:text-sm font-medium transition"
+            className="px-2 xs:px-3 py-1.5 xs:py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-xs xs:text-sm font-medium transition"
           >
             90d
           </button>
           <button
             onClick={() => handlePresetRange(365)}
-            className="px-2 xs:px-3 py-1.5 xs:py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg text-xs xs:text-sm font-medium transition"
+            className="px-2 xs:px-3 py-1.5 xs:py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-xs xs:text-sm font-medium transition"
           >
             1y
           </button>

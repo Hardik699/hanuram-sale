@@ -14,28 +14,28 @@ interface SalesCardProps {
 
 const typeColors = {
   Zomato: {
-    bg: "bg-purple-50",
-    border: "border-purple-200",
-    dot: "bg-purple-500",
-    text: "text-purple-700",
+    bg: "bg-accent-pink/10",
+    border: "border-accent-pink/30",
+    dot: "bg-accent-pink",
+    text: "text-accent-pink",
   },
   Swiggy: {
-    bg: "bg-purple-50",
-    border: "border-purple-200",
-    dot: "bg-purple-500",
-    text: "text-purple-700",
+    bg: "bg-accent-orange/10",
+    border: "border-accent-orange/30",
+    dot: "bg-accent-orange",
+    text: "text-accent-orange",
   },
   Dining: {
-    bg: "bg-purple-50",
-    border: "border-purple-200",
-    dot: "bg-purple-500",
-    text: "text-purple-700",
+    bg: "bg-accent-teal/10",
+    border: "border-accent-teal/30",
+    dot: "bg-accent-teal",
+    text: "text-accent-teal",
   },
   Parcel: {
-    bg: "bg-purple-50",
-    border: "border-purple-200",
-    dot: "bg-purple-500",
-    text: "text-purple-700",
+    bg: "bg-primary/10",
+    border: "border-primary/30",
+    dot: "bg-primary",
+    text: "text-primary",
   },
 };
 
@@ -145,7 +145,7 @@ export default function SalesSummaryCards({
   return (
     <div>
       <div className="flex items-center gap-2 mb-3 xs:mb-4">
-        <TrendingUp className="w-4 xs:w-5 h-4 xs:h-5 text-purple-600" />
+        <TrendingUp className="w-4 xs:w-5 h-4 xs:h-5 text-primary" />
         <h2 className="text-base xs:text-lg sm:text-xl font-bold text-gray-900">
           Sales Summary by Area
         </h2>

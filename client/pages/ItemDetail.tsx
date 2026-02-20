@@ -462,7 +462,7 @@ export default function ItemDetail() {
       <div className="flex-1 p-3 xs:p-4 sm:p-6 lg:p-8">
         <button
           onClick={() => navigate("/items")}
-          className="flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-4 sm:mb-6 font-medium text-sm sm:text-base"
+          className="flex items-center gap-2 text-primary hover:opacity-80 mb-4 sm:mb-6 font-medium text-sm sm:text-base transition"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Items
@@ -479,7 +479,7 @@ export default function ItemDetail() {
       <div className="flex-1 p-3 xs:p-4 sm:p-6 lg:p-8">
         <button
           onClick={() => navigate("/items")}
-          className="flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-4 sm:mb-6 font-medium text-sm sm:text-base"
+          className="flex items-center gap-2 text-primary hover:opacity-80 mb-4 sm:mb-6 font-medium text-sm sm:text-base transition"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Items
@@ -591,14 +591,14 @@ export default function ItemDetail() {
           <div className="flex gap-1.5 xs:gap-2 flex-shrink-0">
             <button
               onClick={() => navigate(`/items/${itemId}/edit`)}
-              className="p-1.5 xs:p-2 hover:bg-purple-50 rounded-lg transition text-purple-600"
+              className="p-1.5 xs:p-2 hover:bg-primary/10 rounded-lg transition text-primary"
               title="Edit item"
             >
               <Edit className="w-4 xs:w-5 h-4 xs:h-5" />
             </button>
             <button
               onClick={() => setShowResetConfirm(true)}
-              className="p-1.5 xs:p-2 hover:bg-purple-50 rounded-lg transition text-purple-600"
+              className="p-1.5 xs:p-2 hover:bg-primary/10 rounded-lg transition text-primary"
               title="Reset sales data"
             >
               <RotateCcw className="w-4 xs:w-5 h-4 xs:h-5" />
@@ -619,7 +619,7 @@ export default function ItemDetail() {
             onClick={() => setActiveTab("details")}
             className={`px-3 xs:px-4 py-2 text-sm xs:text-base font-semibold border-b-2 transition whitespace-nowrap ${
               activeTab === "details"
-                ? "border-purple-600 text-purple-600"
+                ? "border-primary text-primary"
                 : "border-transparent text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -629,7 +629,7 @@ export default function ItemDetail() {
             onClick={() => setActiveTab("sales")}
             className={`px-3 xs:px-4 py-2 text-sm xs:text-base font-semibold border-b-2 transition whitespace-nowrap ${
               activeTab === "sales"
-                ? "border-purple-600 text-purple-600"
+                ? "border-primary text-primary"
                 : "border-transparent text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -687,7 +687,7 @@ export default function ItemDetail() {
               <div className="lg:col-span-2">
                 {/* Basic Info Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 xs:gap-4 mb-4 sm:mb-6">
-                  <div className="bg-purple-50 p-3 xs:p-4 rounded-lg border border-purple-100">
+                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
                     <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
                       Item ID
                     </p>
@@ -696,7 +696,7 @@ export default function ItemDetail() {
                     </p>
                   </div>
 
-                  <div className="bg-purple-50 p-3 xs:p-4 rounded-lg border border-purple-100">
+                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
                     <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
                       Short Code
                     </p>
@@ -705,7 +705,7 @@ export default function ItemDetail() {
                     </p>
                   </div>
 
-                  <div className="bg-purple-50 p-3 xs:p-4 rounded-lg border border-purple-100">
+                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
                     <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
                       Group
                     </p>
@@ -714,7 +714,7 @@ export default function ItemDetail() {
                     </p>
                   </div>
 
-                  <div className="bg-purple-50 p-3 xs:p-4 rounded-lg border border-purple-100">
+                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
                     <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
                       Category
                     </p>
@@ -723,7 +723,7 @@ export default function ItemDetail() {
                     </p>
                   </div>
 
-                  <div className="bg-purple-50 p-3 xs:p-4 rounded-lg border border-purple-100">
+                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
                     <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
                       Item Type
                     </p>
@@ -732,7 +732,7 @@ export default function ItemDetail() {
                     </p>
                   </div>
 
-                  <div className="bg-purple-50 p-3 xs:p-4 rounded-lg border border-purple-100">
+                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
                     <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
                       Unit Type
                     </p>
@@ -741,7 +741,7 @@ export default function ItemDetail() {
                     </p>
                   </div>
 
-                  <div className="bg-purple-50 p-3 xs:p-4 rounded-lg border border-purple-100">
+                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
                     <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
                       HSN Code
                     </p>
@@ -750,27 +750,27 @@ export default function ItemDetail() {
                     </p>
                   </div>
 
-                  <div className="bg-purple-50 p-3 xs:p-4 rounded-lg border border-purple-100">
+                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
                     <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
                       GST (%)
                     </p>
-                    <p className="text-base xs:text-lg font-semibold text-purple-600 mt-1">
+                    <p className="text-base xs:text-lg font-semibold text-primary mt-1">
                       {item.gst || 0}%
                     </p>
                   </div>
 
-                  <div className="bg-purple-50 p-3 xs:p-4 rounded-lg border border-purple-100">
+                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
                     <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
                       Profit Margin (%)
                     </p>
-                    <p className="text-base xs:text-lg font-semibold text-purple-600 mt-1">
+                    <p className="text-base xs:text-lg font-semibold text-primary mt-1">
                       {item.profitMargin || 0}%
                     </p>
                   </div>
                 </div>
 
                 {item.description && (
-                  <div className="bg-purple-50 p-3 xs:p-4 rounded-lg border border-purple-100">
+                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
                     <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
                       Description
                     </p>
@@ -797,7 +797,7 @@ export default function ItemDetail() {
                         className="border border-purple-200 rounded-lg p-3 xs:p-4 hover:shadow-md hover:border-purple-300 transition bg-gradient-to-br from-white to-purple-50"
                       >
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 xs:gap-4 mb-4">
-                          <div className="bg-white p-2 xs:p-3 rounded border border-purple-100">
+                          <div className="bg-white p-2 xs:p-3 rounded border border-primary/20">
                             <p className="text-[8px] xs:text-xs font-semibold text-gray-500 uppercase">
                               Variation Value
                             </p>
@@ -806,7 +806,7 @@ export default function ItemDetail() {
                             </p>
                           </div>
 
-                          <div className="bg-white p-2 xs:p-3 rounded border border-purple-100">
+                          <div className="bg-white p-2 xs:p-3 rounded border border-primary/20">
                             <p className="text-[8px] xs:text-xs font-semibold text-gray-500 uppercase">
                               Base Price
                             </p>
@@ -815,7 +815,7 @@ export default function ItemDetail() {
                             </p>
                           </div>
 
-                          <div className="bg-white p-2 xs:p-3 rounded border border-purple-100">
+                          <div className="bg-white p-2 xs:p-3 rounded border border-primary/20">
                             <p className="text-[8px] xs:text-xs font-semibold text-gray-500 uppercase">
                               SAP Code
                             </p>
@@ -824,7 +824,7 @@ export default function ItemDetail() {
                             </p>
                           </div>
 
-                          <div className="bg-white p-2 xs:p-3 rounded border border-purple-100">
+                          <div className="bg-white p-2 xs:p-3 rounded border border-primary/20">
                             <p className="text-[8px] xs:text-xs font-semibold text-gray-500 uppercase">
                               Profit Margin (%)
                             </p>
@@ -833,7 +833,7 @@ export default function ItemDetail() {
                             </p>
                           </div>
 
-                          <div className="bg-white p-2 xs:p-3 rounded border border-purple-100">
+                          <div className="bg-white p-2 xs:p-3 rounded border border-primary/20">
                             <p className="text-[8px] xs:text-xs font-semibold text-gray-500 uppercase">
                               Sale Type
                             </p>
@@ -844,7 +844,7 @@ export default function ItemDetail() {
                         </div>
 
                         {/* Channel Prices */}
-                        <div className="pt-2 xs:pt-3 border-t border-purple-100">
+                        <div className="pt-2 xs:pt-3 border-t border-primary/20">
                           <p className="text-[8px] xs:text-xs font-semibold text-gray-500 uppercase mb-3">
                             Channel Prices (Area-wise)
                           </p>
@@ -892,7 +892,7 @@ export default function ItemDetail() {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 sm:p-8 text-center">
+                  <div className="bg-primary/5 border border-primary/30 rounded-lg p-4 sm:p-8 text-center">
                     <p className="text-gray-500 text-sm sm:text-base">No variations found for this item.</p>
                   </div>
                 )}
@@ -903,7 +903,7 @@ export default function ItemDetail() {
           /* Sales Tab Content */
           <div className="space-y-4 sm:space-y-6">
             {/* Restaurant & Date Filter */}
-            <div className="bg-purple-50 border border-purple-200 rounded-lg sm:rounded-xl p-3 xs:p-4 sm:p-6 space-y-4">
+            <div className="bg-primary/5 border border-primary/30 rounded-lg sm:rounded-xl p-3 xs:p-4 sm:p-6 space-y-4">
               <div>
                 <label className="block text-xs xs:text-sm font-semibold text-gray-700 mb-2">
                   Restaurant
@@ -911,7 +911,7 @@ export default function ItemDetail() {
                 <select
                   value={selectedRestaurant}
                   onChange={(e) => setSelectedRestaurant(e.target.value)}
-                  className="w-full px-3 xs:px-4 py-2 text-sm xs:text-base border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
+                  className="w-full px-3 xs:px-4 py-2 text-sm xs:text-base border border-primary/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                 >
                   <option value="">All Restaurants</option>
                   {restaurants.map((restaurant) => (
@@ -934,8 +934,8 @@ export default function ItemDetail() {
 
             {/* Sales Summary Cards */}
             {salesLoading ? (
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 sm:p-6 text-center">
-                <p className="text-purple-900 text-sm sm:text-base">Loading sales data...</p>
+              <div className="bg-primary/5 border border-primary/30 rounded-lg p-4 sm:p-6 text-center">
+                <p className="text-primary text-sm sm:text-base">Loading sales data...</p>
               </div>
             ) : salesData ? (
               <>
@@ -962,8 +962,8 @@ export default function ItemDetail() {
                 />
               </>
             ) : (
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 sm:p-6 text-center">
-                <p className="text-purple-900 text-sm sm:text-base">
+              <div className="bg-primary/5 border border-primary/30 rounded-lg p-4 sm:p-6 text-center">
+                <p className="text-primary text-sm sm:text-base">
                   {dateRange.start && dateRange.end
                     ? "No sales data found for the selected date range"
                     : "Please select a date range to view sales data"}
