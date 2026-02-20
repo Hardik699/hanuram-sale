@@ -1120,18 +1120,16 @@ export const handleGetRestaurants: RequestHandler = async (req, res) => {
     console.log("📥 GET /api/sales/restaurants - fetching unique restaurants");
 
     const db = await getDatabase();
-    const itemsCollection = db.collection("items");
+    const petpoojaCollection = db.collection("petpooja");
 
-    // Aggregate all unique restaurant names from salesHistory
-    console.log("🔍 Running MongoDB aggregation to find unique restaurants...");
+    // Aggregate all unique restaurant names from petpooja collection
+    console.log("🔍 Running MongoDB aggregation to find unique restaurants from petpooja...");
 
-    const restaurants = await itemsCollection
+    const restaurants = await petpoojaCollection
       .aggregate([
-        { $unwind: "$variations" },
-        { $unwind: "$variations.salesHistory" },
         {
           $group: {
-            _id: "$variations.salesHistory.restaurant",
+            _id: "$restaurant",
           },
         },
         { $match: { _id: { $nin: [null, ""] } } },
