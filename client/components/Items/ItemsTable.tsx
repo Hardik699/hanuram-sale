@@ -175,12 +175,12 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 <tr
                   key={item.itemId}
                   onClick={() => navigate(`/items/${item.itemId}`)}
-                  className={`border-b border-gray-200 hover:bg-blue-50 transition cursor-pointer text-[10px] sm:text-xs whitespace-nowrap ${
-                    selectedRows.has(item.itemId) ? "bg-blue-100" : ""
+                  className={`border-b border-gray-200 hover:bg-purple-50 transition cursor-pointer text-[10px] sm:text-xs whitespace-nowrap ${
+                    selectedRows.has(item.itemId) ? "bg-purple-50" : ""
                   }`}
                 >
                   {/* Checkbox - Sticky */}
-                  <td className={`px-2 sm:px-4 py-3 text-center border-r border-gray-200 sticky left-0 z-10 transition-colors ${selectedRows.has(item.itemId) ? "bg-blue-100" : "bg-white"}`} onClick={(e) => e.stopPropagation()}>
+                  <td className={`px-2 sm:px-4 py-3 text-center border-r border-gray-200 sticky left-0 z-10 transition-colors ${selectedRows.has(item.itemId) ? "bg-purple-50" : "bg-white"}`} onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selectedRows.has(item.itemId)}
@@ -190,7 +190,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   </td>
 
                   {/* Basic Info - Sticky Item Name */}
-                  <td className={`px-2 sm:px-4 py-3 text-gray-900 font-black sticky left-10 z-10 border-r border-gray-200 min-w-[150px] first-letter:capitalize transition-colors ${selectedRows.has(item.itemId) ? "bg-blue-100" : "bg-white"}`}>
+                  <td className={`px-2 sm:px-4 py-3 text-gray-900 font-black sticky left-10 z-10 border-r border-gray-200 min-w-[150px] first-letter:capitalize transition-colors ${selectedRows.has(item.itemId) ? "bg-purple-50" : "bg-white"}`}>
                     {item.itemName}
                   </td>
                   <td className="px-2 sm:px-4 py-3 text-gray-700 border-r border-gray-200 text-center font-bold">
@@ -203,10 +203,10 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   {/* Variation Prices */}
                   {uniqueVariationValues.map((v) => (
                     <React.Fragment key={`${item.itemId}-${v}-prices`}>
-                      <td className="px-1 sm:px-2 py-3 text-center border-r border-gray-100 font-medium">{getPrice(item, v, "Dining")}</td>
-                      <td className="px-1 sm:px-2 py-3 text-center border-r border-gray-100 font-medium">{getPrice(item, v, "parcal")}</td>
-                      <td className="px-1 sm:px-2 py-3 text-center border-r border-gray-100 font-medium text-blue-600 font-black">{getPrice(item, v, "Swiggy")}</td>
-                      <td className="px-1 sm:px-2 py-3 text-center border-r border-gray-300 font-medium text-orange-600 font-black">{getPrice(item, v, "zomato")}</td>
+                      <td className="px-1 sm:px-2 py-3 text-center border-r border-gray-100 font-medium text-gray-700">{getPrice(item, v, "Dining")}</td>
+                      <td className="px-1 sm:px-2 py-3 text-center border-r border-gray-100 font-medium text-gray-700">{getPrice(item, v, "parcal")}</td>
+                      <td className="px-1 sm:px-2 py-3 text-center border-r border-gray-100 font-medium text-purple-600 font-semibold">{getPrice(item, v, "Swiggy")}</td>
+                      <td className="px-1 sm:px-2 py-3 text-center border-r border-gray-300 font-medium text-purple-600 font-semibold">{getPrice(item, v, "zomato")}</td>
                     </React.Fragment>
                   ))}
                 </tr>

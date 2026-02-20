@@ -194,7 +194,7 @@ export default function Items() {
           {items.length > 0 && !loading && (
             <button
               onClick={handleDownload}
-              className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-medium transition text-sm sm:text-base"
+              className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 font-medium transition text-sm sm:text-base"
             >
               <Download className="w-4 h-4" />
               Download
