@@ -60,39 +60,60 @@ export default function ItemDetail() {
 
   // Fetch unique restaurants (non-blocking)
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
     const fetchRestaurants = async () => {
       try {
+        if (!isMounted) return;
         setRestaurantsLoading(true);
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
         const response = await fetch("/api/sales/restaurants", {
           signal: controller.signal,
         });
+
+        if (!isMounted) return;
         clearTimeout(timeoutId);
 
         if (!response.ok) {
           console.warn("⚠️ Failed to fetch restaurants:", response.status);
-          setRestaurants([]);
+          if (isMounted) setRestaurants([]);
           return;
         }
 
         const result = await response.json();
-        if (result.success && Array.isArray(result.data) && result.data.length > 0) {
-          setRestaurants(result.data);
-          console.log(`📝 Found ${result.data.length} restaurants`);
-        } else {
-          setRestaurants([]);
+        if (isMounted) {
+          if (result.success && Array.isArray(result.data) && result.data.length > 0) {
+            setRestaurants(result.data);
+            console.log(`📝 Found ${result.data.length} restaurants`);
+          } else {
+            setRestaurants([]);
+          }
         }
       } catch (error) {
-        console.warn("⚠️ Restaurant fetch failed (non-critical):", error);
-        setRestaurants([]);
+        // Only log non-abort errors
+        if (error instanceof Error && error.name !== "AbortError") {
+          console.warn("⚠️ Restaurant fetch failed (non-critical):", error);
+        }
+        if (isMounted) {
+          setRestaurants([]);
+        }
       } finally {
-        setRestaurantsLoading(false);
+        if (isMounted) {
+          setRestaurantsLoading(false);
+        }
       }
     };
 
     fetchRestaurants();
+
+    // Cleanup function
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, []);
 
   useEffect(() => {
