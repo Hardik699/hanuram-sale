@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { MongoClient, Db } from "mongodb";
 
 const MONGODB_URI =
+  process.env.MONGODB_URI ||
   "mongodb+srv://admin:admin1@cluster0.a3duo.mongodb.net/?appName=Cluster0";
 
 let cachedClient: MongoClient | null = null;
@@ -313,7 +314,7 @@ export const handleGetDropdowns: RequestHandler = async (req, res) => {
   try {
     const collection = await getDropdownsCollection();
 
-    const dropdowns = await collection.findOne({ _id: "main" });
+    const dropdowns = await collection.findOne({ _id: "main" } as any);
 
     if (!dropdowns) {
       return res.json({
@@ -348,7 +349,7 @@ export const handleAddGroup: RequestHandler = async (req, res) => {
     const collection = await getDropdownsCollection();
 
     const result = await collection.updateOne(
-      { _id: "main" },
+      { _id: "main" } as any,
       {
         $addToSet: { groups: name.trim() },
         $setOnInsert: {
@@ -379,7 +380,7 @@ export const handleAddCategory: RequestHandler = async (req, res) => {
     const collection = await getDropdownsCollection();
 
     await collection.updateOne(
-      { _id: "main" },
+      { _id: "main" } as any,
       {
         $addToSet: { categories: name.trim() },
         $setOnInsert: {
@@ -410,7 +411,7 @@ export const handleAddHsnCode: RequestHandler = async (req, res) => {
     const collection = await getDropdownsCollection();
 
     await collection.updateOne(
-      { _id: "main" },
+      { _id: "main" } as any,
       {
         $addToSet: { hsnCodes: code.trim() },
         $setOnInsert: {
@@ -441,7 +442,7 @@ export const handleAddVariationValue: RequestHandler = async (req, res) => {
     const collection = await getDropdownsCollection();
 
     await collection.updateOne(
-      { _id: "main" },
+      { _id: "main" } as any,
       {
         $addToSet: { variationValues: value.trim() },
         $setOnInsert: {
@@ -500,11 +501,11 @@ export const handleUpdateGroup: RequestHandler = async (req, res) => {
     // If group name is being changed, update it in the groups array
     if (newName && newName !== decodedGroupName) {
       await dropdownsCollection.updateOne(
-        { _id: "main" },
+        { _id: "main" } as any,
         {
           $pull: { groups: decodedGroupName },
           $addToSet: { groups: newName },
-        },
+        } as any,
       );
 
       // Also update the group categories mapping
@@ -553,16 +554,16 @@ export const handleUpdateCategory: RequestHandler = async (req, res) => {
 
     // Update in dropdowns
     await dropdownsCollection.updateOne(
-      { _id: "main" },
+      { _id: "main" } as any,
       {
         $pull: { categories: decodedCategoryName },
-      }
+      } as any
     );
     await dropdownsCollection.updateOne(
-      { _id: "main" },
+      { _id: "main" } as any,
       {
         $addToSet: { categories: newName.trim() },
-      }
+      } as any
     );
 
     // Update all items that reference this category
@@ -595,16 +596,16 @@ export const handleUpdateHsnCode: RequestHandler = async (req, res) => {
 
     // Update in dropdowns
     await dropdownsCollection.updateOne(
-      { _id: "main" },
+      { _id: "main" } as any,
       {
         $pull: { hsnCodes: decodedCode },
-      }
+      } as any
     );
     await dropdownsCollection.updateOne(
-      { _id: "main" },
+      { _id: "main" } as any,
       {
         $addToSet: { hsnCodes: newCode.trim() },
-      }
+      } as any
     );
 
     // Update all items that reference this HSN code
@@ -637,16 +638,16 @@ export const handleUpdateVariationValue: RequestHandler = async (req, res) => {
 
     // Update in dropdowns
     await dropdownsCollection.updateOne(
-      { _id: "main" },
+      { _id: "main" } as any,
       {
         $pull: { variationValues: decodedValue },
-      }
+      } as any
     );
     await dropdownsCollection.updateOne(
-      { _id: "main" },
+      { _id: "main" } as any,
       {
         $addToSet: { variationValues: newValue.trim() },
-      }
+      } as any
     );
 
     // Update all items that have variations with this value
