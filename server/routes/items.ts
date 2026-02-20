@@ -535,3 +535,131 @@ export const handleUpdateGroup: RequestHandler = async (req, res) => {
     res.status(500).json({ error: "Failed to update group" });
   }
 };
+
+// Update a category
+export const handleUpdateCategory: RequestHandler = async (req, res) => {
+  try {
+    const { categoryName } = req.params;
+    const { newName } = req.body;
+
+    const decodedCategoryName = decodeURIComponent(categoryName);
+
+    if (!newName || !newName.trim()) {
+      return res.status(400).json({ error: "New category name is required" });
+    }
+
+    const dropdownsCollection = await getDropdownsCollection();
+    const itemsCollection = await getItemsCollection();
+
+    // Update in dropdowns
+    await dropdownsCollection.updateOne(
+      { _id: "main" },
+      {
+        $pull: { categories: decodedCategoryName },
+      }
+    );
+    await dropdownsCollection.updateOne(
+      { _id: "main" },
+      {
+        $addToSet: { categories: newName.trim() },
+      }
+    );
+
+    // Update all items that reference this category
+    await itemsCollection.updateMany(
+      { category: decodedCategoryName },
+      { $set: { category: newName.trim() } }
+    );
+
+    res.json({ message: "Category updated successfully" });
+  } catch (error) {
+    console.error("Error updating category:", error);
+    res.status(500).json({ error: "Failed to update category" });
+  }
+};
+
+// Update an HSN code
+export const handleUpdateHsnCode: RequestHandler = async (req, res) => {
+  try {
+    const { code } = req.params;
+    const { newCode } = req.body;
+
+    const decodedCode = decodeURIComponent(code);
+
+    if (!newCode || !newCode.trim()) {
+      return res.status(400).json({ error: "New HSN code is required" });
+    }
+
+    const dropdownsCollection = await getDropdownsCollection();
+    const itemsCollection = await getItemsCollection();
+
+    // Update in dropdowns
+    await dropdownsCollection.updateOne(
+      { _id: "main" },
+      {
+        $pull: { hsnCodes: decodedCode },
+      }
+    );
+    await dropdownsCollection.updateOne(
+      { _id: "main" },
+      {
+        $addToSet: { hsnCodes: newCode.trim() },
+      }
+    );
+
+    // Update all items that reference this HSN code
+    await itemsCollection.updateMany(
+      { hsnCode: decodedCode },
+      { $set: { hsnCode: newCode.trim() } }
+    );
+
+    res.json({ message: "HSN code updated successfully" });
+  } catch (error) {
+    console.error("Error updating HSN code:", error);
+    res.status(500).json({ error: "Failed to update HSN code" });
+  }
+};
+
+// Update a variation value
+export const handleUpdateVariationValue: RequestHandler = async (req, res) => {
+  try {
+    const { value } = req.params;
+    const { newValue } = req.body;
+
+    const decodedValue = decodeURIComponent(value);
+
+    if (!newValue || !newValue.trim()) {
+      return res.status(400).json({ error: "New variation value is required" });
+    }
+
+    const dropdownsCollection = await getDropdownsCollection();
+    const itemsCollection = await getItemsCollection();
+
+    // Update in dropdowns
+    await dropdownsCollection.updateOne(
+      { _id: "main" },
+      {
+        $pull: { variationValues: decodedValue },
+      }
+    );
+    await dropdownsCollection.updateOne(
+      { _id: "main" },
+      {
+        $addToSet: { variationValues: newValue.trim() },
+      }
+    );
+
+    // Update all items that have variations with this value
+    // This is more complex because variations is an array of objects
+    await itemsCollection.updateMany(
+      { "variations.value": decodedValue },
+      { $set: { "variations.$[elem].value": newValue.trim() } },
+      { arrayFilters: [{ "elem.value": decodedValue }] }
+    );
+
+    res.json({ message: "Variation value updated successfully" });
+  } catch (error) {
+    console.error("Error updating variation value:", error);
+    res.status(500).json({ error: "Failed to update variation value" });
+  }
+};

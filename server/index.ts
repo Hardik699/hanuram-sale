@@ -46,6 +46,9 @@ import {
   handleAddGS1Channel,
   handleGetGroupCategories,
   handleUpdateGroup,
+  handleUpdateCategory,
+  handleUpdateHsnCode,
+  handleUpdateVariationValue,
 } from "./routes/items";
 import {
   handleGetSales,
@@ -127,8 +130,11 @@ export function createServer() {
   app.get("/api/items/groups/:groupName", handleGetGroupCategories);
   app.put("/api/items/groups/:groupName", handleUpdateGroup);
   app.post("/api/items/categories", handleAddCategory);
+  app.put("/api/items/categories/:categoryName", handleUpdateCategory);
   app.post("/api/items/hsn-codes", handleAddHsnCode);
+  app.put("/api/items/hsn-codes/:code", handleUpdateHsnCode);
   app.post("/api/items/variation-values", handleAddVariationValue);
+  app.put("/api/items/variation-values/:value", handleUpdateVariationValue);
   app.post("/api/items/migrate/add-gs1", handleAddGS1Channel);
   app.get("/api/items", handleGetItems);
   app.get("/api/items/:itemId", handleGetItemById);

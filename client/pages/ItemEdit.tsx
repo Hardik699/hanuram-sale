@@ -105,12 +105,24 @@ export default function ItemEdit() {
   const [newHsnCode, setNewHsnCode] = useState("");
   const [newVariationValue, setNewVariationValue] = useState("");
 
-  // Group editing
+  // Dropdown editing
   const [showEditGroupModal, setShowEditGroupModal] = useState(false);
   const [editingGroupName, setEditingGroupName] = useState("");
   const [groupCategories, setGroupCategories] = useState<string[]>([]);
   const [newGroupCategory, setNewGroupCategory] = useState("");
   const [selectedGroupForEdit, setSelectedGroupForEdit] = useState("");
+
+  const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
+  const [editingCategoryName, setEditingCategoryName] = useState("");
+  const [selectedCategoryForEdit, setSelectedCategoryForEdit] = useState("");
+
+  const [showEditHsnCodeModal, setShowEditHsnCodeModal] = useState(false);
+  const [editingHsnCode, setEditingHsnCode] = useState("");
+  const [selectedHsnCodeForEdit, setSelectedHsnCodeForEdit] = useState("");
+
+  const [showEditVariationValueModal, setShowEditVariationValueModal] = useState(false);
+  const [editingVariationValue, setEditingVariationValue] = useState("");
+  const [selectedVariationValueForEdit, setSelectedVariationValueForEdit] = useState("");
 
   // Helper to capitalize first letter of each word
   const toTitleCase = (str: string) => {
@@ -302,6 +314,85 @@ export default function ItemEdit() {
 
   const removeCategoryFromGroup = (categoryName: string) => {
     setGroupCategories(groupCategories.filter(c => c !== categoryName));
+  };
+
+  const openEditCategoryModal = (categoryName: string) => {
+    setSelectedCategoryForEdit(categoryName);
+    setEditingCategoryName(categoryName);
+    setShowEditCategoryModal(true);
+  };
+
+  const saveCategoryChanges = async () => {
+    try {
+      const response = await fetch(`/api/items/categories/${encodeURIComponent(selectedCategoryForEdit)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newName: editingCategoryName }),
+      });
+      if (response.ok) {
+        const updated = categories.map(c => c === selectedCategoryForEdit ? editingCategoryName : c);
+        setCategories(updated);
+        if (category === selectedCategoryForEdit) {
+          setCategory(editingCategoryName);
+        }
+        setShowEditCategoryModal(false);
+      }
+    } catch (error) {
+      console.error("Failed to save category changes:", error);
+    }
+  };
+
+  const openEditHsnCodeModal = (code: string) => {
+    setSelectedHsnCodeForEdit(code);
+    setEditingHsnCode(code);
+    setShowEditHsnCodeModal(true);
+  };
+
+  const saveHsnCodeChanges = async () => {
+    try {
+      const response = await fetch(`/api/items/hsn-codes/${encodeURIComponent(selectedHsnCodeForEdit)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newCode: editingHsnCode }),
+      });
+      if (response.ok) {
+        const updated = hsnCodes.map(c => c === selectedHsnCodeForEdit ? editingHsnCode : c);
+        setHsnCodes(updated);
+        if (hsnCode === selectedHsnCodeForEdit) {
+          setHsnCode(editingHsnCode);
+        }
+        setShowEditHsnCodeModal(false);
+      }
+    } catch (error) {
+      console.error("Failed to save HSN code changes:", error);
+    }
+  };
+
+  const openEditVariationValueModal = (value: string) => {
+    setSelectedVariationValueForEdit(value);
+    setEditingVariationValue(value);
+    setShowEditVariationValueModal(true);
+  };
+
+  const saveVariationValueChanges = async () => {
+    try {
+      const response = await fetch(`/api/items/variation-values/${encodeURIComponent(selectedVariationValueForEdit)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newValue: editingVariationValue }),
+      });
+      if (response.ok) {
+        const updated = variationValues.map(v => v === selectedVariationValueForEdit ? editingVariationValue : v);
+        setVariationValues(updated);
+
+        // Update variation values in current state
+        setVariations(variations.map(v => v.value === selectedVariationValueForEdit ? { ...v, value: editingVariationValue } : v));
+
+        setShowEditVariationValueModal(false);
+      }
+    } catch (error) {
+      console.error("Failed to save variation value changes:", error);
+    }
   };
 
   const addGroup = async () => {
@@ -758,6 +849,16 @@ export default function ItemEdit() {
                         </option>
                       ))}
                     </select>
+                    {hsnCode && (
+                      <button
+                        type="button"
+                        onClick={() => openEditHsnCodeModal(hsnCode)}
+                        className="px-3 py-2 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 font-semibold"
+                        title="Edit selected HSN code"
+                      >
+                        ✏️
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => setNewHsnCode("")}
@@ -883,6 +984,16 @@ export default function ItemEdit() {
                         </option>
                       ))}
                     </select>
+                    {category && (
+                      <button
+                        type="button"
+                        onClick={() => openEditCategoryModal(category)}
+                        className="px-3 py-2 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 font-semibold"
+                        title="Edit selected category"
+                      >
+                        ✏️
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => setNewCategory("")}
@@ -1021,6 +1132,16 @@ export default function ItemEdit() {
                                 </option>
                               ))}
                             </select>
+                            {variation.value && (
+                              <button
+                                type="button"
+                                onClick={() => openEditVariationValueModal(variation.value)}
+                                className="px-3 py-2 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 font-semibold"
+                                title="Edit selected variation value"
+                              >
+                                ✏️
+                              </button>
+                            )}
                             <button
                               type="button"
                               onClick={() => setNewVariationValue("")}
@@ -1485,6 +1606,108 @@ export default function ItemEdit() {
                   type="button"
                   onClick={() => setShowEditGroupModal(false)}
                   className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Category Modal */}
+        {showEditCategoryModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">✏️ Edit Category</h2>
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Category Name</label>
+                <input
+                  type="text"
+                  value={editingCategoryName}
+                  onChange={(e) => setEditingCategoryName(toTitleCase(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                />
+              </div>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={saveCategoryChanges}
+                  className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowEditCategoryModal(false)}
+                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Edit HSN Code Modal */}
+        {showEditHsnCodeModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">✏️ Edit HSN Code</h2>
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">HSN Code</label>
+                <input
+                  type="text"
+                  value={editingHsnCode}
+                  onChange={(e) => setEditingHsnCode(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                />
+              </div>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={saveHsnCodeChanges}
+                  className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowEditHsnCodeModal(false)}
+                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Variation Value Modal */}
+        {showEditVariationValueModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">✏️ Edit Variation Value</h2>
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Variation Value</label>
+                <input
+                  type="text"
+                  value={editingVariationValue}
+                  onChange={(e) => setEditingVariationValue(toTitleCase(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                />
+              </div>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={saveVariationValueChanges}
+                  className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowEditVariationValueModal(false)}
+                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold"
                 >
                   Cancel
                 </button>
