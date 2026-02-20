@@ -1,6 +1,8 @@
 export function generateItemId(): string {
-  // Generate 6-digit random ID
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  // Generate unique ID using timestamp + random suffix to minimize collisions
+  const timestamp = Date.now().toString(36);
+  const randomSuffix = Math.random().toString(36).substring(2, 8);
+  return (timestamp + randomSuffix).substring(0, 10).toUpperCase();
 }
 
 export function generateShortCode(): string {

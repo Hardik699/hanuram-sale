@@ -99,6 +99,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
   const [newVariationValue, setNewVariationValue] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Helper to capitalize first letter of each word
   const toTitleCase = (str: string) => {
@@ -307,6 +308,10 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (isSubmitting) {
+      return; // Prevent double submission
+    }
+
     if (!itemName || !group || !category) {
       alert("Please fill all required fields");
       return;
@@ -329,6 +334,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
     };
 
     try {
+      setIsSubmitting(true);
       console.log("📤 Saving item to MongoDB:", item.itemId);
       const response = await fetch("/api/items", {
         method: "POST",
@@ -349,6 +355,8 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
         error instanceof Error ? error.message : "Unknown error";
       console.error("❌ Failed to save item:", errorMessage);
       alert(`Error saving item: ${errorMessage}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -957,14 +965,16 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
         <div className="flex gap-3 border-t pt-6">
           <button
             type="submit"
-            className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold transition"
+            disabled={isSubmitting}
+            className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Save Item
+            {isSubmitting ? "Saving..." : "Save Item"}
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition"
+            disabled={isSubmitting}
+            className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>
