@@ -1122,22 +1122,39 @@ export const handleGetRestaurants: RequestHandler = async (req, res) => {
     const db = await getDatabase();
     const petpoojaCollection = db.collection("petpooja");
 
-    // Aggregate all unique restaurant names from petpooja collection
-    console.log("🔍 Running MongoDB aggregation to find unique restaurants from petpooja...");
+    // Query all petpooja documents
+    const allPetpoojaData = await petpoojaCollection.find({}).toArray();
 
-    const restaurants = await petpoojaCollection
-      .aggregate([
-        {
-          $group: {
-            _id: "$restaurant",
-          },
-        },
-        { $match: { _id: { $nin: [null, ""] } } },
-        { $sort: { _id: 1 } },
-      ])
-      .toArray();
+    // Extract unique restaurant names from the data arrays
+    const restaurantSet = new Set<string>();
 
-    const restaurantNames = restaurants.map((r: any) => r._id).filter(Boolean);
+    const getColumnIndex = (headers: string[], name: string) =>
+      headers.findIndex((h) => h.toLowerCase().trim() === name.toLowerCase().trim());
+
+    for (const petpoojaDoc of allPetpoojaData) {
+      if (!Array.isArray(petpoojaDoc.data) || petpoojaDoc.data.length < 2) continue;
+
+      const headers = petpoojaDoc.data[0] as string[];
+      const dataRows = petpoojaDoc.data.slice(1);
+
+      const restaurantIdx = getColumnIndex(headers, "restaurant_name");
+
+      if (restaurantIdx === -1) {
+        console.warn("⚠️ restaurant_name column not found in petpooja data");
+        continue;
+      }
+
+      for (const row of dataRows) {
+        if (!Array.isArray(row)) continue;
+
+        const restaurantName = row[restaurantIdx]?.toString().trim();
+        if (restaurantName) {
+          restaurantSet.add(restaurantName);
+        }
+      }
+    }
+
+    const restaurantNames = Array.from(restaurantSet).sort();
 
     console.log(
       `✅ Found ${restaurantNames.length} unique restaurants:`,
