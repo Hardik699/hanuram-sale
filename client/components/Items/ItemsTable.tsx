@@ -119,8 +119,8 @@ export default function ItemsTable({ items }: ItemsTableProps) {
             {/* Table Header */}
             <thead>
               {/* Row 1: Basic Info and Variyation (merged) */}
-              <tr className="bg-slate-700 text-white text-xs sm:text-sm font-bold border-b border-gray-600">
-                <th rowSpan={3} className="px-2 sm:px-4 py-3 text-center border-r border-gray-600 sticky left-0 z-30 bg-slate-700">
+              <tr className="bg-gray-100 text-gray-700 text-xs sm:text-sm font-bold border-b border-gray-200">
+                <th rowSpan={3} className="px-2 sm:px-4 py-3 text-center border-r border-gray-200 sticky left-0 z-30 bg-gray-100">
                   <input
                     type="checkbox"
                     checked={
@@ -131,39 +131,39 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                     className="w-4 h-4 cursor-pointer"
                   />
                 </th>
-                <th rowSpan={3} className="px-2 sm:px-4 py-3 text-center border-r border-gray-600 sticky left-10 z-30 bg-slate-700 min-w-[150px]">
+                <th rowSpan={3} className="px-2 sm:px-4 py-3 text-center border-r border-gray-200 sticky left-10 z-30 bg-gray-100 min-w-[150px]">
                   Item Name
                 </th>
-                <th rowSpan={3} className="px-2 sm:px-4 py-3 text-center border-r border-gray-600 bg-slate-700">
+                <th rowSpan={3} className="px-2 sm:px-4 py-3 text-center border-r border-gray-200 bg-gray-100">
                   Group
                 </th>
-                <th rowSpan={3} className="px-2 sm:px-4 py-3 text-center border-r border-gray-600 bg-slate-700">
+                <th rowSpan={3} className="px-2 sm:px-4 py-3 text-center border-r border-gray-200 bg-gray-100">
                   Category
                 </th>
                 {uniqueVariationValues.length > 0 && (
-                  <th colSpan={uniqueVariationValues.length * 4} className="px-2 sm:px-4 py-3 text-center border-b border-gray-600 bg-slate-700 uppercase tracking-widest font-black text-lg">
+                  <th colSpan={uniqueVariationValues.length * 4} className="px-2 sm:px-4 py-3 text-center border-b border-gray-200 bg-gray-100 uppercase tracking-widest font-black text-lg">
                     Variyation
                   </th>
                 )}
               </tr>
 
               {/* Row 2: Variation Values (e.g., 250 Gms, 500 Gms) */}
-              <tr className="bg-slate-100 text-slate-800 text-[10px] sm:text-xs font-bold border-b border-gray-200 uppercase tracking-wider">
+              <tr className="bg-white text-gray-600 text-[10px] sm:text-xs font-bold border-b border-gray-200 uppercase tracking-wider">
                 {uniqueVariationValues.map((v) => (
-                  <th key={v} colSpan={4} className="px-2 sm:px-4 py-2 text-center border-r border-gray-300 bg-slate-200">
+                  <th key={v} colSpan={4} className="px-2 sm:px-4 py-2 text-center border-r border-gray-200 bg-gray-50">
                     {v}
                   </th>
                 ))}
               </tr>
 
               {/* Row 3: Channels (Dining, parcal, Swiggy, zomato) */}
-              <tr className="bg-slate-50 text-slate-600 text-[9px] sm:text-[10px] font-bold border-b border-gray-200 uppercase tracking-tighter">
+              <tr className="bg-white text-gray-500 text-[9px] sm:text-[10px] font-bold border-b border-gray-200 uppercase tracking-tighter">
                 {uniqueVariationValues.map((v) => (
                   <React.Fragment key={`${v}-channels`}>
                     <th className="px-1 sm:px-2 py-2 text-center border-r border-gray-200 min-w-[60px]">Dining</th>
                     <th className="px-1 sm:px-2 py-2 text-center border-r border-gray-200 min-w-[60px]">parcal</th>
                     <th className="px-1 sm:px-2 py-2 text-center border-r border-gray-200 min-w-[60px]">Swiggy</th>
-                    <th className="px-1 sm:px-2 py-2 text-center border-r border-gray-300 min-w-[60px]">zomato</th>
+                    <th className="px-1 sm:px-2 py-2 text-center border-r border-gray-200 min-w-[60px]">zomato</th>
                   </React.Fragment>
                 ))}
               </tr>
