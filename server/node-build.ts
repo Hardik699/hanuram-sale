@@ -13,8 +13,12 @@ const distPath = path.join(__dirname, "../spa");
 app.use(express.static(distPath));
 
 // Handle React Router - serve index.html for all non-API routes
-app.get(/^(?!\/api\/)(?!\/health).*$/, (req, res) => {
-  res.sendFile(path.join(distPath, "index.html"));
+app.use((req, res, next) => {
+  if (!req.path.startsWith("/api") && !req.path.startsWith("/health")) {
+    res.sendFile(path.join(distPath, "index.html"));
+  } else {
+    next();
+  }
 });
 
 app.listen(port, () => {
