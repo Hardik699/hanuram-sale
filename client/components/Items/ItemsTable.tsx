@@ -40,13 +40,49 @@ export default function ItemsTable({ items }: ItemsTableProps) {
   const startIdx = currentPage * itemsPerPage;
   const paginatedItems = items.slice(startIdx, startIdx + itemsPerPage);
 
-  const allVariations = Array.from(
+  const uniqueVariationValues = Array.from(
     new Set(
       items.flatMap((item) =>
-        item.variations.map((v: any) => JSON.stringify({ name: v.name, value: v.value }))
+        (item.variations || []).map((v: any) => v.value)
       )
     )
-  ).map((v) => JSON.parse(v));
+  ).sort((a, b) => {
+    // Basic numeric sort for strings like "250 Gms", "1 Kg"
+    const parseNum = (s: string) => {
+      const n = parseFloat(s.match(/\d+/)?.[0] || "0");
+      if (s.toLowerCase().includes("kg") || s.toLowerCase().includes("l")) return n * 1000;
+      return n;
+    };
+    return parseNum(a) - parseNum(b);
+  });
+
+  const getPrice = (item: any, variationValue: string, channel: string) => {
+    const variation = (item.variations || []).find((v: any) => v.value === variationValue);
+    if (!variation) return "-";
+
+    // Standardized channel name handling (map from user image labels if necessary)
+    const channelMap: Record<string, string> = {
+      "Dining": "Dining",
+      "parcal": "Parcale",
+      "Swiggy": "Swiggy",
+      "zomato": "Zomato"
+    };
+    const internalChannel = channelMap[channel] || channel;
+
+    let price = variation.channels?.[internalChannel];
+
+    // Auto calculate if not set
+    if (!price || price === 0) {
+      if (["Zomato", "Swiggy"].includes(internalChannel)) {
+        const autoPrices = calculateAutoPrices(variation.price || 0);
+        price = autoPrices[internalChannel as keyof typeof autoPrices];
+      } else {
+        price = variation.price;
+      }
+    }
+
+    return price && price > 0 ? `₹${price}` : "-";
+  };
 
   const toggleRowSelection = (itemId: string) => {
     const newSelected = new Set(selectedRows);
@@ -79,12 +115,12 @@ export default function ItemsTable({ items }: ItemsTableProps) {
       {/* Responsive Table */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
         <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          <table className="w-full min-w-full">
+          <table className="w-full min-w-full border-collapse">
             {/* Table Header */}
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200 text-xs sm:text-sm whitespace-nowrap">
-                {/* Checkbox - Sticky */}
-                <th className="px-2 sm:px-4 py-3 text-left w-10 sticky left-0 z-20 bg-slate-700">
+              {/* Row 1: Basic Info and Variyation (merged) */}
+              <tr className="bg-slate-700 text-white text-xs sm:text-sm font-bold border-b border-gray-600">
+                <th rowSpan={3} className="px-2 sm:px-4 py-3 text-center border-r border-gray-600 sticky left-0 z-30 bg-slate-700">
                   <input
                     type="checkbox"
                     checked={
@@ -95,26 +131,42 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                     className="w-4 h-4 cursor-pointer"
                   />
                 </th>
-
-                {/* Basic Info - Sticky */}
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 sticky left-10 z-20">
+                <th rowSpan={3} className="px-2 sm:px-4 py-3 text-center border-r border-gray-600 sticky left-10 z-30 bg-slate-700 min-w-[150px]">
                   Item Name
                 </th>
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 hidden sm:table-cell">
-                  Item ID
-                </th>
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 hidden md:table-cell">
+                <th rowSpan={3} className="px-2 sm:px-4 py-3 text-center border-r border-gray-600 bg-slate-700">
                   Group
                 </th>
-                <th className="px-2 sm:px-4 py-3 text-left font-semibold text-white bg-slate-700 hidden lg:table-cell">
+                <th rowSpan={3} className="px-2 sm:px-4 py-3 text-center border-r border-gray-600 bg-slate-700">
                   Category
                 </th>
-
-                {/* Variation Columns - Show all variations with better spacing */}
-                {/* Variations removed as per user request to simplify table */}
+                {uniqueVariationValues.length > 0 && (
+                  <th colSpan={uniqueVariationValues.length * 4} className="px-2 sm:px-4 py-3 text-center border-b border-gray-600 bg-slate-700 uppercase tracking-widest font-black text-lg">
+                    Variyation
+                  </th>
+                )}
               </tr>
 
-              {/* Sub-header for Channels removed as per user request */}
+              {/* Row 2: Variation Values (e.g., 250 Gms, 500 Gms) */}
+              <tr className="bg-slate-100 text-slate-800 text-[10px] sm:text-xs font-bold border-b border-gray-200 uppercase tracking-wider">
+                {uniqueVariationValues.map((v) => (
+                  <th key={v} colSpan={4} className="px-2 sm:px-4 py-2 text-center border-r border-gray-300 bg-slate-200">
+                    {v}
+                  </th>
+                ))}
+              </tr>
+
+              {/* Row 3: Channels (Dining, parcal, Swiggy, zomato) */}
+              <tr className="bg-slate-50 text-slate-600 text-[9px] sm:text-[10px] font-bold border-b border-gray-200 uppercase tracking-tighter">
+                {uniqueVariationValues.map((v) => (
+                  <React.Fragment key={`${v}-channels`}>
+                    <th className="px-1 sm:px-2 py-2 text-center border-r border-gray-200 min-w-[60px]">Dining</th>
+                    <th className="px-1 sm:px-2 py-2 text-center border-r border-gray-200 min-w-[60px]">parcal</th>
+                    <th className="px-1 sm:px-2 py-2 text-center border-r border-gray-200 min-w-[60px]">Swiggy</th>
+                    <th className="px-1 sm:px-2 py-2 text-center border-r border-gray-300 min-w-[60px]">zomato</th>
+                  </React.Fragment>
+                ))}
+              </tr>
             </thead>
 
             {/* Table Body */}
@@ -123,12 +175,12 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 <tr
                   key={item.itemId}
                   onClick={() => navigate(`/items/${item.itemId}`)}
-                  className={`border-b border-gray-200 hover:bg-blue-50 transition cursor-pointer text-xs sm:text-sm whitespace-nowrap ${
+                  className={`border-b border-gray-200 hover:bg-blue-50 transition cursor-pointer text-[10px] sm:text-xs whitespace-nowrap ${
                     selectedRows.has(item.itemId) ? "bg-blue-100" : ""
                   }`}
                 >
                   {/* Checkbox - Sticky */}
-                  <td className="px-2 sm:px-4 py-3 text-center w-10 sticky left-0 z-10 bg-white" onClick={(e) => e.stopPropagation()}>
+                  <td className={`px-2 sm:px-4 py-3 text-center border-r border-gray-200 sticky left-0 z-10 transition-colors ${selectedRows.has(item.itemId) ? "bg-blue-100" : "bg-white"}`} onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selectedRows.has(item.itemId)}
@@ -137,21 +189,26 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                     />
                   </td>
 
-                  {/* Basic Info - Sticky */}
-                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-bold bg-white sticky left-10 z-10 max-w-[150px] sm:max-w-xs truncate">
+                  {/* Basic Info - Sticky Item Name */}
+                  <td className={`px-2 sm:px-4 py-3 text-gray-900 font-black sticky left-10 z-10 border-r border-gray-200 min-w-[150px] first-letter:capitalize transition-colors ${selectedRows.has(item.itemId) ? "bg-blue-100" : "bg-white"}`}>
                     {item.itemName}
                   </td>
-                  <td className="px-2 sm:px-4 py-3 text-gray-700 bg-transparent hidden sm:table-cell">
-                    {item.itemId}
-                  </td>
-                  <td className="px-2 sm:px-4 py-3 text-gray-700 hidden md:table-cell">
+                  <td className="px-2 sm:px-4 py-3 text-gray-700 border-r border-gray-200 text-center font-bold">
                     {item.group}
                   </td>
-                  <td className="px-2 sm:px-4 py-3 text-gray-900 font-medium hidden lg:table-cell max-w-xs truncate">
+                  <td className="px-2 sm:px-4 py-3 text-gray-700 border-r border-gray-200 text-center font-bold">
                     {item.category}
                   </td>
 
-                  {/* Variation Prices removed as per user request */}
+                  {/* Variation Prices */}
+                  {uniqueVariationValues.map((v) => (
+                    <React.Fragment key={`${item.itemId}-${v}-prices`}>
+                      <td className="px-1 sm:px-2 py-3 text-center border-r border-gray-100 font-medium">{getPrice(item, v, "Dining")}</td>
+                      <td className="px-1 sm:px-2 py-3 text-center border-r border-gray-100 font-medium">{getPrice(item, v, "parcal")}</td>
+                      <td className="px-1 sm:px-2 py-3 text-center border-r border-gray-100 font-medium text-blue-600 font-black">{getPrice(item, v, "Swiggy")}</td>
+                      <td className="px-1 sm:px-2 py-3 text-center border-r border-gray-300 font-medium text-orange-600 font-black">{getPrice(item, v, "zomato")}</td>
+                    </React.Fragment>
+                  ))}
                 </tr>
               ))}
             </tbody>
