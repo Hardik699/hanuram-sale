@@ -5,6 +5,27 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const CHANNELS = ["Dining", "Parcale", "Swiggy", "Zomato"];
 
+// Helper function to calculate auto pricing
+const calculateAutoPrices = (basePrice: number) => {
+  if (basePrice <= 0) return { Zomato: 0, Swiggy: 0, GS1: 0 };
+
+  // Round to nearest 5
+  const roundToNearest5 = (price: number) => {
+    return Math.round(price / 5) * 5;
+  };
+
+  // Add 15% markup for Zomato and Swiggy
+  const priceWith15Percent = basePrice * 1.15;
+  const autoPriceZomato = roundToNearest5(priceWith15Percent);
+  const autoPriceSwiggy = roundToNearest5(priceWith15Percent);
+
+  // Add 20% markup for GS1
+  const priceWith20Percent = basePrice * 1.20;
+  const autoPriceGS1 = roundToNearest5(priceWith20Percent);
+
+  return { Zomato: autoPriceZomato, Swiggy: autoPriceSwiggy, GS1: autoPriceGS1 };
+};
+
 interface ItemsTableProps {
   items: any[];
 }
