@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { MongoClient, Db } from "mongodb";
 
 const MONGODB_URI =
+  process.env.MONGODB_URI ||
   "mongodb+srv://admin:admin1@cluster0.a3duo.mongodb.net/?appName=Cluster0";
 
 let cachedClient: MongoClient | null = null;
