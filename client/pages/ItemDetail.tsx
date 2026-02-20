@@ -58,46 +58,35 @@ export default function ItemDetail() {
   // Debug logging
   console.log("🔧 ItemDetail mounted, params:", params, "itemId:", itemId);
 
-  // Fetch unique restaurants
+  // Fetch unique restaurants (non-blocking)
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
         setRestaurantsLoading(true);
-        console.log("🔄 Fetching restaurants from /api/sales/restaurants");
-        const response = await fetch("/api/sales/restaurants");
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+        const response = await fetch("/api/sales/restaurants", {
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
-          console.error(
-            `❌ Restaurants API returned ${response.status}: ${response.statusText}`,
-          );
-          // Try to get error details
-          const errorText = await response.text();
-          console.error("Error details:", errorText);
+          console.warn("⚠️ Failed to fetch restaurants:", response.status);
+          setRestaurants([]);
           return;
         }
 
         const result = await response.json();
-        console.log("✅ Restaurants API response:", result);
-
-        if (result.success && Array.isArray(result.data)) {
+        if (result.success && Array.isArray(result.data) && result.data.length > 0) {
           setRestaurants(result.data);
-          console.log(
-            `📝 Found ${result.data.length} restaurants:`,
-            result.data,
-          );
-          // Set first restaurant as default if available
-          if (result.data.length > 0 && !selectedRestaurant) {
-            setSelectedRestaurant(result.data[0]);
-          }
+          console.log(`📝 Found ${result.data.length} restaurants`);
         } else {
-          console.warn("⚠️ Unexpected response format:", result);
+          setRestaurants([]);
         }
       } catch (error) {
-        console.error("❌ Failed to fetch restaurants:", error);
-        console.error(
-          "Error details:",
-          error instanceof Error ? error.message : String(error),
-        );
+        console.warn("⚠️ Restaurant fetch failed (non-critical):", error);
+        setRestaurants([]);
       } finally {
         setRestaurantsLoading(false);
       }
@@ -900,7 +889,6 @@ export default function ItemDetail() {
                   value={selectedRestaurant}
                   onChange={(e) => setSelectedRestaurant(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  disabled={restaurantsLoading || restaurants.length === 0}
                 >
                   <option value="">All Restaurants</option>
                   {restaurants.map((restaurant) => (
@@ -909,6 +897,9 @@ export default function ItemDetail() {
                     </option>
                   ))}
                 </select>
+                {restaurants.length === 0 && !restaurantsLoading && (
+                  <p className="text-xs text-gray-500 mt-1">No restaurants found yet</p>
+                )}
               </div>
 
               <DateFilter
