@@ -187,14 +187,14 @@ export default function Items() {
               placeholder="Search items..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 text-xs sm:text-sm"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm"
             />
           </div>
 
           {items.length > 0 && !loading && (
             <button
               onClick={handleDownload}
-              className="flex items-center justify-center gap-1.5 xs:gap-2 px-3 xs:px-4 sm:px-6 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 font-medium transition text-xs xs:text-sm sm:text-base whitespace-nowrap"
+              className="flex items-center justify-center gap-1.5 xs:gap-2 px-3 xs:px-4 sm:px-6 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 font-medium transition text-xs xs:text-sm sm:text-base whitespace-nowrap"
             >
               <Download className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
               <span className="hidden xs:inline">Download</span>
@@ -203,7 +203,7 @@ export default function Items() {
           <button
             onClick={() => setShowForm(true)}
             disabled={loading}
-            className="flex items-center justify-center gap-1.5 xs:gap-2 px-3 xs:px-4 sm:px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 font-medium transition text-xs xs:text-sm sm:text-base whitespace-nowrap"
+            className="flex items-center justify-center gap-1.5 xs:gap-2 px-3 xs:px-4 sm:px-6 py-2 bg-primary text-white rounded-lg hover:opacity-90 disabled:opacity-50 font-medium transition text-xs xs:text-sm sm:text-base whitespace-nowrap"
           >
             <Plus className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
             <span className="hidden xs:inline">Add Item</span>
@@ -232,7 +232,7 @@ export default function Items() {
           placeholder="Search items..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 text-sm"
+          className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
         />
       </div>
 

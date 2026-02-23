@@ -17,13 +17,13 @@ const NotFound = () => {
   console.log("This means React Router didn't match any route");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-500 to-cyan-400 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary via-accent-purple to-accent-teal flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-16 text-center">
+          <div className="bg-gradient-to-r from-primary to-accent-purple px-8 py-16 text-center">
             <h1 className="text-7xl font-bold text-white mb-4">404</h1>
-            <p className="text-purple-100 text-lg">Page Not Found</p>
+            <p className="text-white/90 text-lg">Page Not Found</p>
           </div>
 
           {/* Content */}
@@ -53,7 +53,7 @@ const NotFound = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => navigate("/")}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold transition"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-primary text-white rounded-lg hover:opacity-90 font-semibold transition"
               >
                 <Home className="w-4 h-4" />
                 Home

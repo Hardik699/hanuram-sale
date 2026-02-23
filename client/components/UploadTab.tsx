@@ -606,7 +606,7 @@ export default function UploadTab({ type }: UploadTabProps) {
       {/* Upload Section */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
         <div className="flex items-center gap-3 mb-6">
-          <Upload className="w-6 h-6 text-purple-600" />
+          <Upload className="w-6 h-6 text-primary" />
           <h2 className="text-xl font-bold text-gray-900">Upload Data</h2>
         </div>
 
@@ -617,7 +617,7 @@ export default function UploadTab({ type }: UploadTabProps) {
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             >
               {years.map(year => (
                 <option key={year} value={year}>{year}</option>
@@ -630,7 +630,7 @@ export default function UploadTab({ type }: UploadTabProps) {
             <select
               value={selectedMonth || ""}
               onChange={(e) => setSelectedMonth(e.target.value ? parseInt(e.target.value) : null)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="">-- Choose Month --</option>
               {MONTHS.map((month, idx) => (
@@ -643,7 +643,7 @@ export default function UploadTab({ type }: UploadTabProps) {
         {/* File Upload */}
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">Upload CSV/Excel File</label>
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-600 transition">
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition">
             <input
               type="file"
               accept=".csv,.xlsx,.xls"

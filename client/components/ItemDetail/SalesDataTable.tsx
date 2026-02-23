@@ -66,7 +66,7 @@ export default function SalesDataTable({ data, itemName, saleType = "QTY" }: Sal
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
       <div className="flex items-center gap-2 mb-4">
-        <BarChart3 className="w-5 h-5 text-purple-600" />
+        <BarChart3 className="w-5 h-5 text-primary" />
         <h2 className="text-xl font-bold text-gray-900">Item-wise & Variation-wise Data</h2>
       </div>
 
@@ -78,20 +78,20 @@ export default function SalesDataTable({ data, itemName, saleType = "QTY" }: Sal
               <th className="px-4 py-3 text-left font-semibold text-gray-900">SAP Code</th>
 
               {/* Zomato */}
-              <th className="px-4 py-3 text-center font-semibold text-red-700">Zomato Qty</th>
-              <th className="px-4 py-3 text-center font-semibold text-red-700">Zomato Value</th>
+              <th className="px-4 py-3 text-center font-semibold text-accent-pink">Zomato Qty</th>
+              <th className="px-4 py-3 text-center font-semibold text-accent-pink">Zomato Value</th>
 
               {/* Swiggy */}
-              <th className="px-4 py-3 text-center font-semibold text-orange-700">Swiggy Qty</th>
-              <th className="px-4 py-3 text-center font-semibold text-orange-700">Swiggy Value</th>
+              <th className="px-4 py-3 text-center font-semibold text-accent-orange">Swiggy Qty</th>
+              <th className="px-4 py-3 text-center font-semibold text-accent-orange">Swiggy Value</th>
 
               {/* Dining */}
-              <th className="px-4 py-3 text-center font-semibold text-blue-700">Dining Qty</th>
-              <th className="px-4 py-3 text-center font-semibold text-blue-700">Dining Value</th>
+              <th className="px-4 py-3 text-center font-semibold text-accent-teal">Dining Qty</th>
+              <th className="px-4 py-3 text-center font-semibold text-accent-teal">Dining Value</th>
 
               {/* Parcel */}
-              <th className="px-4 py-3 text-center font-semibold text-green-700">Parcel Qty</th>
-              <th className="px-4 py-3 text-center font-semibold text-green-700">Parcel Value</th>
+              <th className="px-4 py-3 text-center font-semibold text-primary">Parcel Qty</th>
+              <th className="px-4 py-3 text-center font-semibold text-primary">Parcel Value</th>
 
               {/* Total */}
               <th className="px-4 py-3 text-center font-semibold text-gray-900">Total Qty</th>
@@ -190,15 +190,15 @@ export default function SalesDataTable({ data, itemName, saleType = "QTY" }: Sal
           </div>
           <div className="text-left sm:text-right">
             <div className="flex flex-col sm:items-end">
-              <p className="text-3xl font-black text-purple-700">
+              <p className="text-3xl font-black text-primary">
                 {totals.totalQty.toFixed(2)}
                 <span className="text-sm ml-1 uppercase">{saleType === "KG" ? "KG" : "qty"}</span>
               </p>
-              <p className="text-xl font-bold text-blue-700">
+              <p className="text-xl font-bold text-accent-orange">
                 ₹{totals.totalValue.toLocaleString()}
               </p>
             </div>
-            <p className="text-xs text-purple-500 font-semibold mt-1">
+            <p className="text-xs text-primary/60 font-semibold mt-1">
               (Zomato + Swiggy + Dining + Parcel)
             </p>
           </div>

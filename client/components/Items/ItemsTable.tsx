@@ -267,7 +267,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                     onClick={() => setCurrentPage(displayIdx)}
                     className={`w-5 h-5 xs:w-6 xs:h-6 sm:w-8 sm:h-8 rounded text-[9px] xs:text-xs sm:text-sm font-medium transition ${
                       currentPage === displayIdx
-                        ? "bg-purple-600 text-white"
+                        ? "bg-primary text-white"
                         : "hover:bg-gray-100 text-gray-700"
                     }`}
                   >
