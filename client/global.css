@@ -216,4 +216,18 @@
   .btn-modern:hover::before {
     left: 100%;
   }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-slate-900/50;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-slate-700/80 rounded-full hover:bg-slate-600 transition-colors;
+  }
 }
