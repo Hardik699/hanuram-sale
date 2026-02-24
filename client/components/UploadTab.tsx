@@ -789,13 +789,15 @@ export default function UploadTab({ type }: UploadTabProps) {
 
       {/* Months Status */}
       <div className="overflow-hidden transition-all duration-300 border border-gray-800 rounded-xl shadow-xl shadow-blue-500/10 hover:shadow-blue-500/20 hover:border-blue-600/50 transition-all duration-300">
-        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-orange-500 p-5 sm:p-6 relative overflow-hidden rounded-t-xl">
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse"></div>
-          </div>
-          <div className="relative z-10">
-            <h2 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">📊 Upload Status</h2>
-            <p className="text-white/70 text-sm mt-1 font-normal">Overview for {selectedYear}</p>
+        <div className="bg-gradient-to-r from-slate-600 to-slate-700 px-6 sm:px-8 py-5 sm:py-6 rounded-t-xl border-b border-slate-600">
+          <div className="flex items-start gap-4">
+            <div className="bg-slate-500/50 p-2.5 rounded-lg mt-0.5">
+              <span className="text-xl">📊</span>
+            </div>
+            <div className="flex-1">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-1">Upload Status</h2>
+              <p className="text-slate-300 text-sm font-normal">Overview for {selectedYear}</p>
+            </div>
           </div>
         </div>
 
@@ -809,11 +811,7 @@ export default function UploadTab({ type }: UploadTabProps) {
               return (
                 <div
                   key={month}
-                  className={`relative group rounded-lg p-3 sm:p-4 border transition-all duration-300 cursor-default overflow-hidden ${
-                    isUploaded
-                      ? idx % 3 === 0 ? "bg-blue-900/20 border-blue-600 hover:shadow-md hover:shadow-blue-500/40 hover:scale-105 shadow-md" : idx % 3 === 1 ? "bg-orange-900/20 border-orange-600 hover:shadow-md hover:shadow-orange-500/40 hover:scale-105 shadow-md" : "bg-green-900/20 border-green-600 hover:shadow-md hover:shadow-green-500/40 hover:scale-105 shadow-md"
-                      : "bg-slate-700/50 border-slate-700 hover:shadow-md hover:shadow-slate-600/20 hover:scale-105 shadow-md"
-                  }`}
+                  className="relative group rounded-lg p-3 sm:p-4 border border-slate-600 bg-slate-700/50 hover:bg-slate-700 hover:shadow-md hover:shadow-slate-600/30 hover:scale-105 shadow-sm transition-all duration-300 cursor-default overflow-hidden"
                 >
                   <div className="flex flex-col h-full relative z-10">
                     <p className="text-xs sm:text-sm font-normal text-white uppercase tracking-wider mb-2 transition-colors duration-300">{month}</p>
