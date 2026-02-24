@@ -62,19 +62,25 @@ export default function ItemDetail() {
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+    let timeoutId: NodeJS.Timeout | null = null;
 
     const fetchRestaurants = async () => {
       try {
         if (!isMounted) return;
         setRestaurantsLoading(true);
 
+        // Set timeout for 15 seconds
+        timeoutId = setTimeout(() => {
+          if (!isMounted) return;
+          controller.abort();
+        }, 15000);
+
         const response = await fetch("/api/sales/restaurants", {
           signal: controller.signal,
         });
 
         if (!isMounted) return;
-        clearTimeout(timeoutId);
+        if (timeoutId) clearTimeout(timeoutId);
 
         if (!response.ok) {
           console.warn("⚠️ Failed to fetch restaurants:", response.status);
@@ -108,11 +114,10 @@ export default function ItemDetail() {
 
     fetchRestaurants();
 
-    // Cleanup function
+    // Cleanup function - just mark as unmounted, don't abort
     return () => {
       isMounted = false;
-      clearTimeout(timeoutId);
-      controller.abort();
+      if (timeoutId) clearTimeout(timeoutId);
     };
   }, []);
 
