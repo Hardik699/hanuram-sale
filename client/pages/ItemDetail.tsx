@@ -578,282 +578,170 @@ export default function ItemDetail() {
       {/* Back Button */}
       <button
         onClick={() => navigate("/items")}
-        className="flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-4 sm:mb-6 font-medium text-sm sm:text-base"
+        className="flex items-center gap-2 text-[#7c3aed] hover:opacity-80 mb-6 font-semibold text-sm transition-all"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Items
       </button>
 
-      {/* Header with Tabs */}
-      <div className="bg-white rounded-t-lg sm:rounded-t-xl border border-gray-200 border-b-0 p-3 xs:p-4 sm:p-6 mb-0">
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-4">
+      {/* Main Item Card */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-8">
+        {/* Card Header */}
+        <div className="p-6 sm:p-8 border-b border-slate-100">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
             <div className="min-w-0 flex-1">
-              <h1 className="text-xl xs:text-2xl sm:text-3xl font-bold text-gray-900 mb-1 capitalize break-words">
+              <h1 className="text-3xl font-black text-slate-900 mb-2 capitalize">
                 {item.itemName}
               </h1>
-              <p className="text-xs xs:text-sm sm:text-base text-gray-600 first-letter:capitalize line-clamp-2">{item.description}</p>
             </div>
-          <div className="flex gap-1.5 xs:gap-2 flex-shrink-0">
+            <div className="flex gap-3 flex-shrink-0">
+              <button
+                onClick={() => navigate(`/items/${itemId}/edit`)}
+                className="p-2.5 hover:bg-emerald-50 rounded-xl transition-all text-emerald-500 border border-emerald-100"
+                title="Edit item"
+              >
+                <Edit className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => setShowResetConfirm(true)}
+                className="p-2.5 hover:bg-emerald-50 rounded-xl transition-all text-emerald-500 border border-emerald-100"
+                title="Reset sales data"
+              >
+                <RotateCcw className="w-5 h-5" />
+              </button>
+              <button
+                onClick={handleDelete}
+                className="p-2.5 hover:bg-red-50 rounded-xl transition-all text-red-500 border border-red-100"
+                title="Delete item"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex gap-8 mt-8">
             <button
-              onClick={() => navigate(`/items/${itemId}/edit`)}
-              className="p-1.5 xs:p-2 hover:bg-primary/10 rounded-lg transition text-primary"
-              title="Edit item"
+              onClick={() => setActiveTab("details")}
+              className={`pb-4 text-sm font-bold transition-all relative ${
+                activeTab === "details"
+                  ? "text-emerald-500"
+                  : "text-slate-400 hover:text-slate-600"
+              }`}
             >
-              <Edit className="w-4 xs:w-5 h-4 xs:h-5" />
+              Item Details
+              {activeTab === "details" && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
+              )}
             </button>
             <button
-              onClick={() => setShowResetConfirm(true)}
-              className="p-1.5 xs:p-2 hover:bg-primary/10 rounded-lg transition text-primary"
-              title="Reset sales data"
+              onClick={() => setActiveTab("sales")}
+              className={`pb-4 text-sm font-bold transition-all relative ${
+                activeTab === "sales"
+                  ? "text-emerald-500"
+                  : "text-slate-400 hover:text-slate-600"
+              }`}
             >
-              <RotateCcw className="w-4 xs:w-5 h-4 xs:h-5" />
-            </button>
-            <button
-              onClick={handleDelete}
-              className="p-1.5 xs:p-2 hover:bg-red-50 rounded-lg transition text-red-600"
-              title="Delete item"
-            >
-              <Trash2 className="w-4 xs:w-5 h-4 xs:h-5" />
+              Sales Information
+              {activeTab === "sales" && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
+              )}
             </button>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 xs:gap-4 border-t border-gray-200 pt-3 xs:pt-4 mt-3 xs:mt-4 overflow-x-auto">
-          <button
-            onClick={() => setActiveTab("details")}
-            className={`px-3 xs:px-4 py-2 text-sm xs:text-base font-semibold border-b-2 transition whitespace-nowrap ${
-              activeTab === "details"
-                ? "border-primary text-primary"
-                : "border-transparent text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            Item Details
-          </button>
-          <button
-            onClick={() => setActiveTab("sales")}
-            className={`px-3 xs:px-4 py-2 text-sm xs:text-base font-semibold border-b-2 transition whitespace-nowrap ${
-              activeTab === "sales"
-                ? "border-primary text-primary"
-                : "border-transparent text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            Sales Information
-          </button>
-        </div>
-      </div>
+        {/* Card Content */}
+        <div className="p-6 sm:p-8">
+          {activeTab === "details" ? (
+            /* Details Tab Content */
+            <div className="space-y-12">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* Left Section - Images */}
+                <div className="lg:col-span-4">
+                  <div className="aspect-square bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden flex items-center justify-center relative group">
+                    {item.images && item.images.length > 0 ? (
+                      <img
+                        src={typeof item.images[0] === 'string' ? item.images[0] : (item.images[0].url || item.images[0].preview)}
+                        alt={item.itemName}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-slate-400 font-medium text-sm">No images</span>
+                    )}
+                  </div>
+                </div>
 
-      {/* Tab Content */}
-      <div className="bg-white rounded-b-lg sm:rounded-b-xl border border-gray-200 border-t-0 p-3 xs:p-4 sm:p-6">
-        {activeTab === "details" ? (
-          /* Details Tab Content */
-          <div className="space-y-6 sm:space-y-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-              {/* Left Section - Images */}
-              <div className="lg:col-span-1">
-                <div className="bg-white rounded-lg sm:rounded-xl border border-gray-200 overflow-hidden">
-                  {item.images && item.images.length > 0 ? (
-                    <div className="space-y-2 p-3 xs:p-4">
-                      <div className="w-full h-48 xs:h-56 sm:h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <img
-                          src={typeof item.images[0] === 'string' ? item.images[0] : (item.images[0].url || item.images[0].preview)}
-                          alt={item.itemName}
-                          className="w-full h-full object-cover rounded-lg"
-                        />
+                {/* Right Section - Item Info */}
+                <div className="lg:col-span-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {[
+                      { label: "Item ID", value: item.itemId },
+                      { label: "Short Code", value: item.shortCode },
+                      { label: "Group", value: item.group },
+                      { label: "Category", value: item.category },
+                      { label: "Item Type", value: item.itemType },
+                      { label: "Unit Type", value: item.unitType },
+                      { label: "HSN Code", value: item.hsnCode || "-" },
+                      { label: "GST (%)", value: `${item.gst || 0}%`, highlight: true },
+                      { label: "Profit Margin (%)", value: `${item.profitMargin || 0}%`, highlight: true },
+                    ].map((info, idx) => (
+                      <div
+                        key={idx}
+                        className="bg-[#f0fdf4] p-5 rounded-2xl border border-[#dcfce7] flex flex-col gap-1 shadow-sm hover:shadow-md transition-shadow duration-300"
+                      >
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                          {info.label}
+                        </span>
+                        <span className={`text-lg font-black ${info.highlight ? "text-emerald-500" : "text-slate-900"}`}>
+                          {info.value}
+                        </span>
                       </div>
-                      {item.images.length > 1 && (
-                        <div className="grid grid-cols-3 gap-2">
-                          {item.images
-                            .slice(1)
-                            .map((img: any, idx: number) => (
-                              <div
-                                key={idx}
-                                className="w-full h-16 xs:h-18 sm:h-20 bg-gray-100 rounded-lg flex items-center justify-center"
-                              >
-                                <img
-                                  src={typeof img === 'string' ? img : (img.url || img.preview)}
-                                  alt={`${item.itemName} ${idx + 2}`}
-                                  className="w-full h-full object-cover rounded-lg"
-                                />
-                              </div>
-                            ))}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="w-full h-48 xs:h-56 sm:h-64 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500 text-sm">
-                      No images
-                    </div>
-                  )}
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Right Section - Item Info */}
-              <div className="lg:col-span-2">
-                {/* Basic Info Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 xs:gap-4 mb-4 sm:mb-6">
-                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
-                    <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Item ID
-                    </p>
-                    <p className="text-base xs:text-lg font-semibold text-gray-900 mt-1 truncate">
-                      {item.itemId}
-                    </p>
-                  </div>
-
-                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
-                    <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Short Code
-                    </p>
-                    <p className="text-base xs:text-lg font-semibold text-gray-900 mt-1 truncate">
-                      {item.shortCode}
-                    </p>
-                  </div>
-
-                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
-                    <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Group
-                    </p>
-                    <p className="text-base xs:text-lg font-semibold text-gray-900 mt-1 truncate">
-                      {item.group}
-                    </p>
-                  </div>
-
-                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
-                    <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Category
-                    </p>
-                    <p className="text-base xs:text-lg font-semibold text-gray-900 mt-1 truncate">
-                      {item.category}
-                    </p>
-                  </div>
-
-                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
-                    <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Item Type
-                    </p>
-                    <p className="text-base xs:text-lg font-semibold text-gray-900 mt-1 truncate">
-                      {item.itemType}
-                    </p>
-                  </div>
-
-                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
-                    <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Unit Type
-                    </p>
-                    <p className="text-base xs:text-lg font-semibold text-gray-900 mt-1 truncate">
-                      {item.unitType}
-                    </p>
-                  </div>
-
-                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
-                    <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      HSN Code
-                    </p>
-                    <p className="text-base xs:text-lg font-semibold text-gray-900 mt-1 truncate">
-                      {item.hsnCode || "-"}
-                    </p>
-                  </div>
-
-                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
-                    <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      GST (%)
-                    </p>
-                    <p className="text-base xs:text-lg font-semibold text-primary mt-1">
-                      {item.gst || 0}%
-                    </p>
-                  </div>
-
-                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
-                    <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      Profit Margin (%)
-                    </p>
-                    <p className="text-base xs:text-lg font-semibold text-primary mt-1">
-                      {item.profitMargin || 0}%
-                    </p>
-                  </div>
-                </div>
-
-                {item.description && (
-                  <div className="bg-primary/5 p-3 xs:p-4 rounded-lg border border-primary/20">
-                    <p className="text-[9px] xs:text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                      Description
-                    </p>
-                    <p className="text-gray-700 text-xs xs:text-sm leading-relaxed whitespace-pre-wrap first-letter:capitalize">
-                      {item.description}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Variations Section */}
-            <div className="border-t border-gray-100 pt-6 sm:pt-8">
-              <div className="space-y-4 sm:space-y-6">
-                <h2 className="text-lg xs:text-xl sm:text-2xl font-bold text-gray-900 mb-4">
-                  Variations ({item.variations?.length || 0})
+              {/* Variations Section */}
+              <div className="pt-8 border-t border-slate-100">
+                <h2 className="text-2xl font-black text-slate-900 mb-8 flex items-center gap-3">
+                  Variations
+                  <span className="text-sm font-bold bg-slate-100 text-slate-500 px-3 py-1 rounded-full">
+                    {item.variations?.length || 0}
+                  </span>
                 </h2>
 
                 {item.variations && item.variations.length > 0 ? (
-                  <div className="space-y-3 sm:space-y-4">
+                  <div className="grid grid-cols-1 gap-6">
                     {item.variations.map((variation: any, idx: number) => (
                       <div
                         key={idx}
-                        className="border border-purple-200 rounded-lg p-3 xs:p-4 hover:shadow-md hover:border-purple-300 transition bg-gradient-to-br from-white to-purple-50"
+                        className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-xl hover:border-emerald-200 transition-all duration-300 group"
                       >
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 xs:gap-4 mb-4">
-                          <div className="bg-white p-2 xs:p-3 rounded border border-primary/20">
-                            <p className="text-[8px] xs:text-xs font-semibold text-gray-500 uppercase">
-                              Variation Value
-                            </p>
-                            <p className="text-sm xs:text-base font-semibold text-purple-600 mt-1">
-                              {variation.value}
-                            </p>
-                          </div>
-
-                          <div className="bg-white p-2 xs:p-3 rounded border border-primary/20">
-                            <p className="text-[8px] xs:text-xs font-semibold text-gray-500 uppercase">
-                              Base Price
-                            </p>
-                            <p className="text-sm xs:text-base font-semibold text-purple-600 mt-1">
-                              ₹{variation.price}
-                            </p>
-                          </div>
-
-                          <div className="bg-white p-2 xs:p-3 rounded border border-primary/20">
-                            <p className="text-[8px] xs:text-xs font-semibold text-gray-500 uppercase">
-                              SAP Code
-                            </p>
-                            <p className="text-sm xs:text-base font-semibold text-gray-900 mt-1 truncate">
-                              {variation.sapCode || "-"}
-                            </p>
-                          </div>
-
-                          <div className="bg-white p-2 xs:p-3 rounded border border-primary/20">
-                            <p className="text-[8px] xs:text-xs font-semibold text-gray-500 uppercase">
-                              Profit Margin (%)
-                            </p>
-                            <p className="text-sm xs:text-base font-semibold text-purple-600 mt-1">
-                              {variation.profitMargin || 0}%
-                            </p>
-                          </div>
-
-                          <div className="bg-white p-2 xs:p-3 rounded border border-primary/20">
-                            <p className="text-[8px] xs:text-xs font-semibold text-gray-500 uppercase">
-                              Sale Type
-                            </p>
-                            <p className="text-sm xs:text-base font-semibold text-gray-900 mt-1">
-                              {variation.saleType || "QTY"}
-                            </p>
-                          </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+                          {[
+                            { label: "Variation Value", value: variation.value, highlight: true },
+                            { label: "Base Price", value: `₹${variation.price}`, highlight: true },
+                            { label: "SAP Code", value: variation.sapCode || "-" },
+                            { label: "Profit Margin (%)", value: `${variation.profitMargin || 0}%`, highlight: true },
+                            { label: "Sale Type", value: variation.saleType || "QTY" },
+                          ].map((vInfo, vIdx) => (
+                            <div key={vIdx} className="flex flex-col gap-1">
+                              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                {vInfo.label}
+                              </span>
+                              <span className={`text-base font-bold ${vInfo.highlight ? "text-emerald-600" : "text-slate-900"}`}>
+                                {vInfo.value}
+                              </span>
+                            </div>
+                          ))}
                         </div>
 
                         {/* Channel Prices */}
-                        <div className="pt-2 xs:pt-3 border-t border-primary/20">
-                          <p className="text-[8px] xs:text-xs font-semibold text-gray-500 uppercase mb-3">
-                            Channel Prices (Area-wise)
+                        <div className="pt-6 border-t border-slate-50">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">
+                            Channel Prices
                           </p>
-                          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 xs:gap-3">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                             {["Dining", "Parcale", "Swiggy", "Zomato", "GS1"].map((channel) => {
                               const isAutoCalculated = ["Zomato", "Swiggy", "GS1"].includes(channel);
                               let displayPrice = variation.channels?.[channel];
@@ -870,24 +758,21 @@ export default function ItemDetail() {
                               return (
                                 <div
                                   key={channel}
-                                  className={`rounded-lg p-2 xs:p-3 text-center border ${isAutoCalculated ? "bg-purple-100 border-purple-300" : "bg-white border-purple-100"}`}
+                                  className={`rounded-xl p-4 transition-all duration-300 border ${
+                                    isAutoCalculated
+                                      ? "bg-emerald-50/50 border-emerald-100 hover:bg-emerald-50"
+                                      : "bg-slate-50/50 border-slate-100 hover:bg-slate-50"
+                                  }`}
                                 >
-                                  <p className="text-[9px] xs:text-[10px] font-bold text-purple-600 mb-0.5 truncate" title={variation.value}>
-                                    {variation.value}
-                                  </p>
-                                  <p className="text-[7px] xs:text-[8px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
-                                    {channel}
-                                    {isAutoCalculated && (
-                                      <span className="text-purple-600 block text-[6px] xs:text-[7px]">
-                                        (auto)
-                                      </span>
-                                    )}
-                                  </p>
-                                  <p
-                                    className={`text-xs xs:text-sm font-black ${isAutoCalculated ? "text-purple-700" : "text-gray-900"}`}
-                                  >
-                                    ₹{displayPrice}
-                                  </p>
+                                  <div className="flex flex-col gap-1">
+                                    <span className="text-[10px] font-bold text-slate-500">
+                                      {channel}
+                                      {isAutoCalculated && <span className="text-emerald-500 ml-1">(auto)</span>}
+                                    </span>
+                                    <span className={`text-lg font-black ${isAutoCalculated ? "text-emerald-600" : "text-slate-900"}`}>
+                                      ₹{displayPrice}
+                                    </span>
+                                  </div>
                                 </div>
                               );
                             })}
@@ -897,86 +782,86 @@ export default function ItemDetail() {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-primary/5 border border-primary/30 rounded-lg p-4 sm:p-8 text-center">
-                    <p className="text-gray-500 text-sm sm:text-base">No variations found for this item.</p>
+                  <div className="bg-slate-50 rounded-2xl p-12 text-center border-2 border-dashed border-slate-200">
+                    <p className="text-slate-400 font-medium">No variations found for this item.</p>
                   </div>
                 )}
               </div>
             </div>
-          </div>
-        ) : (
-          /* Sales Tab Content */
-          <div className="space-y-4 sm:space-y-6">
-            {/* Restaurant & Date Filter */}
-            <div className="bg-primary/5 border border-primary/30 rounded-lg sm:rounded-xl p-3 xs:p-4 sm:p-6 space-y-4">
-              <div>
-                <label className="block text-xs xs:text-sm font-semibold text-gray-700 mb-2">
-                  Restaurant
-                </label>
-                <select
-                  value={selectedRestaurant}
-                  onChange={(e) => setSelectedRestaurant(e.target.value)}
-                  className="w-full px-3 xs:px-4 py-2 text-sm xs:text-base border border-primary/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
-                >
-                  <option value="">All Restaurants</option>
-                  {restaurants.map((restaurant) => (
-                    <option key={restaurant} value={restaurant}>
-                      {restaurant}
-                    </option>
-                  ))}
-                </select>
-                {restaurants.length === 0 && !restaurantsLoading && (
-                  <p className="text-[10px] xs:text-xs text-gray-500 mt-1">No restaurants found yet</p>
-                )}
+          ) : (
+            /* Sales Tab Content - Kept original logic but updated styling */
+            <div className="space-y-8">
+              {/* Restaurant & Date Filter */}
+              <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-bold text-slate-700">
+                    Select Restaurant
+                  </label>
+                  <select
+                    value={selectedRestaurant}
+                    onChange={(e) => setSelectedRestaurant(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none appearance-none bg-white transition-all font-medium text-slate-700"
+                  >
+                    <option value="">All Restaurants</option>
+                    {restaurants.map((restaurant) => (
+                      <option key={restaurant} value={restaurant}>
+                        {restaurant}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-bold text-slate-700">
+                    Date Range
+                  </label>
+                  <DateFilter
+                    onDateRangeChange={(start, end) => {
+                      setDateRange({ start, end });
+                    }}
+                  />
+                </div>
               </div>
 
-              <DateFilter
-                onDateRangeChange={(start, end) => {
-                  setDateRange({ start, end });
-                }}
-              />
+              {salesLoading ? (
+                <div className="p-12 text-center">
+                  <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-slate-500 font-bold">Fetching sales data...</p>
+                </div>
+              ) : salesData ? (
+                <div className="space-y-12">
+                  <SalesSummaryCards
+                    zomatoData={salesData.zomatoData}
+                    swiggyData={salesData.swiggyData}
+                    diningData={salesData.diningData}
+                    parcelData={salesData.parcelData}
+                    saleType={item?.variations?.[0]?.saleType || "QTY"}
+                  />
+
+                  <SalesDataTable
+                    data={salesData.salesTableData}
+                    itemName={item.itemName}
+                    saleType={item?.variations?.[0]?.saleType || "QTY"}
+                  />
+
+                  <SalesCharts
+                    monthlyData={salesData.monthlyData}
+                    dateWiseData={salesData.dateWiseData}
+                    restaurantSales={salesData.restaurantSales}
+                  />
+                </div>
+              ) : (
+                <div className="bg-slate-50 rounded-2xl p-12 text-center border-2 border-dashed border-slate-200">
+                  <p className="text-slate-400 font-medium">
+                    {dateRange.start && dateRange.end
+                      ? "No sales data found for the selected range"
+                      : "Please select a date range"}
+                  </p>
+                </div>
+              )}
             </div>
-
-            {/* Sales Summary Cards */}
-            {salesLoading ? (
-              <div className="bg-primary/5 border border-primary/30 rounded-lg p-4 sm:p-6 text-center">
-                <p className="text-primary text-sm sm:text-base">Loading sales data...</p>
-              </div>
-            ) : salesData ? (
-              <>
-                <SalesSummaryCards
-                  zomatoData={salesData.zomatoData}
-                  swiggyData={salesData.swiggyData}
-                  diningData={salesData.diningData}
-                  parcelData={salesData.parcelData}
-                  saleType={item?.variations?.[0]?.saleType || "QTY"}
-                />
-
-                {/* Sales Data Table */}
-                <SalesDataTable
-                  data={salesData.salesTableData}
-                  itemName={item.itemName}
-                  saleType={item?.variations?.[0]?.saleType || "QTY"}
-                />
-
-                {/* Sales Charts */}
-                <SalesCharts
-                  monthlyData={salesData.monthlyData}
-                  dateWiseData={salesData.dateWiseData}
-                  restaurantSales={salesData.restaurantSales}
-                />
-              </>
-            ) : (
-              <div className="bg-primary/5 border border-primary/30 rounded-lg p-4 sm:p-6 text-center">
-                <p className="text-primary text-sm sm:text-base">
-                  {dateRange.start && dateRange.end
-                    ? "No sales data found for the selected date range"
-                    : "Please select a date range to view sales data"}
-                </p>
-              </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
