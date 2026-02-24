@@ -811,24 +811,32 @@ export default function UploadTab({ type }: UploadTabProps) {
               return (
                 <div
                   key={month}
-                  className="relative group rounded-lg p-3 sm:p-4 border border-slate-600 bg-slate-700/50 hover:bg-slate-700 hover:shadow-md hover:shadow-slate-600/30 hover:scale-105 shadow-sm transition-all duration-300 cursor-default overflow-hidden"
+                  className={`relative group rounded-xl p-4 sm:p-5 border backdrop-blur-sm transition-all duration-300 cursor-default overflow-hidden shadow-lg ${
+                    isUploaded
+                      ? `bg-gradient-to-br from-blue-900/40 to-blue-900/20 border-blue-600/40 hover:border-blue-500/60 hover:shadow-xl hover:shadow-blue-500/30 hover:bg-gradient-to-br hover:from-blue-900/50 hover:to-blue-900/30`
+                      : `bg-gradient-to-br from-slate-800/40 to-slate-700/20 border-slate-600/40 hover:border-slate-500/60 hover:shadow-xl hover:shadow-slate-500/20 hover:bg-gradient-to-br hover:from-slate-800/50 hover:to-slate-700/30`
+                  }`}
                 >
+                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{
+                    background: isUploaded ? 'radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.1), transparent)' : 'none'
+                  }}></div>
+
                   <div className="flex flex-col h-full relative z-10">
-                    <p className="text-xs sm:text-sm font-normal text-white uppercase tracking-wider mb-2 transition-colors duration-300">{month}</p>
-                    <div className="flex items-center gap-2 mb-3 flex-grow">
+                    <p className="text-xs sm:text-sm font-bold text-white uppercase tracking-widest mb-3 transition-colors duration-300 group-hover:text-blue-200">{month}</p>
+                    <div className="flex items-center gap-2.5 mb-4 flex-grow">
                       {isUploaded ? (
                         <>
-                          <div className={`w-2 h-2 rounded-full animate-pulse shadow-md ${
-                            idx % 3 === 0 ? "bg-blue-500 shadow-blue-500/60" : idx % 3 === 1 ? "bg-orange-500 shadow-orange-500/60" : "bg-green-500 shadow-green-500/60"
+                          <div className={`w-3 h-3 rounded-full animate-pulse shadow-lg ${
+                            idx % 3 === 0 ? "bg-blue-400 shadow-blue-400/80" : idx % 3 === 1 ? "bg-orange-400 shadow-orange-400/80" : "bg-green-400 shadow-green-400/80"
                           }`}></div>
-                          <span className={`text-xs sm:text-sm font-normal transition-colors duration-300 ${
+                          <span className={`text-xs sm:text-sm font-semibold transition-colors duration-300 ${
                             idx % 3 === 0 ? "text-blue-300" : idx % 3 === 1 ? "text-orange-300" : "text-green-300"
                           }`}>Uploaded</span>
                         </>
                       ) : (
                         <>
-                          <div className="w-2 h-2 rounded-full bg-slate-500 group-hover:animate-pulse"></div>
-                          <span className="text-xs sm:text-sm font-normal text-slate-400 transition-colors duration-300">Pending</span>
+                          <div className="w-3 h-3 rounded-full bg-slate-500 group-hover:animate-pulse transition-all duration-300"></div>
+                          <span className="text-xs sm:text-sm font-semibold text-slate-400 group-hover:text-slate-300 transition-colors duration-300">Pending</span>
                         </>
                       )}
                     </div>
@@ -836,7 +844,7 @@ export default function UploadTab({ type }: UploadTabProps) {
                       <button
                         onClick={() => openDeleteDialog(monthNum)}
                         disabled={isDeleting}
-                        className="text-xs font-semibold text-blue-400 hover:text-blue-300 hover:bg-blue-900/30 px-2 py-1.5 rounded transition-all duration-300 w-full disabled:opacity-50"
+                        className="text-xs font-semibold text-blue-400 hover:text-blue-200 hover:bg-blue-500/20 px-3 py-2 rounded-lg transition-all duration-300 w-full disabled:opacity-50 active:scale-95 border border-blue-500/30 hover:border-blue-500/60"
                         title="Delete this month's data"
                       >
                         🗑️ Delete
