@@ -791,7 +791,7 @@ export default function UploadTab({ type }: UploadTabProps) {
       </div>
 
       {/* Months Status */}
-      <div className="overflow-hidden transition-all duration-300">
+      <div className="overflow-hidden transition-all duration-300 border border-gray-800 rounded-xl shadow-xl shadow-green-500/10 hover:shadow-green-500/20 hover:border-green-600/50 transition-all duration-300">
         <div className="bg-gradient-to-r from-green-500 via-green-600 to-green-700 p-5 sm:p-6 relative overflow-hidden rounded-t-xl">
           <div className="absolute inset-0 opacity-5">
             <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse"></div>
