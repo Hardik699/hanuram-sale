@@ -604,9 +604,9 @@ export default function UploadTab({ type }: UploadTabProps) {
       />
 
       {/* Upload Section - Modern Card Design */}
-      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl shadow-blue-500/10 border border-slate-700 overflow-hidden">
-        {/* Header with Gradient Background */}
-        <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-orange-500 p-6 sm:p-8">
+      <div className="bg-white rounded-2xl shadow-lg border-2 border-slate-900 overflow-hidden">
+        {/* Header with Blue Background */}
+        <div className="bg-blue-600 p-6 sm:p-8">
           <div className="flex items-center gap-3 mb-1">
             <div className="bg-white/20 p-2.5 rounded-xl backdrop-blur-sm">
               <Upload className="w-6 h-6 text-white" />
@@ -620,11 +620,11 @@ export default function UploadTab({ type }: UploadTabProps) {
           {/* Year and Month Selection */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-sm font-bold text-white mb-3 uppercase tracking-wide">Select Year</label>
+              <label className="block text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide">Select Year</label>
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                className="w-full px-4 py-3 border-2 border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-700/50 text-white font-medium transition hover:border-blue-500"
+                className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-slate-900 font-medium transition hover:border-blue-400"
               >
                 {years.map(year => (
                   <option key={year} value={year}>{year}</option>
@@ -633,11 +633,11 @@ export default function UploadTab({ type }: UploadTabProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-white mb-3 uppercase tracking-wide">Select Month</label>
+              <label className="block text-sm font-bold text-slate-700 mb-3 uppercase tracking-wide">Select Month</label>
               <select
                 value={selectedMonth || ""}
                 onChange={(e) => setSelectedMonth(e.target.value ? parseInt(e.target.value) : null)}
-                className="w-full px-4 py-3 border-2 border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-700/50 text-white font-medium transition hover:border-blue-500"
+                className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-slate-900 font-medium transition hover:border-blue-400"
               >
                 <option value="">-- Choose Month --</option>
                 {MONTHS.map((month, idx) => (
@@ -649,8 +649,8 @@ export default function UploadTab({ type }: UploadTabProps) {
 
           {/* File Upload */}
           <div>
-            <label className="block text-sm font-bold text-white mb-3 uppercase tracking-wide">Upload CSV/Excel File</label>
-            <div className="border-2 border-dashed border-blue-500/50 rounded-xl p-8 text-center hover:border-blue-400 hover:bg-blue-500/5 transition-all cursor-pointer group">
+            <label className="block text-sm font-bold text-slate-900 mb-3 uppercase tracking-wide">Upload CSV/Excel File</label>
+            <div className="border-2 border-dashed border-blue-600 rounded-xl p-8 text-center hover:border-orange-600 hover:bg-orange-50 transition-all cursor-pointer group">
               <input
                 type="file"
                 accept=".csv,.xlsx,.xls"
@@ -659,17 +659,17 @@ export default function UploadTab({ type }: UploadTabProps) {
                 id="file-input"
               />
               <label htmlFor="file-input" className="cursor-pointer block">
-                <div className="bg-gradient-to-br from-blue-500/20 to-orange-500/20 w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                  <FileUp className="w-7 h-7 text-orange-400" />
+                <div className="bg-blue-100 w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                  <FileUp className="w-7 h-7 text-orange-600" />
                 </div>
-                <p className="text-white font-bold text-base">Click to upload or drag & drop</p>
-                <p className="text-slate-400 text-sm mt-1">CSV or Excel files up to 50MB</p>
+                <p className="text-slate-900 font-bold text-base">Click to upload or drag & drop</p>
+                <p className="text-slate-600 text-sm mt-1">CSV or Excel files up to 50MB</p>
               </label>
             </div>
             <div className="mt-4">
               <button
                 onClick={downloadDemoData}
-                className="w-full px-4 py-3 border-2 border-slate-600 text-white font-bold rounded-xl hover:bg-slate-700 hover:border-blue-500 transition-all"
+                className="w-full px-4 py-3 border-2 border-slate-900 text-slate-900 font-bold rounded-xl hover:bg-slate-100 transition-all"
               >
                 📥 Download Demo File
               </button>
@@ -678,9 +678,9 @@ export default function UploadTab({ type }: UploadTabProps) {
 
           {/* File Info - Modern Card */}
           {fileData && (
-            <div className="bg-gradient-to-r from-blue-500/10 to-orange-500/10 border-2 border-blue-500/30 rounded-xl p-4">
-              <p className="text-sm text-white">
-                <span className="font-bold text-orange-400">✓ File loaded:</span> <span className="font-semibold text-blue-400">{fileData.rows}</span> rows, <span className="font-semibold text-blue-400">{fileData.columns}</span> columns
+            <div className="bg-blue-50 border-2 border-blue-600 rounded-xl p-4">
+              <p className="text-sm text-slate-800">
+                <span className="font-bold text-orange-600">✓ File loaded:</span> <span className="font-semibold text-blue-600">{fileData.rows}</span> rows, <span className="font-semibold text-blue-600">{fileData.columns}</span> columns
               </p>
             </div>
           )}
@@ -688,14 +688,14 @@ export default function UploadTab({ type }: UploadTabProps) {
           {/* Validation Results */}
           {validationResult && validationResult.invalidCount > 0 && (
             <div className="space-y-4">
-              <div className="p-4 bg-gradient-to-r from-orange-500/10 to-red-500/10 border-2 border-orange-500/30 rounded-xl">
+              <div className="p-4 bg-orange-50 border-2 border-orange-600 rounded-xl">
                 <div className="flex gap-3">
-                  <AlertCircle className="w-6 h-6 text-orange-400 flex-shrink-0 mt-0.5" />
+                  <AlertCircle className="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-bold text-orange-300">
+                    <p className="text-sm font-bold text-orange-900">
                       {validationResult.invalidCount} row(s) found that don't match the database
                     </p>
-                    <p className="text-sm text-slate-300 mt-1">
+                    <p className="text-sm text-slate-700 mt-1">
                       Only {validationResult.validCount} valid row(s) will be uploaded. Invalid rows are listed below.
                     </p>
                   </div>
@@ -704,19 +704,19 @@ export default function UploadTab({ type }: UploadTabProps) {
 
               {/* Invalid Rows List */}
               {validationResult.invalidRows.length > 0 && (
-                <div className="border-2 border-red-500/30 rounded-xl overflow-hidden bg-red-500/5">
-                  <div className="bg-gradient-to-r from-red-500/20 to-orange-500/20 px-4 py-4 border-b-2 border-red-500/30">
-                    <p className="text-sm font-bold text-red-300">⚠️ Invalid Rows to be Removed</p>
+                <div className="border-2 border-slate-900 rounded-xl overflow-hidden bg-slate-50">
+                  <div className="bg-slate-900 px-4 py-4 border-b-2 border-slate-900">
+                    <p className="text-sm font-bold text-white">⚠️ Invalid Rows to be Removed</p>
                   </div>
                   <div className="max-h-64 overflow-y-auto">
                     {validationResult.invalidRows.map((row: any, idx: number) => (
-                      <div key={idx} className="px-4 py-3 border-b border-red-500/20 last:border-b-0 hover:bg-red-500/10 transition">
+                      <div key={idx} className="px-4 py-3 border-b border-slate-200 last:border-b-0 hover:bg-slate-100 transition">
                         <div className="flex items-start gap-3">
-                          <X className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5 font-bold" />
+                          <X className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5 font-bold" />
                           <div className="flex-1 text-sm">
-                            <p className="font-bold text-white">Row {row.rowIndex}</p>
-                            <p className="text-red-300 text-xs mt-1 font-medium">{row.reason}</p>
-                            <p className="text-slate-400 text-xs mt-1 font-mono truncate bg-slate-700/50 p-1.5 rounded mt-2">
+                            <p className="font-bold text-slate-900">Row {row.rowIndex}</p>
+                            <p className="text-orange-700 text-xs mt-1 font-medium">{row.reason}</p>
+                            <p className="text-slate-600 text-xs mt-1 font-mono truncate bg-slate-200 p-1.5 rounded mt-2">
                               {row.data.slice(0, 3).join(" | ")}...
                             </p>
                           </div>
@@ -732,17 +732,17 @@ export default function UploadTab({ type }: UploadTabProps) {
           {/* Messages */}
           {message && (
             <div className={`p-4 rounded-xl flex gap-3 border-2 ${
-              message.type === "success" ? "bg-gradient-to-r from-emerald-500/10 to-green-500/10 border-green-500/30" :
-              message.type === "error" ? "bg-gradient-to-r from-red-500/10 to-pink-500/10 border-red-500/30" :
-              "bg-gradient-to-r from-orange-500/10 to-orange-500/10 border-orange-500/30"
+              message.type === "success" ? "bg-blue-50 border-blue-600" :
+              message.type === "error" ? "bg-orange-50 border-orange-600" :
+              "bg-orange-50 border-orange-600"
             }`}>
-              {message.type === "success" && <CheckCircle2 className="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" />}
-              {message.type === "error" && <AlertCircle className="w-6 h-6 text-red-400 flex-shrink-0 mt-0.5" />}
-              {message.type === "warning" && <AlertCircle className="w-6 h-6 text-orange-400 flex-shrink-0 mt-0.5" />}
+              {message.type === "success" && <CheckCircle2 className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />}
+              {message.type === "error" && <AlertCircle className="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" />}
+              {message.type === "warning" && <AlertCircle className="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" />}
               <p className={`text-sm font-medium ${
-                message.type === "success" ? "text-green-300" :
-                message.type === "error" ? "text-red-300" :
-                "text-orange-300"
+                message.type === "success" ? "text-blue-900" :
+                message.type === "error" ? "text-orange-900" :
+                "text-orange-900"
               }`}>
                 {message.text}
               </p>
@@ -753,7 +753,7 @@ export default function UploadTab({ type }: UploadTabProps) {
           <button
             onClick={handleUpload}
             disabled={isLoading || !fileData || !selectedMonth}
-            className="w-full bg-gradient-to-r from-blue-600 via-blue-500 to-orange-500 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-blue-500/50 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 uppercase tracking-wide"
+            className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-blue-500/50 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 uppercase tracking-wide"
           >
             {isLoading ? "⏳ Uploading..." : "🚀 Upload Data"}
           </button>
@@ -761,8 +761,8 @@ export default function UploadTab({ type }: UploadTabProps) {
       </div>
 
       {/* Months Status - Modern Grid Card */}
-      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl shadow-blue-500/10 border border-slate-700 overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-orange-500 p-6 sm:p-8">
+      <div className="bg-white rounded-2xl shadow-lg border-2 border-slate-900 overflow-hidden">
+        <div className="bg-blue-600 p-6 sm:p-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-white">Upload Status</h2>
           <p className="text-white/80 text-sm mt-2">Overview for {selectedYear}</p>
         </div>
@@ -779,22 +779,22 @@ export default function UploadTab({ type }: UploadTabProps) {
                   key={month}
                   className={`relative group rounded-xl p-4 sm:p-5 border-2 transition-all duration-300 ${
                     isUploaded
-                      ? "bg-gradient-to-br from-blue-500/20 to-orange-500/20 border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-105"
-                      : "bg-gradient-to-br from-slate-700/50 to-slate-800 border-slate-600 hover:shadow-lg hover:shadow-slate-900/50"
+                      ? "bg-blue-50 border-blue-600 hover:shadow-lg hover:shadow-blue-400/40 hover:scale-105"
+                      : "bg-slate-50 border-slate-300 hover:shadow-lg hover:shadow-slate-400/30"
                   }`}
                 >
                   <div className="flex flex-col h-full">
-                    <p className="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider mb-2">{month}</p>
+                    <p className="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wider mb-2">{month}</p>
                     <div className="flex items-center gap-2 mb-3 flex-grow">
                       {isUploaded ? (
                         <>
-                          <div className="w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse"></div>
-                          <span className="text-xs sm:text-sm font-bold text-blue-300">Uploaded</span>
+                          <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse"></div>
+                          <span className="text-xs sm:text-sm font-bold text-blue-700">Uploaded</span>
                         </>
                       ) : (
                         <>
-                          <div className="w-2.5 h-2.5 rounded-full bg-slate-500"></div>
-                          <span className="text-xs sm:text-sm font-bold text-slate-400">Pending</span>
+                          <div className="w-2.5 h-2.5 rounded-full bg-slate-400"></div>
+                          <span className="text-xs sm:text-sm font-bold text-slate-600">Pending</span>
                         </>
                       )}
                     </div>
@@ -802,7 +802,7 @@ export default function UploadTab({ type }: UploadTabProps) {
                       <button
                         onClick={() => openDeleteDialog(monthNum)}
                         disabled={isDeleting}
-                        className="text-xs sm:text-sm text-orange-400 hover:text-orange-300 font-bold hover:bg-orange-500/20 px-2 py-1.5 rounded-lg transition w-full disabled:opacity-50"
+                        className="text-xs sm:text-sm text-orange-600 hover:text-orange-700 font-bold hover:bg-orange-100 px-2 py-1.5 rounded-lg transition w-full disabled:opacity-50"
                         title="Delete this month's data"
                       >
                         🗑️ Delete

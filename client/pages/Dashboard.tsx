@@ -16,22 +16,22 @@ export default function Dashboard() {
   const currentTab = UPLOAD_TYPES[activeTab];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-white">
       {/* Header Section */}
-      <div className="border-b border-slate-700 bg-slate-900/50 backdrop-blur-sm sticky top-0 z-10">
+      <div className="border-b-2 border-slate-900 bg-white sticky top-0 z-10 shadow-sm">
         <div className="px-6 sm:px-8 py-6 sm:py-8 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white flex items-center gap-3">
-              <div className="bg-gradient-to-br from-blue-500 to-orange-500 p-2.5 rounded-xl">
+            <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 flex items-center gap-3">
+              <div className="bg-blue-600 p-2.5 rounded-xl">
                 <Upload className="w-7 h-7 text-white" />
               </div>
               Data Upload Portal
             </h1>
-            <p className="text-slate-300 text-sm mt-2">Manage and monitor your data uploads</p>
+            <p className="text-slate-600 text-sm mt-2">Manage and monitor your data uploads</p>
           </div>
           <button
             onClick={() => navigate("/items")}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl hover:shadow-2xl hover:shadow-blue-500/50 font-bold transition-all duration-300 text-sm sm:text-base hover:scale-105"
+            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:shadow-xl hover:shadow-blue-400/40 font-bold transition-all duration-300 text-sm sm:text-base hover:scale-105"
           >
             <Package className="w-5 h-5" />
             Items Page
@@ -50,8 +50,8 @@ export default function Dashboard() {
                 onClick={() => setActiveTab(idx)}
                 className={`px-5 sm:px-6 py-3 rounded-xl font-bold text-sm sm:text-base whitespace-nowrap transition-all duration-300 flex items-center gap-2 ${
                   activeTab === idx
-                    ? `${tab.color} text-white shadow-lg shadow-blue-500/30`
-                    : "bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:text-white"
+                    ? `${tab.color} text-white shadow-lg`
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 border-2 border-slate-200"
                 }`}
               >
                 {tab.label}
@@ -68,9 +68,9 @@ export default function Dashboard() {
       </div>
 
       {/* Footer */}
-      <div className="border-t border-slate-700 bg-slate-900/50 mt-12">
+      <div className="border-t-2 border-slate-900 bg-white mt-12">
         <div className="px-6 sm:px-8 py-6 text-center">
-          <p className="text-slate-400 text-sm">
+          <p className="text-slate-600 text-sm">
             Hanuram Data Management System • All Rights Reserved
           </p>
         </div>
