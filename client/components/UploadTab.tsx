@@ -606,17 +606,14 @@ export default function UploadTab({ type }: UploadTabProps) {
       {/* Upload Section */}
       <div className="overflow-hidden transition-all duration-300 border border-gray-800 rounded-xl shadow-xl shadow-blue-500/10 hover:shadow-blue-500/20 hover:border-blue-600/50 transition-all duration-300">
         {/* Header with Green Background */}
-        <div className="bg-blue-400 p-5 sm:p-6 relative overflow-hidden rounded-t-xl">
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl animate-pulse"></div>
-          </div>
-          <div className="relative z-10 flex items-center gap-3">
-            <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm hover:bg-white/30 transition-colors hover:scale-110 transform duration-300">
-              <Upload className="w-5 h-5 text-white" style={{animationDuration: '2s'}} />
+        <div className="bg-slate-700 p-5 sm:p-6 rounded-t-xl">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg">
+              <Upload className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">Upload Data</h2>
-              <p className="text-white/70 text-sm mt-0.5 font-normal">Import your data securely</p>
+              <h2 className="text-xl sm:text-2xl font-semibold text-white">Upload Data</h2>
+              <p className="text-gray-300 text-sm mt-0.5 font-normal">Import your data securely</p>
             </div>
           </div>
         </div>
