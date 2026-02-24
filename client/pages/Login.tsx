@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Lock, User } from "lucide-react";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -7,89 +8,164 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 600));
+
     // Simple authentication check
     if (username === "admin" && password === "admin1") {
-      // Store auth state in localStorage
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("username", username);
       navigate("/dashboard");
     } else {
-      setError("Invalid credentials. Use admin/admin1");
+      setError("Invalid credentials. Try admin / admin1");
     }
 
     setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary via-accent-purple to-accent-teal flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-primary to-accent-purple px-8 py-12">
-            <h1 className="text-3xl font-bold text-white text-center">Data Portal</h1>
-            <p className="text-purple-100 text-center mt-2">Upload Management System</p>
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-4">
+      {/* Animated Gradient Background */}
+      <div className="absolute inset-0 animate-gradient-shift bg-gradient-to-br from-blue-600 via-emerald-500 to-purple-600"></div>
+
+      {/* Floating Shapes */}
+      <div className="absolute top-10 left-10 w-40 h-40 bg-gradient-to-br from-blue-400 to-cyan-300 rounded-full opacity-20 blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-20 right-10 w-60 h-60 bg-gradient-to-tl from-orange-400 to-red-300 rounded-full opacity-20 blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
+      <div className="absolute top-1/2 -left-32 w-96 h-96 bg-gradient-to-r from-green-400 to-blue-500 rounded-full opacity-15 blur-3xl animate-pulse" style={{ animationDelay: "2s" }}></div>
+
+      {/* Main Container */}
+      <div className="relative z-10 w-full max-w-md animate-float-in">
+        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden backdrop-blur-xl border border-white/30">
+          {/* Premium Header */}
+          <div className="relative h-40 bg-gradient-to-r from-blue-600 via-emerald-500 to-orange-500 overflow-hidden">
+            {/* Animated Gradient Line */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-emerald-300 to-orange-400 animate-gradient-shift"></div>
+
+            {/* Content */}
+            <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 py-8">
+              <div className="mb-3 p-3 bg-white/20 rounded-full backdrop-blur-sm">
+                <Lock className="w-6 h-6 text-white" />
+              </div>
+              <h1 className="text-4xl font-black text-white text-center tracking-tight" style={{ fontFamily: "Poppins, sans-serif" }}>
+                Data Portal
+              </h1>
+              <p className="text-white/90 text-center mt-2 text-sm font-medium">
+                Upload Management System
+              </p>
+            </div>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleLogin} className="p-8">
+          {/* Form Content */}
+          <form onSubmit={handleLogin} className="p-8 space-y-6">
+            {/* Error Message */}
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-700 text-sm">{error}</p>
+              <div className="animate-float-in p-4 bg-red-50 border-l-4 border-red-500 rounded-xl">
+                <p className="text-red-700 text-sm font-medium">{error}</p>
               </div>
             )}
 
-            <div className="mb-6">
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+            {/* Username Field */}
+            <div className="space-y-2 animate-slide-in-left">
+              <label htmlFor="username" className="block text-sm font-semibold text-gray-800">
                 Username
               </label>
-              <input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter username"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
-                disabled={isLoading}
-              />
+              <div
+                className={`relative flex items-center transition-all duration-300 ${
+                  focusedField === "username" ? "scale-105" : ""
+                }`}
+              >
+                <User className="absolute left-4 w-5 h-5 text-gray-400 transition-colors duration-300" />
+                <input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  onFocus={() => setFocusedField("username")}
+                  onBlur={() => setFocusedField(null)}
+                  placeholder="admin"
+                  className="input-focus-glow w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-0 disabled:opacity-60 disabled:cursor-not-allowed text-gray-800 placeholder-gray-400"
+                  disabled={isLoading}
+                />
+              </div>
             </div>
 
-            <div className="mb-8">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            {/* Password Field */}
+            <div className="space-y-2 animate-slide-in-left" style={{ animationDelay: "0.1s" }}>
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-800">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
-                disabled={isLoading}
-              />
+              <div
+                className={`relative flex items-center transition-all duration-300 ${
+                  focusedField === "password" ? "scale-105" : ""
+                }`}
+              >
+                <Lock className="absolute left-4 w-5 h-5 text-gray-400 transition-colors duration-300" />
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setFocusedField("password")}
+                  onBlur={() => setFocusedField(null)}
+                  placeholder="••••••••"
+                  className="input-focus-glow w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-0 disabled:opacity-60 disabled:cursor-not-allowed text-gray-800 placeholder-gray-400"
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
             </div>
 
+            {/* Sign In Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-primary to-accent-purple text-white py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-modern w-full mt-8 py-3 bg-gradient-to-r from-blue-600 via-emerald-500 to-orange-500 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-blue-500/50 disabled:opacity-70 disabled:cursor-not-allowed transform transition-all duration-300 hover:scale-[1.02] active:scale-95 text-lg"
             >
-              {isLoading ? "Logging in..." : "Sign In"}
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  Logging in...
+                </span>
+              ) : (
+                "Sign In"
+              )}
             </button>
           </form>
 
           {/* Footer */}
-          <div className="bg-gray-50 px-8 py-4 border-t border-gray-200">
-            <p className="text-gray-600 text-center text-sm">
-              Demo credentials: <br />
-              <span className="font-semibold">admin</span> / <span className="font-semibold">admin1</span>
+          <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-8 py-6 border-t border-gray-200">
+            <p className="text-gray-700 text-center text-sm">
+              <span className="block font-semibold text-gray-800 mb-1">Demo Credentials:</span>
+              <span className="text-gray-600">
+                Username: <span className="font-mono font-bold text-blue-600">admin</span>
+              </span>
+              <br />
+              <span className="text-gray-600">
+                Password: <span className="font-mono font-bold text-blue-600">admin1</span>
+              </span>
             </p>
           </div>
+        </div>
+
+        {/* Bottom Accent */}
+        <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="h-1 w-12 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full"></div>
+          <div className="h-1 w-3 bg-gradient-to-r from-emerald-500 to-orange-500 rounded-full"></div>
+          <div className="h-1 w-12 bg-gradient-to-r from-orange-500 to-blue-500 rounded-full"></div>
         </div>
       </div>
     </div>
