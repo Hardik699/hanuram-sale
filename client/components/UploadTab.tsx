@@ -615,8 +615,8 @@ export default function UploadTab({ type }: UploadTabProps) {
               <Upload className="w-5 h-5 text-white" style={{animationDuration: '2s'}} />
             </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">Upload Data</h2>
-              <p className="text-white/80 text-xs mt-0.5 font-medium italic">Import your data securely</p>
+              <h2 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">Upload Data</h2>
+              <p className="text-white/70 text-sm mt-0.5 font-normal">Import your data securely</p>
             </div>
           </div>
         </div>
@@ -797,8 +797,8 @@ export default function UploadTab({ type }: UploadTabProps) {
             <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse"></div>
           </div>
           <div className="relative z-10">
-            <h2 className="text-lg sm:text-xl font-semibold text-white tracking-tight">📊 Upload Status</h2>
-            <p className="text-white/80 text-xs mt-1 font-normal">Overview for {selectedYear}</p>
+            <h2 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">📊 Upload Status</h2>
+            <p className="text-white/70 text-sm mt-1 font-normal">Overview for {selectedYear}</p>
           </div>
         </div>
 
