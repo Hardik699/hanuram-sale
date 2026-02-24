@@ -680,7 +680,7 @@ export default function UploadTab({ type }: UploadTabProps) {
             <div className="mt-4">
               <button
                 onClick={downloadDemoData}
-                className="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-300 text-sm"
+                className="w-full px-4 py-2.5 bg-blue-600/20 border border-blue-600/60 text-blue-300 font-semibold rounded-lg hover:bg-blue-600/30 hover:border-blue-500 transition-all duration-300 text-sm shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-500/40"
               >
                 📥 Download Demo File
               </button>
