@@ -808,21 +808,30 @@ export default function UploadTab({ type }: UploadTabProps) {
               const status = getMonthStatus(monthNum);
               const isUploaded = status === "uploaded";
 
+              const isBlueCard = idx % 2 === 0;
               return (
                 <div
                   key={month}
                   className={`relative group rounded-xl p-4 sm:p-5 border backdrop-blur-sm transition-all duration-300 cursor-default overflow-hidden shadow-lg ${
                     isUploaded
-                      ? `bg-gradient-to-br from-blue-900/40 to-blue-900/20 border-blue-600/40 hover:border-blue-500/60 hover:shadow-xl hover:shadow-blue-500/30 hover:bg-gradient-to-br hover:from-blue-900/50 hover:to-blue-900/30`
+                      ? isBlueCard
+                        ? `bg-gradient-to-br from-blue-900/50 to-blue-800/30 border-blue-500/50 hover:border-blue-400/70 hover:shadow-xl hover:shadow-blue-500/40 hover:bg-gradient-to-br hover:from-blue-900/60 hover:to-blue-800/40`
+                        : `bg-gradient-to-br from-orange-900/50 to-orange-800/30 border-orange-500/50 hover:border-orange-400/70 hover:shadow-xl hover:shadow-orange-500/40 hover:bg-gradient-to-br hover:from-orange-900/60 hover:to-orange-800/40`
                       : `bg-gradient-to-br from-slate-800/40 to-slate-700/20 border-slate-600/40 hover:border-slate-500/60 hover:shadow-xl hover:shadow-slate-500/20 hover:bg-gradient-to-br hover:from-slate-800/50 hover:to-slate-700/30`
                   }`}
                 >
                   <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{
-                    background: isUploaded ? 'radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.1), transparent)' : 'none'
+                    background: isUploaded ? (isBlueCard ? 'radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.15), transparent)' : 'radial-gradient(circle at 100% 0%, rgba(234, 88, 12, 0.15), transparent)') : 'none'
                   }}></div>
 
                   <div className="flex flex-col h-full relative z-10">
-                    <p className="text-xs sm:text-sm font-bold text-white uppercase tracking-widest mb-3 transition-colors duration-300 group-hover:text-blue-200">{month}</p>
+                    <p className={`text-xs sm:text-sm font-bold uppercase tracking-widest mb-3 transition-colors duration-300 ${
+                      isUploaded
+                        ? isBlueCard
+                          ? "text-blue-100 group-hover:text-blue-50"
+                          : "text-orange-100 group-hover:text-orange-50"
+                        : "text-white group-hover:text-slate-100"
+                    }`}>{month}</p>
                     <div className="flex items-center gap-2.5 mb-4 flex-grow">
                       {isUploaded ? (
                         <>
@@ -844,7 +853,11 @@ export default function UploadTab({ type }: UploadTabProps) {
                       <button
                         onClick={() => openDeleteDialog(monthNum)}
                         disabled={isDeleting}
-                        className="text-xs font-semibold text-blue-400 hover:text-blue-200 hover:bg-blue-500/20 px-3 py-2 rounded-lg transition-all duration-300 w-full disabled:opacity-50 active:scale-95 border border-blue-500/30 hover:border-blue-500/60"
+                        className={`text-xs font-semibold px-3 py-2 rounded-lg transition-all duration-300 w-full disabled:opacity-50 active:scale-95 border ${
+                          isBlueCard
+                            ? "text-blue-300 hover:text-blue-100 hover:bg-blue-500/25 border-blue-500/40 hover:border-blue-400/70"
+                            : "text-orange-300 hover:text-orange-100 hover:bg-orange-500/25 border-orange-500/40 hover:border-orange-400/70"
+                        }`}
                         title="Delete this month's data"
                       >
                         🗑️ Delete
