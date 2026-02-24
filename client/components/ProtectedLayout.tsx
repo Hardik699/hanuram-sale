@@ -1,4 +1,4 @@
-import TopNav from "./TopNav";
+import Sidebar from "./Sidebar";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
@@ -6,8 +6,8 @@ interface ProtectedLayoutProps {
 
 export default function ProtectedLayout({ children }: ProtectedLayoutProps) {
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 flex flex-col transition-colors duration-300">
-      <TopNav />
+    <div className="min-h-screen bg-gray-950 flex transition-colors duration-300">
+      <Sidebar />
       <main className="flex-1 transition-colors duration-300">
         {children}
       </main>

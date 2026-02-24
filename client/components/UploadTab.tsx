@@ -603,10 +603,10 @@ export default function UploadTab({ type }: UploadTabProps) {
         isLoading={isDeleting}
       />
 
-      {/* Upload Section - Modern Card Design */}
-      <div className="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-xl">
+      {/* Upload Section */}
+      <div className="overflow-hidden transition-all duration-300">
         {/* Header with Green Background */}
-        <div className="bg-gradient-to-r from-green-500 via-green-600 to-green-700 p-5 sm:p-6 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-green-500 via-green-600 to-green-700 p-5 sm:p-6 relative overflow-hidden rounded-t-xl">
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl animate-pulse"></div>
           </div>
@@ -621,7 +621,7 @@ export default function UploadTab({ type }: UploadTabProps) {
           </div>
         </div>
 
-        <div className="p-6 sm:p-7 space-y-6 transition-colors duration-300">
+        <div className="p-6 sm:p-7 space-y-6 transition-colors duration-300 bg-gray-950">
           {/* Year and Month Selection */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="group">
@@ -784,9 +784,9 @@ export default function UploadTab({ type }: UploadTabProps) {
         </div>
       </div>
 
-      {/* Months Status - Modern Grid Card */}
-      <div className="bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-xl">
-        <div className="bg-gradient-to-r from-green-500 via-green-600 to-green-700 p-5 sm:p-6 relative overflow-hidden">
+      {/* Months Status */}
+      <div className="overflow-hidden transition-all duration-300">
+        <div className="bg-gradient-to-r from-green-500 via-green-600 to-green-700 p-5 sm:p-6 relative overflow-hidden rounded-t-xl">
           <div className="absolute inset-0 opacity-5">
             <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse"></div>
           </div>
@@ -796,7 +796,7 @@ export default function UploadTab({ type }: UploadTabProps) {
           </div>
         </div>
 
-        <div className="p-5 sm:p-6">
+        <div className="p-5 sm:p-6 bg-gray-950">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {MONTHS.map((month, idx) => {
               const monthNum = idx + 1;

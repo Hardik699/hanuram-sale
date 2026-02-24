@@ -76,6 +76,11 @@ export default {
           pink: "hsl(var(--pink))",
           blue: "hsl(var(--blue))",
         },
+        theme: {
+          blue: "#2563eb",
+          green: "#10b981",
+          orange: "#f97316",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
