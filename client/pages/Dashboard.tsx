@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Package, Upload, CloudUpload } from "lucide-react";
 import UploadTab from "@/components/UploadTab";
+import DashboardStats from "@/components/DashboardStats";
 
 const UPLOAD_TYPES = [
   { id: "petpooja", label: "Petpooja Upload", color: "bg-blue-600" },
@@ -48,6 +49,9 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <div className="flex-1 px-6 sm:px-8 py-8 max-w-7xl mx-auto w-full">
+        {/* Dashboard Stats */}
+        <DashboardStats />
+
         {/* Tabs Navigation */}
         <div className="mb-8">
           <div className="flex gap-2 overflow-x-auto pb-4 scroll-smooth">
