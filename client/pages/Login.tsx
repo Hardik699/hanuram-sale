@@ -135,20 +135,6 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Demo Credentials */}
-          <div className="bg-gray-100 px-8 py-6 border-t border-gray-200">
-            <p className="text-gray-700 text-center text-sm font-semibold mb-2">Demo Credentials:</p>
-            <div className="space-y-2 text-center">
-              <div className="flex justify-between items-center bg-white p-3 rounded-lg border border-blue-200">
-                <span className="text-gray-700 font-medium">Username:</span>
-                <span className="font-mono font-bold text-blue-600">admin</span>
-              </div>
-              <div className="flex justify-between items-center bg-white p-3 rounded-lg border border-orange-200">
-                <span className="text-gray-700 font-medium">Password:</span>
-                <span className="font-mono font-bold text-orange-600">admin1</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
