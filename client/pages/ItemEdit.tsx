@@ -189,7 +189,9 @@ export default function ItemEdit() {
         setGroup(foundItem.group);
         setCategory(foundItem.category);
         setProfitMargin(foundItem.profitMargin?.toString() || "");
-        setGst(foundItem.gst?.toString() || "");
+        // Format GST with % sign to match dropdown options
+        const gstValue = foundItem.gst ? `${foundItem.gst}%` : "";
+        setGst(gstValue);
         setItemType(foundItem.itemType || "Goods");
         setUnitType(foundItem.unitType || "Single Count");
 

@@ -361,13 +361,13 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
   };
 
   return (
-    <div className="p-6 sm:p-8">
+    <div className="p-6 sm:p-8 bg-white dark:bg-slate-800 transition-colors duration-300">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Add New Item</h2>
+        <h2 className="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-400 dark:to-blue-500 bg-clip-text text-transparent">Add New Item</h2>
         <button
           onClick={onClose}
-          className="p-2 hover:bg-gray-100 rounded-lg transition"
+          className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors duration-300 text-slate-600 dark:text-slate-400"
         >
           <X className="w-6 h-6" />
         </button>
@@ -377,51 +377,51 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
         {/* Basic Info */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-blue-600 dark:text-slate-300 mb-2 uppercase tracking-wide">
               Item ID (Auto)
             </label>
             <input
               type="text"
               value={itemId}
               disabled
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 transition-colors duration-300"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Item Name *
             </label>
             <input
               type="text"
               value={itemName}
               onChange={(e) => setItemName(toTitleCase(e.target.value))}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Short Code (Auto)
             </label>
             <input
               type="text"
               value={shortCode}
               disabled
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-gray-100 text-gray-600"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               HSN Code
             </label>
             <div className="flex gap-2">
               <select
                 value={hsnCode}
                 onChange={(e) => setHsnCode(e.target.value)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               >
                 <option value="">Select HSN Code</option>
                 {hsnCodes.map((code) => (
@@ -446,7 +446,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                   onChange={(e) => setNewHsnCode(e.target.value)}
                   placeholder="Enter new HSN Code"
                   autoFocus
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
                 <button
                   type="button"
@@ -460,13 +460,13 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               GST (%)
             </label>
             <select
               value={gst}
               onChange={(e) => setGst(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
             >
               <option value="">Select GST</option>
               {GST_OPTIONS.map((option) => (
@@ -481,14 +481,14 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
         {/* Group & Category with Add Option */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Group *
             </label>
             <div className="flex gap-2">
               <select
                 value={group}
                 onChange={(e) => setGroup(e.target.value)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                 required
               >
                 <option value="">Select Group</option>
@@ -514,7 +514,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                   onChange={(e) => setNewGroup(toTitleCase(e.target.value))}
                   placeholder="Enter new group"
                   autoFocus
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
                 <button
                   type="button"
@@ -528,14 +528,14 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Category *
             </label>
             <div className="flex gap-2">
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                 required
               >
                 <option value="">Select Category</option>
@@ -561,7 +561,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                   onChange={(e) => setNewCategory(toTitleCase(e.target.value))}
                   placeholder="Enter new category"
                   autoFocus
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
                 <button
                   type="button"
@@ -578,7 +578,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
         {/* Item Type & Unit Type */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Profit Margin (%)
             </label>
             <input
@@ -586,18 +586,18 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
               value={profitMargin}
               onChange={(e) => setProfitMargin(e.target.value)}
               step="0.01"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Item Type
             </label>
             <select
               value={itemType}
               onChange={(e) => setItemType(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
             >
               {ITEM_TYPES.map((type) => (
                 <option key={type} value={type}>
@@ -608,13 +608,13 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Unit Type
             </label>
             <select
               value={unitType}
               onChange={(e) => setUnitType(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
             >
               {UNIT_TYPES.map((type) => (
                 <option key={type} value={type}>
@@ -626,13 +626,13 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Description
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(toTitleCase(e.target.value))}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 min-h-[100px]"
+            className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 min-h-[100px]"
             placeholder="Enter item description"
           />
         </div>
@@ -658,7 +658,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Variation Value
                   </label>
                   <div className="flex gap-2">
@@ -667,7 +667,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                       onChange={(e) =>
                         updateVariation(variation.id, "value", e.target.value)
                       }
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                      className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                     >
                       <option value="">Select Variation</option>
                       {variationValues.map((val) => (
@@ -693,7 +693,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                           onChange={(e) => setNewVariationValue(toTitleCase(e.target.value))}
                           placeholder="e.g., 300 Gms, 1.5 L"
                           autoFocus
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                          className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                         />
                         <button
                           type="button"
@@ -707,7 +707,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Price
                   </label>
                   <input
@@ -722,12 +722,12 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                     }
                     placeholder="0"
                     step="0.01"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     SAP Code
                   </label>
                   <input
@@ -736,12 +736,12 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                     onChange={(e) =>
                       updateVariation(variation.id, "sapCode", e.target.value)
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Profit Margin (%)
                   </label>
                   <input
@@ -755,12 +755,12 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                       )
                     }
                     step="0.01"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Sale Type
                   </label>
                   <select
@@ -772,7 +772,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                         e.target.value as "QTY" | "KG"
                       )
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                   >
                     <option value="QTY">QTY (Quantity)</option>
                     <option value="KG">KG (Kilogram)</option>
@@ -788,7 +788,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
               {/* Channel Prices */}
               <div className="mb-4">
                 <div className="flex justify-between items-center mb-3">
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                     Channel Prices
                   </label>
                   <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded space-y-1">
@@ -827,7 +827,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                           placeholder="0"
                           step="0.01"
                           disabled={isAutoCalculated}
-                          className={`w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+                          className={`w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 ${
                             isAutoCalculated
                               ? "bg-blue-50 text-gray-500 cursor-not-allowed"
                               : ""
@@ -852,11 +852,11 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                           e.target.checked,
                         )
                       }
-                      className="w-4 h-4 border-gray-300 rounded focus:ring-2 focus:ring-purple-600 cursor-pointer"
+                      className="w-4 h-4 border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 cursor-pointer"
                     />
                     <label
                       htmlFor={`gs1-checkbox-${variation.id}`}
-                      className="text-sm font-medium text-gray-700 cursor-pointer flex-1"
+                      className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer flex-1"
                     >
                       Enable GS1 Channel
                     </label>
@@ -875,7 +875,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                           placeholder="Auto: 0"
                           step="0.01"
                           disabled
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-blue-50 text-gray-500 cursor-not-allowed"
+                          className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-blue-50 text-gray-500 cursor-not-allowed"
                         />
                         <p className="text-xs text-blue-600 mt-1">
                           Auto +20% (rounded to 5)
@@ -898,7 +898,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
                             )
                           }
                           placeholder="Enter GS1 code"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
+                          className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                         />
                       </div>
                     </div>
@@ -921,7 +921,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
         {/* Image Upload */}
         <div className="border-t pt-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Images</h3>
-          <div className="mb-4 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+          <div className="mb-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-8 text-center">
             <input
               type="file"
               multiple
@@ -931,7 +931,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
               id="image-input"
             />
             <label htmlFor="image-input" className="cursor-pointer block">
-              <p className="text-gray-700 font-medium">
+              <p className="text-slate-700 dark:text-slate-300 font-medium">
                 Click to upload or drag images
               </p>
               <p className="text-gray-500 text-sm">PNG, JPG up to 10MB</p>
@@ -974,7 +974,7 @@ export default function ItemForm({ onSuccess, onClose }: ItemFormProps) {
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 px-6 py-3 bg-gray-100 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-gray-200 font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>

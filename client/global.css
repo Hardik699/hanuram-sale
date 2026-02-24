@@ -1,5 +1,6 @@
 /** @import must precede all other statements */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -128,9 +129,34 @@
     overflow-x: auto;
     white-space: pre;
   }
+}
 
-  input[type="text"],
-  textarea {
-    text-transform: capitalize;
+@layer components {
+  /* Stylish headings */
+  .heading-stylish {
+    @apply font-extrabold tracking-tight;
+    font-family: "Poppins", sans-serif;
+  }
+
+  /* Light theme text styling */
+  .light-text-primary {
+    @apply text-slate-900 dark:text-white;
+  }
+
+  .light-text-secondary {
+    @apply text-slate-600 dark:text-slate-400;
+  }
+
+  .light-text-accent {
+    @apply text-blue-600 dark:text-blue-400;
+  }
+
+  /* Light mode background gradients */
+  .light-bg-subtle {
+    @apply bg-gradient-to-br from-slate-50 to-blue-50 dark:bg-slate-900;
+  }
+
+  .light-card-bg {
+    @apply bg-white dark:bg-slate-800;
   }
 }

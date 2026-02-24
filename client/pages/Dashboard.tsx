@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Package } from "lucide-react";
+import { Package, Upload } from "lucide-react";
 import UploadTab from "@/components/UploadTab";
 
 const UPLOAD_TYPES = [
-  { id: "petpooja", label: "Petpooja Upload", color: "from-primary to-accent-purple" },
-  { id: "pain_lebs", label: "Pain Labs Upload", color: "from-primary to-accent-teal" },
-  { id: "website", label: "Website Upload", color: "from-accent-teal to-accent-orange" }
+  { id: "petpooja", label: "Petpooja Upload", color: "bg-blue-600" },
+  { id: "pain_lebs", label: "Pain Labs Upload", color: "bg-orange-600" },
+  { id: "website", label: "Website Upload", color: "bg-blue-500" }
 ];
 
 export default function Dashboard() {
@@ -16,45 +16,75 @@ export default function Dashboard() {
   const currentTab = UPLOAD_TYPES[activeTab];
 
   return (
-    <div className="p-6 sm:p-8">
-      {/* Header */}
-      <div className="mb-8 flex justify-between items-start">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Data Upload Portal</h1>
-          <p className="text-gray-500 text-sm mt-1">Manage your data uploads efficiently</p>
+    <div className="min-h-screen transition-colors duration-300 bg-gradient-to-br from-slate-50 to-blue-50 dark:bg-slate-900">
+      {/* Header Section */}
+      <div className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 sticky top-0 z-10 shadow-sm transition-colors duration-300">
+        <div className="px-6 sm:px-8 py-5 sm:py-6 flex justify-between items-center gap-4">
+          <div className="group cursor-default flex-1">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-2 rounded-lg group-hover:scale-110 transition-transform duration-300 shadow-md shadow-blue-500/30">
+                <Upload className="w-5 h-5 text-white group-hover:rotate-12 transition-transform" />
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 bg-clip-text text-transparent transition-colors duration-300">
+                Data Upload
+              </h1>
+            </div>
+            <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-medium ml-11 mt-1 transition-colors duration-300 italic">
+              Manage and monitor your uploads
+            </p>
+          </div>
+          <button
+            onClick={() => navigate("/items")}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/40 font-semibold transition-all duration-300 text-xs sm:text-sm hover:scale-105 group relative overflow-hidden whitespace-nowrap hover:bg-blue-700"
+          >
+            <div className="absolute inset-0 bg-white/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+            <Package className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            <span className="relative">Items</span>
+          </button>
         </div>
-        <button
-          onClick={() => navigate("/items")}
-          className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-gradient-to-r from-primary to-accent-purple text-white rounded-lg hover:shadow-lg font-medium transition text-sm sm:text-base"
-        >
-          <Package className="w-4 h-4" />
-          Items Page
-        </button>
       </div>
 
-      {/* Tabs */}
-      <div>
-        <div className="flex gap-2 sm:gap-4 mb-8 border-b border-gray-200 overflow-x-auto">
-          {UPLOAD_TYPES.map((tab, idx) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(idx)}
-              className={`px-3 sm:px-6 py-3 font-medium text-sm sm:text-base transition-all relative whitespace-nowrap ${
-                activeTab === idx
-                  ? "text-transparent bg-clip-text " + `bg-gradient-to-r ${tab.color}`
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              {tab.label}
-              {activeTab === idx && (
-                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${tab.color}`} />
-              )}
-            </button>
-          ))}
+      {/* Main Content */}
+      <div className="px-6 sm:px-8 py-8 max-w-7xl mx-auto">
+        {/* Tabs Navigation */}
+        <div className="mb-6">
+          <div className="flex gap-2 overflow-x-auto pb-3 scroll-smooth">
+            {UPLOAD_TYPES.map((tab, idx) => {
+              const isActive = activeTab === idx;
+              const tabColor = isActive ? "bg-blue-600" : "bg-slate-100 dark:bg-slate-800";
+              const tabTextColor = isActive ? "text-white" : "text-slate-600 dark:text-slate-400";
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(idx)}
+                  className={`px-4 sm:px-6 py-2.5 rounded-lg font-semibold text-xs sm:text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2 group relative overflow-hidden ${
+                    isActive
+                      ? `${tabColor} ${tabTextColor} shadow-md hover:shadow-lg transform`
+                      : `${tabColor} ${tabTextColor} hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700`
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-white/10 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+                  {tab.label}
+                  {isActive && (
+                    <div className="w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Tab Content */}
         <UploadTab type={currentTab.id} />
+      </div>
+
+      {/* Footer */}
+      <div className="border-t border-slate-200 dark:border-slate-700 bg-gradient-to-b from-white to-blue-50 dark:bg-slate-900 mt-8 transition-colors duration-300">
+        <div className="px-6 sm:px-8 py-4 text-center">
+          <p className="text-slate-400 dark:text-slate-500 text-xs transition-colors duration-300 font-medium tracking-wide">
+            Hanuram Data Management • All Rights Reserved © 2024
+          </p>
+        </div>
       </div>
     </div>
   );
