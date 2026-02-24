@@ -625,7 +625,7 @@ export default function UploadTab({ type }: UploadTabProps) {
           {/* Year and Month Selection */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="group">
-              <label className="block text-xs sm:text-sm font-normal text-white mb-2 transition-colors duration-300 uppercase tracking-wider">
+              <label className="block text-sm font-normal text-gray-300 mb-3">
                 📅 Select Year
               </label>
               <select
@@ -640,7 +640,7 @@ export default function UploadTab({ type }: UploadTabProps) {
             </div>
 
             <div className="group">
-              <label className="block text-xs sm:text-sm font-normal text-white mb-2 transition-colors duration-300 uppercase tracking-wider">
+              <label className="block text-sm font-normal text-gray-300 mb-3">
                 📆 Select Month
               </label>
               <select
@@ -661,7 +661,7 @@ export default function UploadTab({ type }: UploadTabProps) {
 
           {/* File Upload */}
           <div>
-            <label className="block text-xs sm:text-sm font-normal text-white mb-3 transition-colors duration-300 uppercase tracking-wider">
+            <label className="block text-sm font-normal text-gray-300 mb-3">
               📂 Upload CSV/Excel File
             </label>
             <div className="border-2 border-dashed border-green-600 rounded-xl p-7 text-center hover:border-green-500 hover:bg-slate-700 transition-all duration-300 cursor-pointer group relative overflow-hidden bg-slate-800">
