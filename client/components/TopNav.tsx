@@ -48,8 +48,8 @@ export default function TopNav() {
   return (
     <header className={`w-full transition-all duration-300 shadow-lg ${
       isDark
-        ? "bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white border-b-2 border-slate-700"
-        : "bg-gradient-to-r from-white via-blue-50/30 to-white text-slate-900 border-b-2 border-slate-200"
+        ? "bg-slate-900 text-white border-b-2 border-slate-700"
+        : "bg-white text-slate-900 border-b-2 border-slate-200"
     }`}>
       <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
         {/* Logo */}

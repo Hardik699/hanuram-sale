@@ -606,7 +606,7 @@ export default function UploadTab({ type }: UploadTabProps) {
       {/* Upload Section - Modern Card Design */}
       <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border-2 border-slate-900 dark:border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-3xl hover:scale-[1.01]">
         {/* Header with Blue Background */}
-        <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600 p-8 sm:p-10 relative overflow-hidden">
+        <div className="bg-blue-600 p-8 sm:p-10 relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl animate-pulse"></div>
           </div>
@@ -688,9 +688,9 @@ export default function UploadTab({ type }: UploadTabProps) {
 
           {/* File Info - Modern Card */}
           {fileData && (
-            <div className="bg-blue-50 dark:bg-blue-900/30 border-2 border-blue-600 rounded-xl p-4 transition-colors duration-300">
-              <p className="text-sm text-slate-800 dark:text-slate-100 transition-colors duration-300">
-                <span className="font-bold text-orange-600 dark:text-orange-400">✓ File loaded:</span> <span className="font-semibold text-blue-600 dark:text-blue-400">{fileData.rows}</span> rows, <span className="font-semibold text-blue-600 dark:text-blue-400">{fileData.columns}</span> columns
+            <div className="bg-blue-50 dark:bg-blue-900/30 border-2 border-blue-600 rounded-2xl p-4 transition-colors duration-300 hover:shadow-lg">
+              <p className="text-sm text-slate-800 dark:text-slate-100 transition-colors duration-300 font-semibold">
+                <span className="text-orange-600 dark:text-orange-400">✓ File loaded:</span> <span className="text-blue-700 dark:text-blue-300">{fileData.rows}</span> rows, <span className="text-blue-700 dark:text-blue-300">{fileData.columns}</span> columns
               </p>
             </div>
           )}
@@ -698,7 +698,7 @@ export default function UploadTab({ type }: UploadTabProps) {
           {/* Validation Results */}
           {validationResult && validationResult.invalidCount > 0 && (
             <div className="space-y-4">
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 border-2 border-orange-600 rounded-xl transition-colors duration-300">
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 border-2 border-orange-600 rounded-2xl transition-colors duration-300">
                 <div className="flex gap-3">
                   <AlertCircle className="w-6 h-6 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
                   <div>
@@ -714,7 +714,7 @@ export default function UploadTab({ type }: UploadTabProps) {
 
               {/* Invalid Rows List */}
               {validationResult.invalidRows.length > 0 && (
-                <div className="border-2 border-slate-900 dark:border-slate-700 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-700/50 transition-colors duration-300">
+                <div className="border-2 border-slate-900 dark:border-slate-700 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-700/50 transition-colors duration-300">
                   <div className="bg-slate-900 dark:bg-slate-900 px-4 py-4 border-b-2 border-slate-900 dark:border-slate-800">
                     <p className="text-sm font-bold text-white">⚠️ Invalid Rows to be Removed</p>
                   </div>
@@ -741,7 +741,7 @@ export default function UploadTab({ type }: UploadTabProps) {
 
           {/* Messages */}
           {message && (
-            <div className={`p-4 rounded-xl flex gap-3 border-2 transition-colors duration-300 ${
+            <div className={`p-4 rounded-2xl flex gap-3 border-2 transition-colors duration-300 ${
               message.type === "success" ? "bg-blue-50 dark:bg-blue-900/30 border-blue-600" :
               message.type === "error" ? "bg-orange-50 dark:bg-orange-900/30 border-orange-600" :
               "bg-orange-50 dark:bg-orange-900/30 border-orange-600"
@@ -763,7 +763,7 @@ export default function UploadTab({ type }: UploadTabProps) {
           <button
             onClick={handleUpload}
             disabled={isLoading || !fileData || !selectedMonth}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-4 sm:py-5 rounded-2xl font-black text-lg hover:shadow-3xl hover:shadow-blue-500/60 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 uppercase tracking-widest relative overflow-hidden group"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 sm:py-5 rounded-2xl font-black text-lg hover:shadow-3xl hover:shadow-blue-500/60 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 uppercase tracking-widest relative overflow-hidden group"
           >
             <div className="absolute inset-0 bg-white/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
             <div className="relative flex items-center justify-center gap-2">
@@ -785,7 +785,7 @@ export default function UploadTab({ type }: UploadTabProps) {
 
       {/* Months Status - Modern Grid Card */}
       <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border-2 border-slate-900 dark:border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-3xl">
-        <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600 p-8 sm:p-10 relative overflow-hidden">
+        <div className="bg-blue-600 p-8 sm:p-10 relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse"></div>
           </div>
@@ -807,12 +807,12 @@ export default function UploadTab({ type }: UploadTabProps) {
                   key={month}
                   className={`relative group rounded-2xl p-5 sm:p-6 border-2 transition-all duration-300 cursor-default overflow-hidden ${
                     isUploaded
-                      ? "bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/40 dark:to-blue-800/20 border-blue-500 hover:shadow-2xl hover:shadow-blue-400/50 hover:scale-110 dark:border-blue-600"
-                      : "bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-700 dark:to-slate-800 border-slate-300 dark:border-slate-600 hover:shadow-xl hover:shadow-slate-400/30 dark:hover:shadow-slate-900/50 hover:scale-105"
+                      ? "bg-blue-50 dark:bg-blue-900/30 border-blue-500 hover:shadow-2xl hover:shadow-blue-400/50 hover:scale-110 dark:border-blue-600"
+                      : "bg-slate-50 dark:bg-slate-700 border-slate-300 dark:border-slate-600 hover:shadow-xl hover:shadow-slate-400/30 dark:hover:shadow-slate-900/50 hover:scale-105"
                   }`}
                 >
                   {isUploaded && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-blue-300/20 to-blue-400/0 animate-pulse"></div>
+                    <div className="absolute inset-0 bg-blue-200/20 animate-pulse"></div>
                   )}
                   <div className="flex flex-col h-full relative z-10">
                     <p className="text-sm sm:text-base font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-3 transition-colors duration-300">{month}</p>
