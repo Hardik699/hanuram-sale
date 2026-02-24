@@ -606,7 +606,7 @@ export default function UploadTab({ type }: UploadTabProps) {
       {/* Upload Section */}
       <div className="overflow-hidden transition-all duration-300 border border-gray-800 rounded-xl shadow-xl shadow-blue-500/10 hover:shadow-blue-500/20 hover:border-blue-600/50 transition-all duration-300">
         {/* Header with Green Background */}
-        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-orange-500 p-5 sm:p-6 relative overflow-hidden rounded-t-xl">
+        <div className="bg-blue-400 p-5 sm:p-6 relative overflow-hidden rounded-t-xl">
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl animate-pulse"></div>
           </div>
