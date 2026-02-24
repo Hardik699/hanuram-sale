@@ -656,6 +656,9 @@ export default function UploadTab({ type }: UploadTabProps) {
             </div>
           </div>
 
+          {/* Divider */}
+          <div className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
+
           {/* File Upload */}
           <div>
             <label className="block text-sm font-bold text-green-400 mb-3 transition-colors duration-300 uppercase tracking-wider">
@@ -686,6 +689,9 @@ export default function UploadTab({ type }: UploadTabProps) {
               </button>
             </div>
           </div>
+
+          {/* Divider */}
+          <div className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
 
           {/* File Info - Modern Card */}
           {fileData && (
