@@ -15,8 +15,7 @@ export default function TopNav() {
   // Load theme from localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const shouldBeDark = savedTheme ? savedTheme === "dark" : prefersDark;
+    const shouldBeDark = savedTheme === "dark"; // Default to light theme (false)
     setIsDark(shouldBeDark);
     applyTheme(shouldBeDark);
   }, []);
