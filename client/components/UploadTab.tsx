@@ -603,215 +603,216 @@ export default function UploadTab({ type }: UploadTabProps) {
         isLoading={isDeleting}
       />
 
-      {/* Upload Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
-        <div className="flex items-center gap-3 mb-6">
-          <Upload className="w-6 h-6 text-primary" />
-          <h2 className="text-xl font-bold text-gray-900">Upload Data</h2>
+      {/* Upload Section - Modern Card Design */}
+      <div className="bg-gradient-to-br from-white via-white to-gray-50 rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        {/* Header with Gradient Background */}
+        <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 p-6 sm:p-8">
+          <div className="flex items-center gap-3 mb-1">
+            <div className="bg-white/20 p-2.5 rounded-xl backdrop-blur-sm">
+              <Upload className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">Upload Data</h2>
+          </div>
+          <p className="text-white/80 text-sm mt-2">Import your data securely and efficiently</p>
         </div>
 
-        {/* Year and Month Selection */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Select Year</label>
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            >
-              {years.map(year => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Select Month</label>
-            <select
-              value={selectedMonth || ""}
-              onChange={(e) => setSelectedMonth(e.target.value ? parseInt(e.target.value) : null)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            >
-              <option value="">-- Choose Month --</option>
-              {MONTHS.map((month, idx) => (
-                <option key={month} value={idx + 1}>{month}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* File Upload */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Upload CSV/Excel File</label>
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition">
-            <input
-              type="file"
-              accept=".csv,.xlsx,.xls"
-              onChange={handleFileUpload}
-              className="hidden"
-              id="file-input"
-            />
-            <label htmlFor="file-input" className="cursor-pointer">
-              <FileUp className="w-10 h-10 text-gray-400 mx-auto mb-2" />
-              <p className="text-gray-700 font-medium">Click to upload or drag & drop</p>
-              <p className="text-gray-500 text-sm">CSV or Excel files</p>
-            </label>
-          </div>
-          <div className="mt-4">
-            <button
-              onClick={downloadDemoData}
-              className="w-full px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition"
-            >
-              Download Demo File
-            </button>
-          </div>
-        </div>
-
-        {/* File Info */}
-        {fileData && (
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-gray-700">
-              <span className="font-semibold">File loaded:</span> {fileData.rows} rows, {fileData.columns} columns
-            </p>
-          </div>
-        )}
-
-        {/* Validation Results */}
-        {validationResult && validationResult.invalidCount > 0 && (
-          <div className="mb-6 space-y-4">
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <div className="flex gap-3">
-                <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-semibold text-yellow-800">
-                    {validationResult.invalidCount} row(s) found that don't match the database
-                  </p>
-                  <p className="text-sm text-yellow-700 mt-1">
-                    Only {validationResult.validCount} valid row(s) will be uploaded. Invalid rows are listed below.
-                  </p>
-                </div>
-              </div>
+        <div className="p-6 sm:p-8 space-y-6">
+          {/* Year and Month Selection */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Select Year</label>
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white font-medium transition"
+              >
+                {years.map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
             </div>
 
-            {/* Invalid Rows List */}
-            {validationResult.invalidRows.length > 0 && (
-              <div className="border border-red-200 rounded-lg overflow-hidden">
-                <div className="bg-red-50 px-4 py-3 border-b border-red-200">
-                  <p className="text-sm font-semibold text-red-900">Invalid Rows to be Removed</p>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Select Month</label>
+              <select
+                value={selectedMonth || ""}
+                onChange={(e) => setSelectedMonth(e.target.value ? parseInt(e.target.value) : null)}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white font-medium transition"
+              >
+                <option value="">-- Choose Month --</option>
+                {MONTHS.map((month, idx) => (
+                  <option key={month} value={idx + 1}>{month}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* File Upload */}
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Upload CSV/Excel File</label>
+            <div className="border-2 border-dashed border-purple-300 rounded-xl p-8 text-center hover:border-purple-500 hover:bg-purple-50/30 transition-all cursor-pointer group">
+              <input
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                onChange={handleFileUpload}
+                className="hidden"
+                id="file-input"
+              />
+              <label htmlFor="file-input" className="cursor-pointer block">
+                <div className="bg-gradient-to-br from-purple-100 to-blue-100 w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                  <FileUp className="w-7 h-7 text-purple-600" />
                 </div>
-                <div className="max-h-64 overflow-y-auto">
-                  {validationResult.invalidRows.map((row: any, idx: number) => (
-                    <div key={idx} className="px-4 py-3 border-b border-red-100 last:border-b-0 hover:bg-red-50">
-                      <div className="flex items-start gap-3">
-                        <X className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                        <div className="flex-1 text-sm">
-                          <p className="font-medium text-gray-900">Row {row.rowIndex}</p>
-                          <p className="text-red-700 text-xs mt-1">{row.reason}</p>
-                          <p className="text-gray-600 text-xs mt-1 font-mono truncate">
-                            {row.data.slice(0, 3).join(" | ")}...
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <p className="text-gray-900 font-bold text-base">Click to upload or drag & drop</p>
+                <p className="text-gray-500 text-sm mt-1">CSV or Excel files up to 50MB</p>
+              </label>
+            </div>
+            <div className="mt-4">
+              <button
+                onClick={downloadDemoData}
+                className="w-full px-4 py-3 border-2 border-gray-300 text-gray-700 font-bold rounded-xl hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 hover:border-purple-300 transition-all"
+              >
+                📥 Download Demo File
+              </button>
+            </div>
+          </div>
+
+          {/* File Info - Modern Card */}
+          {fileData && (
+            <div className="bg-gradient-to-r from-cyan-50 to-blue-50 border-2 border-cyan-200 rounded-xl p-4">
+              <p className="text-sm text-gray-700">
+                <span className="font-bold text-gray-900">✓ File loaded:</span> <span className="font-semibold text-cyan-600">{fileData.rows}</span> rows, <span className="font-semibold text-cyan-600">{fileData.columns}</span> columns
+              </p>
+            </div>
+          )}
+
+          {/* Validation Results */}
+          {validationResult && validationResult.invalidCount > 0 && (
+            <div className="space-y-4">
+              <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-xl">
+                <div className="flex gap-3">
+                  <AlertCircle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-bold text-amber-900">
+                      {validationResult.invalidCount} row(s) found that don't match the database
+                    </p>
+                    <p className="text-sm text-amber-700 mt-1">
+                      Only {validationResult.validCount} valid row(s) will be uploaded. Invalid rows are listed below.
+                    </p>
+                  </div>
                 </div>
               </div>
-            )}
-          </div>
-        )}
 
-        {/* Messages */}
-        {message && (
-          <div className={`mb-6 p-4 rounded-lg flex gap-3 ${
-            message.type === "success" ? "bg-green-50 border border-green-200" :
-            message.type === "error" ? "bg-red-50 border border-red-200" :
-            "bg-yellow-50 border border-yellow-200"
-          }`}>
-            {message.type === "success" && <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />}
-            {message.type === "error" && <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />}
-            {message.type === "warning" && <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />}
-            <p className={`text-sm ${
-              message.type === "success" ? "text-green-700" :
-              message.type === "error" ? "text-red-700" :
-              "text-yellow-700"
+              {/* Invalid Rows List */}
+              {validationResult.invalidRows.length > 0 && (
+                <div className="border-2 border-red-200 rounded-xl overflow-hidden">
+                  <div className="bg-gradient-to-r from-red-50 to-pink-50 px-4 py-4 border-b-2 border-red-200">
+                    <p className="text-sm font-bold text-red-900">⚠️ Invalid Rows to be Removed</p>
+                  </div>
+                  <div className="max-h-64 overflow-y-auto">
+                    {validationResult.invalidRows.map((row: any, idx: number) => (
+                      <div key={idx} className="px-4 py-3 border-b border-red-100 last:border-b-0 hover:bg-red-50/50 transition">
+                        <div className="flex items-start gap-3">
+                          <X className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5 font-bold" />
+                          <div className="flex-1 text-sm">
+                            <p className="font-bold text-gray-900">Row {row.rowIndex}</p>
+                            <p className="text-red-700 text-xs mt-1 font-medium">{row.reason}</p>
+                            <p className="text-gray-600 text-xs mt-1 font-mono truncate bg-gray-100 p-1.5 rounded mt-2">
+                              {row.data.slice(0, 3).join(" | ")}...
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Messages */}
+          {message && (
+            <div className={`p-4 rounded-xl flex gap-3 border-2 ${
+              message.type === "success" ? "bg-gradient-to-r from-emerald-50 to-green-50 border-green-300" :
+              message.type === "error" ? "bg-gradient-to-r from-red-50 to-pink-50 border-red-300" :
+              "bg-gradient-to-r from-amber-50 to-orange-50 border-amber-300"
             }`}>
-              {message.text}
-            </p>
-          </div>
-        )}
+              {message.type === "success" && <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />}
+              {message.type === "error" && <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />}
+              {message.type === "warning" && <AlertCircle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />}
+              <p className={`text-sm font-medium ${
+                message.type === "success" ? "text-green-800" :
+                message.type === "error" ? "text-red-800" :
+                "text-amber-800"
+              }`}>
+                {message.text}
+              </p>
+            </div>
+          )}
 
-        {/* Upload Button */}
-        <button
-          onClick={handleUpload}
-          disabled={isLoading || !fileData || !selectedMonth}
-          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-        >
-          {isLoading ? "Uploading..." : "Upload Data"}
-        </button>
+          {/* Upload Button */}
+          <button
+            onClick={handleUpload}
+            disabled={isLoading || !fileData || !selectedMonth}
+            className="w-full bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 uppercase tracking-wide"
+          >
+            {isLoading ? "⏳ Uploading..." : "🚀 Upload Data"}
+          </button>
+        </div>
       </div>
 
-      {/* Months Status Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-6 sm:p-8 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">Upload Status</h2>
-          <p className="text-gray-500 text-sm mt-1">Status for {selectedYear}</p>
+      {/* Months Status - Modern Grid Card */}
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div className="bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 p-6 sm:p-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">Upload Status</h2>
+          <p className="text-white/80 text-sm mt-2">Overview for {selectedYear}</p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Month</th>
-                <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Status</th>
-                <th className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-semibold text-gray-700">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {MONTHS.map((month, idx) => {
-                const monthNum = idx + 1;
-                const status = getMonthStatus(monthNum);
-                const isUploaded = status === "uploaded";
+        <div className="p-6 sm:p-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            {MONTHS.map((month, idx) => {
+              const monthNum = idx + 1;
+              const status = getMonthStatus(monthNum);
+              const isUploaded = status === "uploaded";
 
-                return (
-                  <tr key={month} className="border-b border-gray-200 hover:bg-gray-50 transition">
-                    <td className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-900 font-medium">{month}</td>
-                    <td className="px-4 sm:px-6 py-3 sm:py-4">
-                      <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
-                        isUploaded
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-600"
-                      }`}>
-                        {isUploaded ? (
-                          <>
-                            <CheckCircle2 className="w-4 h-4" />
-                            Uploaded
-                          </>
-                        ) : (
-                          <>
-                            <div className="w-2 h-2 rounded-full bg-gray-400" />
-                            Pending
-                          </>
-                        )}
-                      </span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-3 sm:py-4 text-center">
-                      {isUploaded && (
-                        <button
-                          onClick={() => openDeleteDialog(monthNum)}
-                          disabled={isDeleting}
-                          className="inline-flex items-center gap-1 px-3 py-1 text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-50"
-                          title="Delete this month's data"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          <span className="text-xs sm:text-sm font-medium">Delete</span>
-                        </button>
+              return (
+                <div
+                  key={month}
+                  className={`relative group rounded-xl p-4 sm:p-5 border-2 transition-all duration-300 ${
+                    isUploaded
+                      ? "bg-gradient-to-br from-emerald-50 to-green-50 border-green-300 hover:shadow-lg hover:scale-105"
+                      : "bg-gradient-to-br from-gray-50 to-gray-100 border-gray-300 hover:shadow-md"
+                  }`}
+                >
+                  <div className="flex flex-col h-full">
+                    <p className="text-xs sm:text-sm font-bold text-gray-600 uppercase tracking-wider mb-2">{month}</p>
+                    <div className="flex items-center gap-2 mb-3 flex-grow">
+                      {isUploaded ? (
+                        <>
+                          <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div>
+                          <span className="text-xs sm:text-sm font-bold text-green-700">Uploaded</span>
+                        </>
+                      ) : (
+                        <>
+                          <div className="w-2.5 h-2.5 rounded-full bg-gray-400"></div>
+                          <span className="text-xs sm:text-sm font-bold text-gray-600">Pending</span>
+                        </>
                       )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    </div>
+                    {isUploaded && (
+                      <button
+                        onClick={() => openDeleteDialog(monthNum)}
+                        disabled={isDeleting}
+                        className="text-xs sm:text-sm text-red-600 hover:text-red-700 font-bold hover:bg-red-100 px-2 py-1.5 rounded-lg transition w-full disabled:opacity-50"
+                        title="Delete this month's data"
+                      >
+                        🗑️ Delete
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
