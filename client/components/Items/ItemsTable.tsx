@@ -164,22 +164,10 @@ export default function ItemsTable({ items }: ItemsTableProps) {
               <tr className="bg-slate-800/30 text-gray-300 text-[10px] sm:text-xs font-bold border-b border-slate-700/40">
                 {uniqueVariationValues.map((v) => (
                   <React.Fragment key={`${v}-channels`}>
-                    <th className="px-2 py-2 text-center border border-blue-500/40 mx-0.5 bg-blue-900/30 rounded text-blue-200 font-bold">
-                      <span className="hidden sm:inline">Dining</span>
-                      <span className="sm:hidden">D</span>
-                    </th>
-                    <th className="px-2 py-2 text-center border border-cyan-500/40 mx-0.5 bg-cyan-900/30 rounded text-cyan-200 font-bold">
-                      <span className="hidden sm:inline">Parcal</span>
-                      <span className="sm:hidden">P</span>
-                    </th>
-                    <th className="px-2 py-2 text-center border border-purple-500/40 mx-0.5 bg-purple-900/30 rounded text-purple-200 font-bold">
-                      <span className="hidden sm:inline">Swiggy</span>
-                      <span className="sm:hidden">S</span>
-                    </th>
-                    <th className="px-2 py-2 text-center border border-orange-500/40 mx-0.5 bg-orange-900/30 rounded text-orange-200 font-bold">
-                      <span className="hidden sm:inline">Zomato</span>
-                      <span className="sm:hidden">Z</span>
-                    </th>
+                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/30 rounded text-gray-200 font-bold">Dining</th>
+                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/30 rounded text-gray-200 font-bold">Parcal</th>
+                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/30 rounded text-gray-200 font-bold">Swiggy</th>
+                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/30 rounded text-gray-200 font-bold">Zomato</th>
                   </React.Fragment>
                 ))}
               </tr>
@@ -221,10 +209,10 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   {/* Prices */}
                   {uniqueVariationValues.map((v) => (
                     <React.Fragment key={`${item.itemId}-${v}-prices`}>
-                      <td className="px-2 py-3 text-center font-bold text-blue-100 mx-0.5 rounded border border-blue-500/30 bg-blue-900/10 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Dining")}</td>
-                      <td className="px-2 py-3 text-center font-bold text-cyan-100 mx-0.5 rounded border border-cyan-500/30 bg-cyan-900/10 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Parcal")}</td>
-                      <td className="px-2 py-3 text-center font-bold text-purple-100 mx-0.5 rounded border border-purple-500/30 bg-purple-900/10 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Swiggy")}</td>
-                      <td className="px-2 py-3 text-center font-bold text-orange-100 mx-0.5 rounded border border-orange-500/30 bg-orange-900/10 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Zomato")}</td>
+                      <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 bg-slate-700/20 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Dining")}</td>
+                      <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 bg-slate-700/20 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Parcal")}</td>
+                      <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 bg-slate-700/20 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Swiggy")}</td>
+                      <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 bg-slate-700/20 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Zomato")}</td>
                     </React.Fragment>
                   ))}
                 </tr>
@@ -300,21 +288,21 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 <div className="pt-2 border-t border-slate-700/40">
                   <p className="text-gray-400 text-xs mb-3">Pricing ({uniqueVariationValues[0]})</p>
                   <div className="grid grid-cols-4 gap-2">
-                    <div className="text-center bg-blue-900/20 rounded-lg p-2 border border-blue-500/30">
-                      <p className="text-blue-300 text-[10px] font-semibold mb-1">Dining</p>
-                      <p className="text-blue-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Dining")}</p>
+                    <div className="text-center bg-slate-700/30 rounded-lg p-2 border border-slate-600/40">
+                      <p className="text-gray-300 text-[10px] font-semibold mb-1">Dining</p>
+                      <p className="text-gray-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Dining")}</p>
                     </div>
-                    <div className="text-center bg-cyan-900/20 rounded-lg p-2 border border-cyan-500/30">
-                      <p className="text-cyan-300 text-[10px] font-semibold mb-1">Parcal</p>
-                      <p className="text-cyan-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Parcal")}</p>
+                    <div className="text-center bg-slate-700/30 rounded-lg p-2 border border-slate-600/40">
+                      <p className="text-gray-300 text-[10px] font-semibold mb-1">Parcal</p>
+                      <p className="text-gray-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Parcal")}</p>
                     </div>
-                    <div className="text-center bg-purple-900/20 rounded-lg p-2 border border-purple-500/30">
-                      <p className="text-purple-300 text-[10px] font-semibold mb-1">Swiggy</p>
-                      <p className="text-purple-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Swiggy")}</p>
+                    <div className="text-center bg-slate-700/30 rounded-lg p-2 border border-slate-600/40">
+                      <p className="text-gray-300 text-[10px] font-semibold mb-1">Swiggy</p>
+                      <p className="text-gray-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Swiggy")}</p>
                     </div>
-                    <div className="text-center bg-orange-900/20 rounded-lg p-2 border border-orange-500/30">
-                      <p className="text-orange-300 text-[10px] font-semibold mb-1">Zomato</p>
-                      <p className="text-orange-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Zomato")}</p>
+                    <div className="text-center bg-slate-700/30 rounded-lg p-2 border border-slate-600/40">
+                      <p className="text-gray-300 text-[10px] font-semibold mb-1">Zomato</p>
+                      <p className="text-gray-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Zomato")}</p>
                     </div>
                   </div>
                 </div>
