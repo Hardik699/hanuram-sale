@@ -104,66 +104,70 @@ export default function ItemsTable({ items }: ItemsTableProps) {
 
   if (items.length === 0) {
     return (
-      <div className="bg-slate-800/50 border border-slate-700 rounded-lg sm:rounded-xl p-4 sm:p-8 text-center shadow-lg shadow-blue-600/10">
-        <p className="text-gray-400 text-xs sm:text-sm font-medium">No items added yet</p>
+      <div className="bg-slate-800/40 border border-slate-700/50 rounded-xl p-8 sm:p-12 text-center shadow-md">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-14 h-14 rounded-full bg-slate-700/50 flex items-center justify-center">
+            <svg className="w-7 h-7 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+            </svg>
+          </div>
+          <p className="text-gray-300 text-sm font-medium">No items added yet</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3 sm:space-y-4">
-      {/* Responsive Table */}
-      <div className="bg-slate-800/40 backdrop-blur-sm rounded-xl border border-slate-700 overflow-hidden shadow-lg shadow-blue-600/20">
+    <div className="space-y-4">
+      {/* Desktop View - Full Table */}
+      <div className="hidden lg:block bg-slate-800/30 border border-slate-700/40 rounded-xl overflow-hidden shadow-md">
         <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
-          <table className="w-full min-w-full border-collapse">
+          <table className="w-full border-collapse">
             {/* Table Header */}
             <thead>
-              {/* Row 1: Basic Info and Variyation (merged) */}
-              <tr className="bg-gradient-to-r from-slate-700/80 to-slate-700/50 text-gray-200 text-[10px] xs:text-xs sm:text-sm font-bold border-b border-slate-700 transition-colors duration-300">
-                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 sticky left-0 z-30 bg-slate-700/80 transition-colors duration-300">
+              {/* Row 1: Basic Info and Variation */}
+              <tr className="bg-slate-900/60 text-gray-100 text-xs sm:text-sm font-bold border-b border-slate-700/40">
+                <th rowSpan={3} className="px-3 sm:px-4 py-3 text-center border-r border-slate-700/40 sticky left-0 z-30 bg-slate-900/70 w-12">
                   <input
                     type="checkbox"
-                    checked={
-                      paginatedItems.length > 0 &&
-                      selectedRows.size === paginatedItems.length
-                    }
+                    checked={paginatedItems.length > 0 && selectedRows.size === paginatedItems.length}
                     onChange={toggleSelectAll}
-                    className="w-3.5 h-3.5 xs:w-4 xs:h-4 cursor-pointer accent-blue-600"
+                    className="w-4 h-4 cursor-pointer accent-blue-500 rounded"
                   />
                 </th>
-                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r-2 border-blue-600/60 sticky left-8 xs:left-10 sm:left-12 z-30 bg-slate-700/80 transition-colors duration-300 min-w-[120px] xs:min-w-[140px] sm:min-w-[150px]">
+                <th rowSpan={3} className="px-3 sm:px-4 py-3 text-left border-r border-slate-700/40 sticky left-12 z-30 bg-slate-900/70 min-w-[140px]">
                   Item Name
                 </th>
-                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r-2 border-blue-600/60 bg-slate-700/80 transition-colors duration-300 hidden xs:table-cell">
+                <th rowSpan={3} className="px-3 sm:px-4 py-3 text-center border-r border-slate-700/40 bg-slate-900/60">
                   Group
                 </th>
-                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r-2 border-blue-600/60 bg-slate-700/80 transition-colors duration-300 hidden sm:table-cell">
+                <th rowSpan={3} className="px-3 sm:px-4 py-3 text-center border-r border-slate-700/40 bg-slate-900/60">
                   Category
                 </th>
                 {uniqueVariationValues.length > 0 && (
-                  <th colSpan={uniqueVariationValues.length * 4} className="px-4 xs:px-6 sm:px-8 py-3 xs:py-4 sm:py-5 text-center bg-gradient-to-r from-blue-900/40 to-blue-800/20 border border-blue-600/50 rounded-t-xl transition-colors duration-300 uppercase tracking-widest font-bold text-xs sm:text-sm lg:text-base text-blue-200 shadow-lg shadow-blue-600/20">
-                    📊 Variations
+                  <th colSpan={uniqueVariationValues.length * 4} className="px-4 py-3 text-center bg-blue-900/30 border-b border-blue-500/20 font-bold text-blue-100">
+                    Pricing
                   </th>
                 )}
               </tr>
 
-              {/* Row 2: Variation Values (e.g., 250 Gms, 500 Gms) */}
-              <tr className="bg-transparent text-gray-200 text-[8px] xs:text-[9px] sm:text-xs font-bold uppercase tracking-wider transition-colors duration-300 px-2 xs:px-3 sm:px-4 py-2">
-                {uniqueVariationValues.map((v, idx) => (
-                  <th key={v} colSpan={4} className={`px-2 xs:px-3 sm:px-4 py-2 xs:py-3 sm:py-4 text-center bg-gradient-to-b from-blue-900/50 to-blue-900/30 border border-blue-600/60 rounded-lg transition-colors duration-300 mx-1 shadow-lg shadow-blue-600/20 hover:bg-blue-900/60 ${idx < uniqueVariationValues.length - 1 ? '' : ''}`}>
-                    <span className="text-blue-200">💾 {v}</span>
+              {/* Row 2: Variation Values */}
+              <tr className="bg-slate-800/40 text-gray-100 text-xs font-bold border-b border-slate-700/40">
+                {uniqueVariationValues.map((v) => (
+                  <th key={v} colSpan={4} className="px-2 sm:px-3 py-2.5 text-center bg-slate-700/30 border border-slate-600/40 rounded mx-0.5 text-gray-200 text-[11px]">
+                    {v}
                   </th>
                 ))}
               </tr>
 
-              {/* Row 3: Channels (Dining, parcal, Swiggy, zomato) */}
-              <tr className="bg-transparent text-gray-300 text-[7px] xs:text-[8px] sm:text-[9px] font-bold uppercase tracking-tighter transition-colors duration-300">
-                {uniqueVariationValues.map((v, idx) => (
+              {/* Row 3: Channels */}
+              <tr className="bg-slate-800/30 text-gray-300 text-[10px] sm:text-xs font-bold border-b border-slate-700/40">
+                {uniqueVariationValues.map((v) => (
                   <React.Fragment key={`${v}-channels`}>
-                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1.5 xs:py-2 sm:py-2.5 text-center border border-blue-600/40 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px] mx-0.5 rounded-lg bg-blue-900/20">Dining</th>
-                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1.5 xs:py-2 sm:py-2.5 text-center border border-blue-600/40 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px] mx-0.5 rounded-lg bg-blue-900/20">Parcal</th>
-                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1.5 xs:py-2 sm:py-2.5 text-center border border-blue-600/40 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px] mx-0.5 rounded-lg bg-blue-900/20">Swiggy</th>
-                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1.5 xs:py-2 sm:py-2.5 text-center border border-blue-600/40 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px] mx-0.5 rounded-lg bg-blue-900/20">Zomato</th>
+                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/30 rounded text-gray-200 font-bold">Dining</th>
+                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/30 rounded text-gray-200 font-bold">Parcal</th>
+                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/30 rounded text-gray-200 font-bold">Swiggy</th>
+                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/30 rounded text-gray-200 font-bold">Zomato</th>
                   </React.Fragment>
                 ))}
               </tr>
@@ -175,38 +179,40 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 <tr
                   key={item.itemId}
                   onClick={() => navigate(`/items/${item.itemId}`)}
-                  className={`border-b border-slate-700 transition-colors duration-300 cursor-pointer text-[8px] xs:text-[9px] sm:text-xs whitespace-nowrap ${
-                    selectedRows.has(item.itemId) ? "bg-blue-600/20" : "bg-slate-800/50 hover:bg-slate-700/50"
+                  className={`border-b border-slate-700/30 cursor-pointer text-xs transition-all duration-200 group ${
+                    selectedRows.has(item.itemId) ? "bg-blue-600/15 shadow-md shadow-blue-500/20" : "bg-slate-800/20 hover:bg-slate-800/50 hover:shadow-lg hover:shadow-slate-900/50 hover:border-slate-700/50"
                   }`}
                 >
-                  {/* Checkbox - Sticky */}
-                  <td className={`px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 sticky left-0 z-10 transition-colors duration-300 ${selectedRows.has(item.itemId) ? "bg-blue-600/20" : "bg-slate-800/50"}`} onClick={(e) => e.stopPropagation()}>
+                  {/* Checkbox */}
+                  <td className={`px-3 sm:px-4 py-3 text-center border-r border-slate-700/40 sticky left-0 z-10 transition-colors ${selectedRows.has(item.itemId) ? "bg-blue-600/15" : "bg-slate-800/20 group-hover:bg-slate-800/50"}`} onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selectedRows.has(item.itemId)}
                       onChange={() => toggleRowSelection(item.itemId)}
-                      className="w-3.5 h-3.5 xs:w-4 xs:h-4 accent-blue-500"
+                      className="w-4 h-4 accent-blue-500 rounded cursor-pointer transition-transform hover:scale-110"
                     />
                   </td>
 
-                  {/* Basic Info - Sticky Item Name */}
-                  <td className={`px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-white font-bold xs:font-black sticky left-8 xs:left-10 sm:left-12 z-10 border-r border-slate-700 min-w-[120px] xs:min-w-[140px] sm:min-w-[150px] first-letter:capitalize transition-colors duration-300 ${selectedRows.has(item.itemId) ? "bg-blue-600/20" : "bg-slate-800/50"}`}>
-                    {item.itemName}
+                  {/* Item Name */}
+                  <td className={`px-3 sm:px-4 py-3 text-white font-semibold sticky left-12 z-10 border-r border-slate-700/40 transition-colors ${selectedRows.has(item.itemId) ? "bg-blue-600/15" : "bg-slate-800/20 group-hover:bg-slate-800/50"}`}>
+                    <span className="truncate block">{item.itemName}</span>
                   </td>
-                  <td className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-gray-300 border-r border-slate-700 text-center font-bold hidden xs:table-cell transition-colors duration-300">
+
+                  <td className="px-3 sm:px-4 py-3 text-gray-300 text-center border-r border-slate-700/40 text-xs">
                     {item.group}
                   </td>
-                  <td className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-gray-300 border-r border-slate-700 text-center font-bold hidden sm:table-cell transition-colors duration-300">
+
+                  <td className="px-3 sm:px-4 py-3 text-gray-300 text-center border-r border-slate-700/40 text-xs">
                     {item.category}
                   </td>
 
-                  {/* Variation Prices */}
-                  {uniqueVariationValues.map((v, idx) => (
+                  {/* Prices */}
+                  {uniqueVariationValues.map((v) => (
                     <React.Fragment key={`${item.itemId}-${v}-prices`}>
-                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-semibold text-gray-300 mx-0.5 bg-slate-700/30">{getPrice(item, v, "Dining")}</td>
-                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-semibold text-gray-300 mx-0.5 bg-slate-700/30">{getPrice(item, v, "Parcal")}</td>
-                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-bold text-blue-400 mx-0.5 bg-slate-700/30">{getPrice(item, v, "Swiggy")}</td>
-                      <td className={`px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center font-bold text-orange-400 mx-0.5 bg-slate-700/30 border-r border-slate-700`}>{getPrice(item, v, "Zomato")}</td>
+                      <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 bg-slate-700/20 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Dining")}</td>
+                      <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 bg-slate-700/20 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Parcal")}</td>
+                      <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 bg-slate-700/20 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Swiggy")}</td>
+                      <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 bg-slate-700/20 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Zomato")}</td>
                     </React.Fragment>
                   ))}
                 </tr>
@@ -214,77 +220,154 @@ export default function ItemsTable({ items }: ItemsTableProps) {
             </tbody>
           </table>
         </div>
+      </div>
 
-        {/* Footer with Pagination */}
-        <div className="px-3 xs:px-4 sm:px-6 py-3 xs:py-4 border-t border-slate-700 flex flex-col gap-3 xs:gap-4 bg-slate-800/30 transition-colors duration-300">
-          {/* Info Row */}
-          <div className="flex items-center justify-between gap-2 flex-wrap">
-            <div className="text-[10px] xs:text-xs sm:text-sm text-gray-400 transition-colors duration-300">
-              {selectedRows.size > 0 && (
-                <span className="font-medium text-blue-300">{selectedRows.size} selected · </span>
+      {/* Tablet View - Simplified */}
+      <div className="hidden md:lg:block lg:hidden bg-slate-800/30 border border-slate-700/40 rounded-xl overflow-hidden shadow-md">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-slate-900/60 text-gray-100 text-xs font-bold border-b border-slate-700/40">
+                <th className="px-3 py-3 text-left border-r border-slate-700/40">Item</th>
+                <th className="px-3 py-3 text-center border-r border-slate-700/40">Group</th>
+                <th className="px-3 py-3 text-center">Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedItems.map((item) => (
+                <tr
+                  key={item.itemId}
+                  onClick={() => navigate(`/items/${item.itemId}`)}
+                  className="border-b border-slate-700/30 cursor-pointer bg-slate-800/20 hover:bg-slate-800/50 hover:shadow-md hover:shadow-slate-900/40 transition-all duration-200"
+                >
+                  <td className="px-3 py-4 text-white font-semibold text-sm truncate">{item.itemName}</td>
+                  <td className="px-3 py-4 text-gray-300 text-center text-xs">{item.group}</td>
+                  <td className="px-3 py-4 text-gray-300 text-center text-xs">{item.category}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Mobile View - Card Layout */}
+      <div className="md:hidden space-y-3">
+        {paginatedItems.map((item) => (
+          <div
+            key={item.itemId}
+            onClick={() => navigate(`/items/${item.itemId}`)}
+            className="bg-slate-800/30 border border-slate-700/40 rounded-lg p-4 cursor-pointer hover:bg-slate-800/60 hover:border-slate-700/60 hover:shadow-lg hover:shadow-slate-900/40 transition-all duration-200 group"
+          >
+            <div className="space-y-3">
+              {/* Item Name */}
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="text-white font-semibold text-sm flex-1 line-clamp-2">{item.itemName}</h3>
+                <input
+                  type="checkbox"
+                  checked={selectedRows.has(item.itemId)}
+                  onChange={() => toggleRowSelection(item.itemId)}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-4 h-4 accent-blue-500 rounded cursor-pointer flex-shrink-0"
+                />
+              </div>
+
+              {/* Details Grid */}
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <p className="text-gray-400">Group</p>
+                  <p className="text-gray-200 font-medium">{item.group}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400">Category</p>
+                  <p className="text-gray-200 font-medium">{item.category}</p>
+                </div>
+              </div>
+
+              {/* Pricing Preview - First variation only */}
+              {uniqueVariationValues.length > 0 && (
+                <div className="pt-2 border-t border-slate-700/40">
+                  <p className="text-gray-400 text-xs mb-3">Pricing ({uniqueVariationValues[0]})</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    <div className="text-center bg-slate-700/30 rounded-lg p-2 border border-slate-600/40">
+                      <p className="text-gray-300 text-[10px] font-semibold mb-1">Dining</p>
+                      <p className="text-gray-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Dining")}</p>
+                    </div>
+                    <div className="text-center bg-slate-700/30 rounded-lg p-2 border border-slate-600/40">
+                      <p className="text-gray-300 text-[10px] font-semibold mb-1">Parcal</p>
+                      <p className="text-gray-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Parcal")}</p>
+                    </div>
+                    <div className="text-center bg-slate-700/30 rounded-lg p-2 border border-slate-600/40">
+                      <p className="text-gray-300 text-[10px] font-semibold mb-1">Swiggy</p>
+                      <p className="text-gray-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Swiggy")}</p>
+                    </div>
+                    <div className="text-center bg-slate-700/30 rounded-lg p-2 border border-slate-600/40">
+                      <p className="text-gray-300 text-[10px] font-semibold mb-1">Zomato</p>
+                      <p className="text-gray-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Zomato")}</p>
+                    </div>
+                  </div>
+                </div>
               )}
-              <span className="hidden xs:inline">Showing {startIdx + 1} to{" "}</span>
-              {Math.min(startIdx + itemsPerPage, items.length)}<span className="hidden xs:inline"> of {items.length}</span>
             </div>
+          </div>
+        ))}
+      </div>
 
-            <div className="flex items-center gap-1.5 xs:gap-2">
-              <span className="text-[9px] xs:text-xs sm:text-sm text-gray-500 transition-colors duration-300">Rows:</span>
-              <select
-                value={itemsPerPage}
-                onChange={(e) => {
-                  setItemsPerPage(Number(e.target.value));
-                  setCurrentPage(0);
-                }}
-                className="text-[9px] xs:text-xs sm:text-sm border border-slate-600 rounded px-1.5 xs:px-2 py-0.5 xs:py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-700 text-white transition-colors duration-300"
+      {/* Footer - Pagination */}
+      <div className="px-4 sm:px-6 py-4 border border-slate-700/40 rounded-lg bg-slate-800/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="text-xs sm:text-sm text-gray-400">
+          Showing <span className="text-gray-100">{startIdx + 1}</span> to{" "}
+          <span className="text-gray-100">{Math.min(startIdx + itemsPerPage, items.length)}</span> of{" "}
+          <span className="text-gray-100">{items.length}</span> items
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-end">
+          <button
+            onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
+            disabled={currentPage === 0}
+            className="p-1.5 hover:bg-slate-700/50 rounded disabled:opacity-30 transition-colors text-gray-400 border border-slate-700/40"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {Array.from({ length: Math.min(totalPages, 5) }).map((_, idx) => {
+            const displayIdx = totalPages <= 5 ? idx : Math.max(0, Math.min(idx + Math.max(0, currentPage - 2), totalPages - 5)) + idx;
+            return (
+              <button
+                key={displayIdx}
+                onClick={() => setCurrentPage(displayIdx)}
+                className={`w-7 h-7 rounded text-xs font-semibold transition-colors ${
+                  currentPage === displayIdx
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-400 hover:text-gray-300 hover:bg-slate-700/40"
+                }`}
               >
-                {[5, 10, 15, 20, 30, 50].map((value) => (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+                {displayIdx + 1}
+              </button>
+            );
+          })}
 
-          {/* Pagination Controls */}
-          <div className="flex items-center justify-center gap-1 xs:gap-2">
-            <button
-              onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
-              disabled={currentPage === 0}
-              className="p-1 xs:p-1.5 sm:p-2 hover:bg-slate-700 rounded-lg disabled:opacity-50 transition-colors duration-300 text-gray-400 hover:text-gray-300"
-            >
-              <ChevronLeft className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
-            </button>
+          <button
+            onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
+            disabled={currentPage === totalPages - 1}
+            className="p-1.5 hover:bg-slate-700/50 rounded disabled:opacity-30 transition-colors text-gray-400 border border-slate-700/40"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
 
-            <div className="flex items-center gap-0.5 xs:gap-1">
-              {Array.from({ length: Math.min(totalPages, 5) }).map((_, idx) => {
-                // Show first 5 pages or adjust for current page context
-                const displayIdx = totalPages <= 5 ? idx : Math.max(0, Math.min(idx + Math.max(0, currentPage - 2), totalPages - 5)) + idx;
-
-                return (
-                  <button
-                    key={displayIdx}
-                    onClick={() => setCurrentPage(displayIdx)}
-                    className={`w-5 h-5 xs:w-6 xs:h-6 sm:w-8 sm:h-8 rounded text-[9px] xs:text-xs sm:text-sm font-medium transition-all duration-300 ${
-                      currentPage === displayIdx
-                        ? "bg-blue-600 text-white shadow-md shadow-blue-500/60"
-                        : "hover:bg-slate-700 text-gray-400 hover:text-gray-300"
-                    }`}
-                  >
-                    {displayIdx + 1}
-                  </button>
-                );
-              })}
-            </div>
-
-            <button
-              onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
-              disabled={currentPage === totalPages - 1}
-              className="p-1 xs:p-1.5 sm:p-2 hover:bg-slate-700 rounded-lg disabled:opacity-50 transition-colors duration-300 text-gray-400 hover:text-gray-300"
-            >
-              <ChevronRight className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
-            </button>
-          </div>
+          <select
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(0);
+            }}
+            className="ml-2 pl-2 border-l border-slate-600/40 text-xs bg-slate-700/40 text-gray-100 rounded px-2 py-1"
+          >
+            {[5, 10, 15, 20, 30, 50].map((value) => (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
     </div>

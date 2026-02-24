@@ -162,69 +162,77 @@ export default function Items() {
   };
 
   return (
-    <div className="flex-1 p-3 xs:p-4 sm:p-6 lg:p-8 bg-gray-950 min-h-screen transition-colors duration-300">
+    <div className="flex-1 p-4 xs:p-5 sm:p-6 lg:p-8 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 min-h-screen transition-colors duration-300">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
-        <div className="w-full sm:w-auto group cursor-default">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="bg-blue-600 p-3 rounded-lg group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-blue-600/50">
-              <span className="text-white text-xl font-bold">📦</span>
-            </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-white">
-                Items
-              </h1>
-              <p className="text-gray-400 text-xs sm:text-sm font-medium mt-1">
-                Manage your product items and variations
-              </p>
-              {loading && (
-                <p className="text-gray-500 text-xs mt-2 transition-colors duration-300">
-                  Loading items from MongoDB...
+      <div className="mb-8 sm:mb-10">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-5 sm:gap-6">
+          {/* Title Section */}
+          <div className="w-full sm:w-auto group cursor-default">
+            <div className="flex items-start sm:items-center gap-4">
+              <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-3.5 rounded-xl group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-blue-600/40 flex-shrink-0">
+                <span className="text-white text-2xl font-bold">📦</span>
+              </div>
+              <div className="flex-1">
+                <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight">
+                  Items
+                </h1>
+                <p className="text-gray-400 text-sm sm:text-base font-medium mt-2">
+                  Manage your product items and variations
                 </p>
-              )}
+                {loading && (
+                  <p className="text-gray-500 text-xs sm:text-sm mt-3 inline-flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                    Loading items from MongoDB...
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="flex flex-col xs:flex-row gap-2 xs:gap-3 w-full sm:w-auto">
-          {/* Search bar - Desktop */}
-          <div className="relative w-full max-w-xs hidden sm:block">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-            <input
-              type="text"
-              placeholder="Search items..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-800 text-white text-xs sm:text-sm font-medium transition-all duration-300 shadow-lg shadow-blue-600/20 hover:border-slate-500"
-            />
           </div>
 
-          {items.length > 0 && !loading && (
+          {/* Action Buttons */}
+          <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto">
+            {items.length > 0 && !loading && (
+              <button
+                onClick={handleDownload}
+                className="flex items-center justify-center gap-2 px-4 xs:px-5 sm:px-6 py-3 bg-gradient-to-r from-emerald-600/20 to-emerald-600/10 border border-emerald-600/50 text-emerald-300 hover:text-emerald-200 rounded-xl hover:from-emerald-600/30 hover:to-emerald-600/20 hover:border-emerald-500/60 font-semibold transition-all duration-300 text-xs xs:text-sm sm:text-base whitespace-nowrap shadow-lg shadow-emerald-600/20 hover:shadow-xl hover:shadow-emerald-500/30 group relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-white/10 translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+                <Download className="w-4 h-4 xs:w-4.5 xs:h-4.5 relative z-10" />
+                <span className="hidden xs:inline relative z-10">Download</span>
+              </button>
+            )}
             <button
-              onClick={handleDownload}
-              className="flex items-center justify-center gap-1.5 xs:gap-2 px-3 xs:px-4 sm:px-6 py-2.5 bg-blue-600/20 border border-blue-600/60 text-blue-300 rounded-lg hover:bg-blue-600/30 hover:border-blue-500 font-semibold transition-all duration-300 text-xs xs:text-sm sm:text-base whitespace-nowrap shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-500/40 group relative overflow-hidden"
+              onClick={() => setShowForm(true)}
+              disabled={loading}
+              className="flex items-center justify-center gap-2 px-4 xs:px-5 sm:px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-all duration-300 text-xs xs:text-sm sm:text-base whitespace-nowrap shadow-lg shadow-blue-600/40 hover:shadow-xl hover:shadow-blue-500/60 hover:scale-[1.02] group relative overflow-hidden"
             >
-              <div className="absolute inset-0 bg-white/10 translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-              <Download className="w-3.5 h-3.5 xs:w-4 xs:h-4 relative z-10" />
-              <span className="hidden xs:inline relative z-10">Download</span>
+              <div className="absolute inset-0 bg-white/15 translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+              <Plus className="w-4 h-4 xs:w-4.5 xs:h-4.5 relative z-10" />
+              <span className="hidden xs:inline relative z-10">Add Item</span>
+              <span className="xs:hidden relative z-10">Add</span>
             </button>
-          )}
-          <button
-            onClick={() => setShowForm(true)}
-            disabled={loading}
-            className="flex items-center justify-center gap-1.5 xs:gap-2 px-3 xs:px-4 sm:px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg disabled:opacity-50 font-semibold transition-all duration-300 text-xs xs:text-sm sm:text-base whitespace-nowrap shadow-lg shadow-blue-600/50 hover:shadow-xl hover:shadow-blue-500/80 hover:scale-[1.02] group relative overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-white/10 translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-            <Plus className="w-3.5 h-3.5 xs:w-4 xs:h-4 relative z-10" />
-            <span className="hidden xs:inline relative z-10">Add Item</span>
-            <span className="xs:hidden relative z-10">Add</span>
-          </button>
+          </div>
         </div>
       </div>
 
+      {/* Search bar - Desktop */}
+      {!loading && (
+        <div className="mb-6 relative w-full max-w-md hidden sm:block">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-gray-500" />
+          <input
+            type="text"
+            placeholder="Search items by name, ID, group, or category..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-12 pr-4 py-3 border border-slate-700/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-800/50 text-white text-sm font-medium transition-all duration-300 shadow-lg shadow-blue-600/10 hover:border-slate-600/80 hover:bg-slate-800/70 placeholder:text-gray-500"
+          />
+        </div>
+      )}
+
       {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-blue-600/30">
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-lg z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-slate-900/80 border border-slate-700/50 backdrop-blur-xl">
             <ItemForm
               onSuccess={handleAddItem}
               onClose={() => setShowForm(false)}
@@ -234,21 +242,45 @@ export default function Items() {
       )}
 
       {/* Search bar - Mobile only */}
-      <div className="mb-4 sm:hidden relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-        <input
-          type="text"
-          placeholder="Search items..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-800 text-white text-sm font-medium transition-all duration-300 shadow-lg shadow-blue-600/20 hover:border-slate-500"
-        />
-      </div>
+      {!loading && (
+        <div className="mb-5 sm:hidden relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+          <input
+            type="text"
+            placeholder="Search items..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-11 pr-4 py-3 border border-slate-700/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-800/50 text-white text-sm font-medium transition-all duration-300 shadow-lg shadow-blue-600/10 hover:border-slate-600/80 hover:bg-slate-800/70 placeholder:text-gray-500"
+          />
+        </div>
+      )}
 
       {/* Items Table */}
       {loading ? (
-        <div className="bg-slate-800/50 border border-slate-700 rounded-lg sm:rounded-xl p-4 sm:p-8 text-center shadow-lg shadow-blue-600/10">
-          <p className="text-gray-400 text-xs sm:text-sm font-medium">Loading items from MongoDB...</p>
+        <div className="flex items-center justify-center min-h-[400px] sm:min-h-[500px]">
+          <div className="flex flex-col items-center gap-6 sm:gap-8">
+            {/* Animated Spinner */}
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24">
+              {/* Outer ring */}
+              <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-500 border-r-blue-500 animate-spin"></div>
+              {/* Middle ring */}
+              <div className="absolute inset-3 sm:inset-4 rounded-full border-3 border-transparent border-b-blue-400 animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+              {/* Inner dot */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-blue-500 animate-pulse"></div>
+              </div>
+            </div>
+
+            {/* Loading Text */}
+            <div className="text-center space-y-2">
+              <h3 className="text-lg sm:text-xl font-bold text-white">
+                Loading Items
+              </h3>
+              <p className="text-gray-400 text-sm sm:text-base font-medium">
+                Fetching your data from MongoDB...
+              </p>
+            </div>
+          </div>
         </div>
       ) : (
         <ItemsTable items={filteredItems} />
