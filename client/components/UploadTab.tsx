@@ -604,27 +604,32 @@ export default function UploadTab({ type }: UploadTabProps) {
       />
 
       {/* Upload Section - Modern Card Design */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-900 dark:border-slate-700 overflow-hidden transition-colors duration-300">
+      <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border-2 border-slate-900 dark:border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-3xl hover:scale-[1.01]">
         {/* Header with Blue Background */}
-        <div className="bg-blue-600 p-6 sm:p-8">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="bg-white/20 p-2.5 rounded-xl backdrop-blur-sm">
-              <Upload className="w-6 h-6 text-white" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">Upload Data</h2>
+        <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600 p-8 sm:p-10 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl animate-pulse"></div>
           </div>
-          <p className="text-white/90 text-sm mt-2">Import your data securely and efficiently</p>
+          <div className="relative z-10 flex items-center gap-4 mb-2">
+            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm hover:bg-white/30 transition-colors hover:scale-110 transform duration-300">
+              <Upload className="w-7 h-7 text-white animate-bounce" style={{animationDuration: '2s'}} />
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">Upload Data</h2>
+          </div>
+          <p className="text-white/95 text-base font-medium mt-3 ml-16">📁 Import your data securely and efficiently</p>
         </div>
 
-        <div className="p-6 sm:p-8 space-y-6 transition-colors duration-300">
+        <div className="p-8 sm:p-10 space-y-8 transition-colors duration-300">
           {/* Year and Month Selection */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            <div>
-              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 uppercase tracking-wide transition-colors duration-300">Select Year</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+            <div className="group">
+              <label className="block text-base font-bold text-slate-700 dark:text-slate-300 mb-3 uppercase tracking-widest transition-colors duration-300 flex items-center gap-2">
+                <span className="text-lg">📅</span> Select Year
+              </label>
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                className="w-full px-4 py-3 border-2 border-blue-200 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-medium transition hover:border-blue-400 dark:hover:border-slate-500"
+                className="w-full px-5 py-3.5 border-2 border-blue-300 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-semibold transition-all duration-300 hover:border-blue-500 dark:hover:border-slate-500 group-hover:shadow-lg cursor-pointer"
               >
                 {years.map(year => (
                   <option key={year} value={year}>{year}</option>
@@ -632,12 +637,14 @@ export default function UploadTab({ type }: UploadTabProps) {
               </select>
             </div>
 
-            <div>
-              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 uppercase tracking-wide transition-colors duration-300">Select Month</label>
+            <div className="group">
+              <label className="block text-base font-bold text-slate-700 dark:text-slate-300 mb-3 uppercase tracking-widest transition-colors duration-300 flex items-center gap-2">
+                <span className="text-lg">📆</span> Select Month
+              </label>
               <select
                 value={selectedMonth || ""}
                 onChange={(e) => setSelectedMonth(e.target.value ? parseInt(e.target.value) : null)}
-                className="w-full px-4 py-3 border-2 border-blue-200 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-medium transition hover:border-blue-400 dark:hover:border-slate-500"
+                className="w-full px-5 py-3.5 border-2 border-blue-300 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-semibold transition-all duration-300 hover:border-blue-500 dark:hover:border-slate-500 group-hover:shadow-lg cursor-pointer"
               >
                 <option value="">-- Choose Month --</option>
                 {MONTHS.map((month, idx) => (
@@ -649,8 +656,11 @@ export default function UploadTab({ type }: UploadTabProps) {
 
           {/* File Upload */}
           <div>
-            <label className="block text-sm font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wide transition-colors duration-300">Upload CSV/Excel File</label>
-            <div className="border-2 border-dashed border-blue-600 dark:border-blue-500 rounded-xl p-8 text-center hover:border-orange-600 dark:hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/30 transition-all cursor-pointer group">
+            <label className="block text-base font-bold text-slate-900 dark:text-white mb-4 uppercase tracking-widest transition-colors duration-300 flex items-center gap-2">
+              <span className="text-xl">📂</span> Upload CSV/Excel File
+            </label>
+            <div className="border-3 border-dashed border-blue-600 dark:border-blue-500 rounded-3xl p-10 text-center hover:border-orange-600 dark:hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/20 transition-all duration-300 cursor-pointer group relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-transparent opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
               <input
                 type="file"
                 accept=".csv,.xlsx,.xls"
@@ -658,18 +668,18 @@ export default function UploadTab({ type }: UploadTabProps) {
                 className="hidden"
                 id="file-input"
               />
-              <label htmlFor="file-input" className="cursor-pointer block">
-                <div className="bg-blue-100 dark:bg-blue-900/50 w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                  <FileUp className="w-7 h-7 text-orange-600" />
+              <label htmlFor="file-input" className="cursor-pointer block relative z-10">
+                <div className="bg-gradient-to-br from-blue-100 to-orange-100 dark:from-blue-900/50 dark:to-orange-900/50 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-4 group-hover:scale-125 group-hover:rotate-6 transition-all duration-300 shadow-lg group-hover:shadow-2xl">
+                  <FileUp className="w-10 h-10 text-orange-600 group-hover:animate-bounce" />
                 </div>
-                <p className="text-slate-900 dark:text-white font-bold text-base transition-colors duration-300">Click to upload or drag & drop</p>
-                <p className="text-slate-600 dark:text-slate-400 text-sm mt-1 transition-colors duration-300">CSV or Excel files up to 50MB</p>
+                <p className="text-slate-900 dark:text-white font-black text-lg transition-colors duration-300">Click to upload or drag & drop</p>
+                <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 font-semibold transition-colors duration-300">📊 CSV or Excel files up to 50MB</p>
               </label>
             </div>
-            <div className="mt-4">
+            <div className="mt-5">
               <button
                 onClick={downloadDemoData}
-                className="w-full px-4 py-3 border-2 border-slate-900 dark:border-slate-400 text-slate-900 dark:text-white font-bold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-all"
+                className="w-full px-5 py-3.5 border-2 border-slate-900 dark:border-slate-400 text-slate-900 dark:text-white font-bold rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-300 hover:scale-105 transform hover:shadow-lg"
               >
                 📥 Download Demo File
               </button>
@@ -753,22 +763,40 @@ export default function UploadTab({ type }: UploadTabProps) {
           <button
             onClick={handleUpload}
             disabled={isLoading || !fileData || !selectedMonth}
-            className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-blue-500/50 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 uppercase tracking-wide"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-4 sm:py-5 rounded-2xl font-black text-lg hover:shadow-3xl hover:shadow-blue-500/60 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 uppercase tracking-widest relative overflow-hidden group"
           >
-            {isLoading ? "⏳ Uploading..." : "🚀 Upload Data"}
+            <div className="absolute inset-0 bg-white/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+            <div className="relative flex items-center justify-center gap-2">
+              {isLoading ? (
+                <>
+                  <span className="inline-block animate-spin">⏳</span>
+                  <span>Uploading...</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-xl group-hover:scale-125 transition-transform">🚀</span>
+                  <span>Upload Data Now</span>
+                </>
+              )}
+            </div>
           </button>
         </div>
       </div>
 
       {/* Months Status - Modern Grid Card */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-900 dark:border-slate-700 overflow-hidden transition-colors duration-300">
-        <div className="bg-blue-600 p-6 sm:p-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white">Upload Status</h2>
-          <p className="text-white/80 text-sm mt-2">Overview for {selectedYear}</p>
+      <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border-2 border-slate-900 dark:border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-3xl">
+        <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600 p-8 sm:p-10 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse"></div>
+          </div>
+          <div className="relative z-10">
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">📊 Upload Status</h2>
+            <p className="text-white/90 text-base font-semibold mt-2">Overview for {selectedYear}</p>
+          </div>
         </div>
 
-        <div className="p-6 sm:p-8">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="p-8 sm:p-10">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {MONTHS.map((month, idx) => {
               const monthNum = idx + 1;
               const status = getMonthStatus(monthNum);
@@ -777,24 +805,27 @@ export default function UploadTab({ type }: UploadTabProps) {
               return (
                 <div
                   key={month}
-                  className={`relative group rounded-xl p-4 sm:p-5 border-2 transition-all duration-300 ${
+                  className={`relative group rounded-2xl p-5 sm:p-6 border-2 transition-all duration-300 cursor-default overflow-hidden ${
                     isUploaded
-                      ? "bg-blue-50 dark:bg-blue-900/30 border-blue-600 hover:shadow-lg hover:shadow-blue-400/40 hover:scale-105"
-                      : "bg-slate-50 dark:bg-slate-700 border-slate-300 dark:border-slate-600 hover:shadow-lg hover:shadow-slate-400/30 dark:hover:shadow-slate-900/50"
+                      ? "bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/40 dark:to-blue-800/20 border-blue-500 hover:shadow-2xl hover:shadow-blue-400/50 hover:scale-110 dark:border-blue-600"
+                      : "bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-700 dark:to-slate-800 border-slate-300 dark:border-slate-600 hover:shadow-xl hover:shadow-slate-400/30 dark:hover:shadow-slate-900/50 hover:scale-105"
                   }`}
                 >
-                  <div className="flex flex-col h-full">
-                    <p className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 transition-colors duration-300">{month}</p>
-                    <div className="flex items-center gap-2 mb-3 flex-grow">
+                  {isUploaded && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-blue-300/20 to-blue-400/0 animate-pulse"></div>
+                  )}
+                  <div className="flex flex-col h-full relative z-10">
+                    <p className="text-sm sm:text-base font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-3 transition-colors duration-300">{month}</p>
+                    <div className="flex items-center gap-2.5 mb-4 flex-grow">
                       {isUploaded ? (
                         <>
-                          <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse"></div>
-                          <span className="text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-300 transition-colors duration-300">Uploaded</span>
+                          <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 animate-pulse shadow-lg shadow-blue-600/50"></div>
+                          <span className="text-sm sm:text-base font-bold text-blue-700 dark:text-blue-300 transition-colors duration-300">✓ Uploaded</span>
                         </>
                       ) : (
                         <>
-                          <div className="w-2.5 h-2.5 rounded-full bg-slate-400 dark:bg-slate-500"></div>
-                          <span className="text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-400 transition-colors duration-300">Pending</span>
+                          <div className="w-3 h-3 rounded-full bg-slate-400 dark:bg-slate-500 group-hover:animate-pulse"></div>
+                          <span className="text-sm sm:text-base font-bold text-slate-600 dark:text-slate-400 transition-colors duration-300">⏱ Pending</span>
                         </>
                       )}
                     </div>
@@ -802,10 +833,10 @@ export default function UploadTab({ type }: UploadTabProps) {
                       <button
                         onClick={() => openDeleteDialog(monthNum)}
                         disabled={isDeleting}
-                        className="text-xs sm:text-sm text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 font-bold hover:bg-orange-100 dark:hover:bg-orange-900/30 px-2 py-1.5 rounded-lg transition w-full disabled:opacity-50 transition-colors duration-300"
+                        className="text-sm font-bold text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/50 px-3 py-2 rounded-xl transition-all duration-300 w-full disabled:opacity-50 group-hover:scale-110 transform"
                         title="Delete this month's data"
                       >
-                        🗑️ Delete
+                        🗑️ Delete Data
                       </button>
                     )}
                   </div>
