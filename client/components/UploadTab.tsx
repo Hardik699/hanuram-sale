@@ -792,13 +792,13 @@ export default function UploadTab({ type }: UploadTabProps) {
 
       {/* Months Status */}
       <div className="overflow-hidden transition-all duration-300 border border-gray-800 rounded-xl shadow-xl shadow-green-500/10 hover:shadow-green-500/20 hover:border-green-600/50 transition-all duration-300">
-        <div className="bg-gradient-to-r from-green-500 via-green-600 to-green-700 p-5 sm:p-6 relative overflow-hidden rounded-t-xl">
+        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-orange-500 p-5 sm:p-6 relative overflow-hidden rounded-t-xl">
           <div className="absolute inset-0 opacity-5">
             <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse"></div>
           </div>
           <div className="relative z-10">
-            <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">📊 Upload Status</h2>
-            <p className="text-white/80 text-xs mt-1 font-medium italic">Overview for {selectedYear}</p>
+            <h2 className="text-lg sm:text-xl font-semibold text-white tracking-tight">📊 Upload Status</h2>
+            <p className="text-white/80 text-xs mt-1 font-normal">Overview for {selectedYear}</p>
           </div>
         </div>
 
@@ -814,22 +814,26 @@ export default function UploadTab({ type }: UploadTabProps) {
                   key={month}
                   className={`relative group rounded-lg p-3 sm:p-4 border transition-all duration-300 cursor-default overflow-hidden ${
                     isUploaded
-                      ? "bg-green-900/20 border-green-600 hover:shadow-md hover:shadow-green-500/40 hover:scale-105 shadow-md"
+                      ? idx % 3 === 0 ? "bg-blue-900/20 border-blue-600 hover:shadow-md hover:shadow-blue-500/40 hover:scale-105 shadow-md" : idx % 3 === 1 ? "bg-orange-900/20 border-orange-600 hover:shadow-md hover:shadow-orange-500/40 hover:scale-105 shadow-md" : "bg-green-900/20 border-green-600 hover:shadow-md hover:shadow-green-500/40 hover:scale-105 shadow-md"
                       : "bg-slate-700/50 border-slate-700 hover:shadow-md hover:shadow-slate-600/20 hover:scale-105 shadow-md"
                   }`}
                 >
                   <div className="flex flex-col h-full relative z-10">
-                    <p className="text-xs sm:text-sm font-extrabold text-green-400 uppercase tracking-widest mb-2 transition-colors duration-300 letter-spacing-wide">{month}</p>
+                    <p className="text-xs sm:text-sm font-normal text-white uppercase tracking-wider mb-2 transition-colors duration-300">{month}</p>
                     <div className="flex items-center gap-2 mb-3 flex-grow">
                       {isUploaded ? (
                         <>
-                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-md shadow-green-500/60"></div>
-                          <span className="text-xs sm:text-sm font-bold text-green-300 transition-colors duration-300">Uploaded</span>
+                          <div className={`w-2 h-2 rounded-full animate-pulse shadow-md ${
+                            idx % 3 === 0 ? "bg-blue-500 shadow-blue-500/60" : idx % 3 === 1 ? "bg-orange-500 shadow-orange-500/60" : "bg-green-500 shadow-green-500/60"
+                          }`}></div>
+                          <span className={`text-xs sm:text-sm font-normal transition-colors duration-300 ${
+                            idx % 3 === 0 ? "text-blue-300" : idx % 3 === 1 ? "text-orange-300" : "text-green-300"
+                          }`}>Uploaded</span>
                         </>
                       ) : (
                         <>
                           <div className="w-2 h-2 rounded-full bg-slate-500 group-hover:animate-pulse"></div>
-                          <span className="text-xs sm:text-sm font-bold text-slate-400 transition-colors duration-300">Pending</span>
+                          <span className="text-xs sm:text-sm font-normal text-slate-400 transition-colors duration-300">Pending</span>
                         </>
                       )}
                     </div>
