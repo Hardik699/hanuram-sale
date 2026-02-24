@@ -119,8 +119,8 @@ export default function ItemsTable({ items }: ItemsTableProps) {
 
   return (
     <div className="space-y-4">
-      {/* Table */}
-      <div className="bg-slate-800/30 border border-slate-700/40 rounded-xl overflow-hidden shadow-md">
+      {/* Desktop View - Full Table */}
+      <div className="hidden lg:block bg-slate-800/30 border border-slate-700/40 rounded-xl overflow-hidden shadow-md">
         <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
           <table className="w-full border-collapse">
             {/* Table Header */}
@@ -138,10 +138,10 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 <th rowSpan={3} className="px-3 sm:px-4 py-3 text-left border-r border-slate-700/40 sticky left-12 z-30 bg-slate-900/70 min-w-[140px]">
                   Item Name
                 </th>
-                <th rowSpan={3} className="px-3 sm:px-4 py-3 text-center border-r border-slate-700/40 bg-slate-900/60 hidden xs:table-cell">
+                <th rowSpan={3} className="px-3 sm:px-4 py-3 text-center border-r border-slate-700/40 bg-slate-900/60">
                   Group
                 </th>
-                <th rowSpan={3} className="px-3 sm:px-4 py-3 text-center border-r border-slate-700/40 bg-slate-900/60 hidden sm:table-cell">
+                <th rowSpan={3} className="px-3 sm:px-4 py-3 text-center border-r border-slate-700/40 bg-slate-900/60">
                   Category
                 </th>
                 {uniqueVariationValues.length > 0 && (
@@ -154,20 +154,20 @@ export default function ItemsTable({ items }: ItemsTableProps) {
               {/* Row 2: Variation Values */}
               <tr className="bg-slate-800/40 text-gray-100 text-xs font-bold border-b border-slate-700/40">
                 {uniqueVariationValues.map((v) => (
-                  <th key={v} colSpan={4} className="px-2 sm:px-3 py-2.5 text-center bg-slate-700/30 border border-slate-600/40 rounded mx-0.5 text-gray-200">
+                  <th key={v} colSpan={4} className="px-2 sm:px-3 py-2.5 text-center bg-slate-700/30 border border-slate-600/40 rounded mx-0.5 text-gray-200 text-[11px]">
                     {v}
                   </th>
                 ))}
               </tr>
 
               {/* Row 3: Channels */}
-              <tr className="bg-slate-800/30 text-gray-300 text-[11px] sm:text-xs font-bold border-b border-slate-700/40">
+              <tr className="bg-slate-800/30 text-gray-300 text-[10px] sm:text-xs font-bold border-b border-slate-700/40">
                 {uniqueVariationValues.map((v) => (
                   <React.Fragment key={`${v}-channels`}>
-                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/20 rounded text-gray-300">Dining</th>
-                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/20 rounded text-gray-300">Parcal</th>
-                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/20 rounded text-gray-300">Swiggy</th>
-                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/20 rounded text-gray-300">Zomato</th>
+                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/20 rounded text-gray-300">D</th>
+                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/20 rounded text-gray-300">P</th>
+                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/20 rounded text-gray-300">S</th>
+                    <th className="px-2 py-2 text-center border border-slate-600/40 mx-0.5 bg-slate-700/20 rounded text-gray-300">Z</th>
                   </React.Fragment>
                 ))}
               </tr>
@@ -179,7 +179,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 <tr
                   key={item.itemId}
                   onClick={() => navigate(`/items/${item.itemId}`)}
-                  className={`border-b border-slate-700/30 cursor-pointer text-xs sm:text-sm transition-colors group ${
+                  className={`border-b border-slate-700/30 cursor-pointer text-xs transition-colors group ${
                     selectedRows.has(item.itemId) ? "bg-blue-600/15" : "bg-slate-800/20 hover:bg-slate-800/40"
                   }`}
                 >
@@ -198,21 +198,21 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                     <span className="truncate block">{item.itemName}</span>
                   </td>
 
-                  <td className="px-3 sm:px-4 py-3 text-gray-300 text-center border-r border-slate-700/40 hidden xs:table-cell">
+                  <td className="px-3 sm:px-4 py-3 text-gray-300 text-center border-r border-slate-700/40 text-xs">
                     {item.group}
                   </td>
 
-                  <td className="px-3 sm:px-4 py-3 text-gray-300 text-center border-r border-slate-700/40 hidden sm:table-cell">
+                  <td className="px-3 sm:px-4 py-3 text-gray-300 text-center border-r border-slate-700/40 text-xs">
                     {item.category}
                   </td>
 
                   {/* Prices */}
                   {uniqueVariationValues.map((v) => (
                     <React.Fragment key={`${item.itemId}-${v}-prices`}>
-                      <td className="px-2 py-3 text-center font-semibold text-gray-200 mx-0.5 rounded border border-slate-600/30">{getPrice(item, v, "Dining")}</td>
-                      <td className="px-2 py-3 text-center font-semibold text-gray-200 mx-0.5 rounded border border-slate-600/30">{getPrice(item, v, "Parcal")}</td>
-                      <td className="px-2 py-3 text-center font-semibold text-gray-200 mx-0.5 rounded border border-slate-600/30">{getPrice(item, v, "Swiggy")}</td>
-                      <td className="px-2 py-3 text-center font-semibold text-gray-200 mx-0.5 rounded border border-slate-600/30">{getPrice(item, v, "Zomato")}</td>
+                      <td className="px-2 py-3 text-center font-semibold text-gray-200 mx-0.5 rounded border border-slate-600/30 text-xs">{getPrice(item, v, "Dining")}</td>
+                      <td className="px-2 py-3 text-center font-semibold text-gray-200 mx-0.5 rounded border border-slate-600/30 text-xs">{getPrice(item, v, "Parcal")}</td>
+                      <td className="px-2 py-3 text-center font-semibold text-gray-200 mx-0.5 rounded border border-slate-600/30 text-xs">{getPrice(item, v, "Swiggy")}</td>
+                      <td className="px-2 py-3 text-center font-semibold text-gray-200 mx-0.5 rounded border border-slate-600/30 text-xs">{getPrice(item, v, "Zomato")}</td>
                     </React.Fragment>
                   ))}
                 </tr>
@@ -220,64 +220,154 @@ export default function ItemsTable({ items }: ItemsTableProps) {
             </tbody>
           </table>
         </div>
+      </div>
 
-        {/* Footer */}
-        <div className="px-4 sm:px-6 py-4 border-t border-slate-700/40 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-800/20">
-          <div className="text-xs sm:text-sm text-gray-400">
-            Showing <span className="text-gray-100">{startIdx + 1}</span> to{" "}
-            <span className="text-gray-100">{Math.min(startIdx + itemsPerPage, items.length)}</span> of{" "}
-            <span className="text-gray-100">{items.length}</span> items
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
-              disabled={currentPage === 0}
-              className="p-1.5 hover:bg-slate-700/50 rounded disabled:opacity-30 transition-colors text-gray-400"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-
-            {Array.from({ length: Math.min(totalPages, 5) }).map((_, idx) => {
-              const displayIdx = totalPages <= 5 ? idx : Math.max(0, Math.min(idx + Math.max(0, currentPage - 2), totalPages - 5)) + idx;
-              return (
-                <button
-                  key={displayIdx}
-                  onClick={() => setCurrentPage(displayIdx)}
-                  className={`w-7 h-7 rounded text-xs font-semibold transition-colors ${
-                    currentPage === displayIdx
-                      ? "bg-blue-600 text-white"
-                      : "text-gray-400 hover:text-gray-300 hover:bg-slate-700/40"
-                  }`}
+      {/* Tablet View - Simplified */}
+      <div className="hidden md:lg:block lg:hidden bg-slate-800/30 border border-slate-700/40 rounded-xl overflow-hidden shadow-md">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-slate-900/60 text-gray-100 text-xs font-bold border-b border-slate-700/40">
+                <th className="px-3 py-3 text-left border-r border-slate-700/40">Item</th>
+                <th className="px-3 py-3 text-center border-r border-slate-700/40">Group</th>
+                <th className="px-3 py-3 text-center">Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedItems.map((item) => (
+                <tr
+                  key={item.itemId}
+                  onClick={() => navigate(`/items/${item.itemId}`)}
+                  className="border-b border-slate-700/30 cursor-pointer bg-slate-800/20 hover:bg-slate-800/40 transition-colors"
                 >
-                  {displayIdx + 1}
-                </button>
-              );
-            })}
-
-            <button
-              onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
-              disabled={currentPage === totalPages - 1}
-              className="p-1.5 hover:bg-slate-700/50 rounded disabled:opacity-30 transition-colors text-gray-400"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-
-            <select
-              value={itemsPerPage}
-              onChange={(e) => {
-                setItemsPerPage(Number(e.target.value));
-                setCurrentPage(0);
-              }}
-              className="ml-2 pl-2 border-l border-slate-600/40 text-xs bg-slate-700/40 text-gray-100 rounded px-2 py-1"
-            >
-              {[5, 10, 15, 20, 30, 50].map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
+                  <td className="px-3 py-4 text-white font-semibold text-sm truncate">{item.itemName}</td>
+                  <td className="px-3 py-4 text-gray-300 text-center text-xs">{item.group}</td>
+                  <td className="px-3 py-4 text-gray-300 text-center text-xs">{item.category}</td>
+                </tr>
               ))}
-            </select>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Mobile View - Card Layout */}
+      <div className="md:hidden space-y-3">
+        {paginatedItems.map((item) => (
+          <div
+            key={item.itemId}
+            onClick={() => navigate(`/items/${item.itemId}`)}
+            className="bg-slate-800/30 border border-slate-700/40 rounded-lg p-4 cursor-pointer hover:bg-slate-800/50 transition-colors group"
+          >
+            <div className="space-y-3">
+              {/* Item Name */}
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="text-white font-semibold text-sm flex-1 line-clamp-2">{item.itemName}</h3>
+                <input
+                  type="checkbox"
+                  checked={selectedRows.has(item.itemId)}
+                  onChange={() => toggleRowSelection(item.itemId)}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-4 h-4 accent-blue-500 rounded cursor-pointer flex-shrink-0"
+                />
+              </div>
+
+              {/* Details Grid */}
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <p className="text-gray-400">Group</p>
+                  <p className="text-gray-200 font-medium">{item.group}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400">Category</p>
+                  <p className="text-gray-200 font-medium">{item.category}</p>
+                </div>
+              </div>
+
+              {/* Pricing Preview - First variation only */}
+              {uniqueVariationValues.length > 0 && (
+                <div className="pt-2 border-t border-slate-700/40">
+                  <p className="text-gray-400 text-xs mb-2">Pricing ({uniqueVariationValues[0]})</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    <div className="text-center">
+                      <p className="text-gray-400 text-[10px]">Dining</p>
+                      <p className="text-gray-200 font-semibold text-sm">{getPrice(item, uniqueVariationValues[0], "Dining")}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-gray-400 text-[10px]">Parcal</p>
+                      <p className="text-gray-200 font-semibold text-sm">{getPrice(item, uniqueVariationValues[0], "Parcal")}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-gray-400 text-[10px]">Swiggy</p>
+                      <p className="text-gray-200 font-semibold text-sm">{getPrice(item, uniqueVariationValues[0], "Swiggy")}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-gray-400 text-[10px]">Zomato</p>
+                      <p className="text-gray-200 font-semibold text-sm">{getPrice(item, uniqueVariationValues[0], "Zomato")}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
+        ))}
+      </div>
+
+      {/* Footer - Pagination */}
+      <div className="px-4 sm:px-6 py-4 border border-slate-700/40 rounded-lg bg-slate-800/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="text-xs sm:text-sm text-gray-400">
+          Showing <span className="text-gray-100">{startIdx + 1}</span> to{" "}
+          <span className="text-gray-100">{Math.min(startIdx + itemsPerPage, items.length)}</span> of{" "}
+          <span className="text-gray-100">{items.length}</span> items
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-end">
+          <button
+            onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
+            disabled={currentPage === 0}
+            className="p-1.5 hover:bg-slate-700/50 rounded disabled:opacity-30 transition-colors text-gray-400 border border-slate-700/40"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {Array.from({ length: Math.min(totalPages, 5) }).map((_, idx) => {
+            const displayIdx = totalPages <= 5 ? idx : Math.max(0, Math.min(idx + Math.max(0, currentPage - 2), totalPages - 5)) + idx;
+            return (
+              <button
+                key={displayIdx}
+                onClick={() => setCurrentPage(displayIdx)}
+                className={`w-7 h-7 rounded text-xs font-semibold transition-colors ${
+                  currentPage === displayIdx
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-400 hover:text-gray-300 hover:bg-slate-700/40"
+                }`}
+              >
+                {displayIdx + 1}
+              </button>
+            );
+          })}
+
+          <button
+            onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
+            disabled={currentPage === totalPages - 1}
+            className="p-1.5 hover:bg-slate-700/50 rounded disabled:opacity-30 transition-colors text-gray-400 border border-slate-700/40"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+
+          <select
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(0);
+            }}
+            className="ml-2 pl-2 border-l border-slate-600/40 text-xs bg-slate-700/40 text-gray-100 rounded px-2 py-1"
+          >
+            {[5, 10, 15, 20, 30, 50].map((value) => (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
     </div>
