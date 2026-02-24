@@ -836,7 +836,7 @@ export default function UploadTab({ type }: UploadTabProps) {
                       <button
                         onClick={() => openDeleteDialog(monthNum)}
                         disabled={isDeleting}
-                        className="text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-red-900/30 px-2 py-1.5 rounded transition-all duration-300 w-full disabled:opacity-50"
+                        className="text-xs font-semibold text-blue-400 hover:text-blue-300 hover:bg-blue-900/30 px-2 py-1.5 rounded transition-all duration-300 w-full disabled:opacity-50"
                         title="Delete this month's data"
                       >
                         🗑️ Delete
