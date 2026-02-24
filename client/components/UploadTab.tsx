@@ -604,9 +604,9 @@ export default function UploadTab({ type }: UploadTabProps) {
       />
 
       {/* Upload Section */}
-      <div className="overflow-hidden transition-all duration-300 border border-gray-800 rounded-xl shadow-xl shadow-green-500/10 hover:shadow-green-500/20 hover:border-green-600/50 transition-all duration-300">
+      <div className="overflow-hidden transition-all duration-300 border border-gray-800 rounded-xl shadow-xl shadow-blue-500/10 hover:shadow-blue-500/20 hover:border-blue-600/50 transition-all duration-300">
         {/* Header with Green Background */}
-        <div className="bg-gradient-to-r from-green-500 via-green-600 to-green-700 p-5 sm:p-6 relative overflow-hidden rounded-t-xl">
+        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-orange-500 p-5 sm:p-6 relative overflow-hidden rounded-t-xl">
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl animate-pulse"></div>
           </div>
@@ -770,7 +770,7 @@ export default function UploadTab({ type }: UploadTabProps) {
           <button
             onClick={handleUpload}
             disabled={isLoading || !fileData || !selectedMonth}
-            className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-slate-950 py-2.5 sm:py-3 rounded-lg font-extrabold text-sm hover:shadow-lg hover:shadow-green-500/60 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 relative overflow-hidden group tracking-wide"
+            className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-orange-500 hover:from-blue-400 hover:via-purple-400 hover:to-orange-400 text-white py-2.5 sm:py-3 rounded-lg font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/60 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 relative overflow-hidden group tracking-wide"
           >
             <div className="absolute inset-0 bg-white/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
             <div className="relative flex items-center justify-center gap-1.5">
@@ -791,7 +791,7 @@ export default function UploadTab({ type }: UploadTabProps) {
       </div>
 
       {/* Months Status */}
-      <div className="overflow-hidden transition-all duration-300 border border-gray-800 rounded-xl shadow-xl shadow-green-500/10 hover:shadow-green-500/20 hover:border-green-600/50 transition-all duration-300">
+      <div className="overflow-hidden transition-all duration-300 border border-gray-800 rounded-xl shadow-xl shadow-blue-500/10 hover:shadow-blue-500/20 hover:border-blue-600/50 transition-all duration-300">
         <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-orange-500 p-5 sm:p-6 relative overflow-hidden rounded-t-xl">
           <div className="absolute inset-0 opacity-5">
             <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse"></div>
