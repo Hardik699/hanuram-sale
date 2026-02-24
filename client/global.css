@@ -218,6 +218,19 @@
   }
 
   /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-900/20;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-700/50 rounded-full hover:bg-slate-600 transition-colors;
+  }
+
   .custom-scrollbar::-webkit-scrollbar {
     height: 8px;
     width: 8px;
@@ -229,5 +242,14 @@
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
     @apply bg-slate-700/80 rounded-full hover:bg-slate-600 transition-colors;
+  }
+
+  /* Hide Scrollbar */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
 }
