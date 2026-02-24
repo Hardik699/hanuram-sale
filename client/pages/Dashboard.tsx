@@ -16,20 +16,20 @@ export default function Dashboard() {
   const currentTab = UPLOAD_TYPES[activeTab];
 
   return (
-    <div className="min-h-screen transition-colors duration-300 bg-white dark:bg-slate-900">
+    <div className="min-h-screen transition-colors duration-300 bg-gradient-to-br from-slate-50 to-blue-50 dark:bg-slate-900">
       {/* Header Section */}
       <div className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 sticky top-0 z-10 shadow-sm transition-colors duration-300">
         <div className="px-6 sm:px-8 py-5 sm:py-6 flex justify-between items-center gap-4">
           <div className="group cursor-default flex-1">
             <div className="flex items-center gap-3">
-              <div className="bg-blue-600 p-2 rounded-lg group-hover:scale-110 transition-transform duration-300 shadow-md shadow-blue-600/30">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-2 rounded-lg group-hover:scale-110 transition-transform duration-300 shadow-md shadow-blue-500/30">
                 <Upload className="w-5 h-5 text-white group-hover:rotate-12 transition-transform" />
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white transition-colors duration-300">
+              <h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 bg-clip-text text-transparent transition-colors duration-300">
                 Data Upload
               </h1>
             </div>
-            <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-medium ml-11 mt-1 transition-colors duration-300">
+            <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-medium ml-11 mt-1 transition-colors duration-300 italic">
               Manage and monitor your uploads
             </p>
           </div>
@@ -79,9 +79,9 @@ export default function Dashboard() {
       </div>
 
       {/* Footer */}
-      <div className="border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 mt-8 transition-colors duration-300">
+      <div className="border-t border-slate-200 dark:border-slate-700 bg-gradient-to-b from-white to-blue-50 dark:bg-slate-900 mt-8 transition-colors duration-300">
         <div className="px-6 sm:px-8 py-4 text-center">
-          <p className="text-slate-500 dark:text-slate-500 text-xs transition-colors duration-300">
+          <p className="text-slate-400 dark:text-slate-500 text-xs transition-colors duration-300 font-medium tracking-wide">
             Hanuram Data Management • All Rights Reserved © 2024
           </p>
         </div>
