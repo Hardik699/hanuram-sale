@@ -179,22 +179,22 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 <tr
                   key={item.itemId}
                   onClick={() => navigate(`/items/${item.itemId}`)}
-                  className={`border-b border-slate-700/30 cursor-pointer text-xs transition-colors group ${
-                    selectedRows.has(item.itemId) ? "bg-blue-600/15" : "bg-slate-800/20 hover:bg-slate-800/40"
+                  className={`border-b border-slate-700/30 cursor-pointer text-xs transition-all duration-200 group ${
+                    selectedRows.has(item.itemId) ? "bg-blue-600/15 shadow-md shadow-blue-500/20" : "bg-slate-800/20 hover:bg-slate-800/50 hover:shadow-lg hover:shadow-slate-900/50 hover:border-slate-700/50"
                   }`}
                 >
                   {/* Checkbox */}
-                  <td className={`px-3 sm:px-4 py-3 text-center border-r border-slate-700/40 sticky left-0 z-10 ${selectedRows.has(item.itemId) ? "bg-blue-600/15" : "bg-slate-800/20 group-hover:bg-slate-800/40"}`} onClick={(e) => e.stopPropagation()}>
+                  <td className={`px-3 sm:px-4 py-3 text-center border-r border-slate-700/40 sticky left-0 z-10 transition-colors ${selectedRows.has(item.itemId) ? "bg-blue-600/15" : "bg-slate-800/20 group-hover:bg-slate-800/50"}`} onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selectedRows.has(item.itemId)}
                       onChange={() => toggleRowSelection(item.itemId)}
-                      className="w-4 h-4 accent-blue-500 rounded cursor-pointer"
+                      className="w-4 h-4 accent-blue-500 rounded cursor-pointer transition-transform hover:scale-110"
                     />
                   </td>
 
                   {/* Item Name */}
-                  <td className={`px-3 sm:px-4 py-3 text-white font-semibold sticky left-12 z-10 border-r border-slate-700/40 ${selectedRows.has(item.itemId) ? "bg-blue-600/15" : "bg-slate-800/20 group-hover:bg-slate-800/40"}`}>
+                  <td className={`px-3 sm:px-4 py-3 text-white font-semibold sticky left-12 z-10 border-r border-slate-700/40 transition-colors ${selectedRows.has(item.itemId) ? "bg-blue-600/15" : "bg-slate-800/20 group-hover:bg-slate-800/50"}`}>
                     <span className="truncate block">{item.itemName}</span>
                   </td>
 
@@ -238,7 +238,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 <tr
                   key={item.itemId}
                   onClick={() => navigate(`/items/${item.itemId}`)}
-                  className="border-b border-slate-700/30 cursor-pointer bg-slate-800/20 hover:bg-slate-800/40 transition-colors"
+                  className="border-b border-slate-700/30 cursor-pointer bg-slate-800/20 hover:bg-slate-800/50 hover:shadow-md hover:shadow-slate-900/40 transition-all duration-200"
                 >
                   <td className="px-3 py-4 text-white font-semibold text-sm truncate">{item.itemName}</td>
                   <td className="px-3 py-4 text-gray-300 text-center text-xs">{item.group}</td>
@@ -256,7 +256,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
           <div
             key={item.itemId}
             onClick={() => navigate(`/items/${item.itemId}`)}
-            className="bg-slate-800/30 border border-slate-700/40 rounded-lg p-4 cursor-pointer hover:bg-slate-800/50 transition-colors group"
+            className="bg-slate-800/30 border border-slate-700/40 rounded-lg p-4 cursor-pointer hover:bg-slate-800/60 hover:border-slate-700/60 hover:shadow-lg hover:shadow-slate-900/40 transition-all duration-200 group"
           >
             <div className="space-y-3">
               {/* Item Name */}
