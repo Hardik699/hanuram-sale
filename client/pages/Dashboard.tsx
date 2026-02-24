@@ -74,6 +74,9 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 mb-8"></div>
+
         {/* Tab Content */}
         <UploadTab type={currentTab.id} />
       </div>
