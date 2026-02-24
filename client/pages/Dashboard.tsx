@@ -16,18 +16,18 @@ export default function Dashboard() {
   const currentTab = UPLOAD_TYPES[activeTab];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen transition-colors duration-300 bg-white dark:bg-slate-900">
       {/* Header Section */}
-      <div className="border-b-2 border-slate-900 bg-white sticky top-0 z-10 shadow-sm">
+      <div className="border-b-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-900 sticky top-0 z-10 shadow-sm transition-colors duration-300">
         <div className="px-6 sm:px-8 py-6 sm:py-8 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 flex items-center gap-3">
+            <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white flex items-center gap-3 transition-colors duration-300">
               <div className="bg-blue-600 p-2.5 rounded-xl">
                 <Upload className="w-7 h-7 text-white" />
               </div>
               Data Upload Portal
             </h1>
-            <p className="text-slate-600 text-sm mt-2">Manage and monitor your data uploads</p>
+            <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 transition-colors duration-300">Manage and monitor your data uploads</p>
           </div>
           <button
             onClick={() => navigate("/items")}
@@ -51,7 +51,7 @@ export default function Dashboard() {
                 className={`px-5 sm:px-6 py-3 rounded-xl font-bold text-sm sm:text-base whitespace-nowrap transition-all duration-300 flex items-center gap-2 ${
                   activeTab === idx
                     ? `${tab.color} text-white shadow-lg`
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 border-2 border-slate-200"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white border-2 border-slate-200 dark:border-slate-700"
                 }`}
               >
                 {tab.label}
@@ -68,9 +68,9 @@ export default function Dashboard() {
       </div>
 
       {/* Footer */}
-      <div className="border-t-2 border-slate-900 bg-white mt-12">
+      <div className="border-t-2 border-slate-900 dark:border-slate-700 bg-white dark:bg-slate-900 mt-12 transition-colors duration-300">
         <div className="px-6 sm:px-8 py-6 text-center">
-          <p className="text-slate-600 text-sm">
+          <p className="text-slate-600 dark:text-slate-400 text-sm transition-colors duration-300">
             Hanuram Data Management System • All Rights Reserved
           </p>
         </div>
