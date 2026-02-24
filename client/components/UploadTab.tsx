@@ -604,32 +604,34 @@ export default function UploadTab({ type }: UploadTabProps) {
       />
 
       {/* Upload Section - Modern Card Design */}
-      <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border-2 border-slate-900 dark:border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-3xl hover:scale-[1.01]">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-lg">
         {/* Header with Blue Background */}
-        <div className="bg-blue-600 p-8 sm:p-10 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
+        <div className="bg-blue-600 p-5 sm:p-6 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-5">
             <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl animate-pulse"></div>
           </div>
-          <div className="relative z-10 flex items-center gap-4 mb-2">
-            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm hover:bg-white/30 transition-colors hover:scale-110 transform duration-300">
-              <Upload className="w-7 h-7 text-white animate-bounce" style={{animationDuration: '2s'}} />
+          <div className="relative z-10 flex items-center gap-3">
+            <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm hover:bg-white/30 transition-colors hover:scale-110 transform duration-300">
+              <Upload className="w-5 h-5 text-white animate-bounce" style={{animationDuration: '2s'}} />
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">Upload Data</h2>
+            <div>
+              <h2 className="text-lg sm:text-xl font-bold text-white">Upload Data</h2>
+              <p className="text-white/80 text-xs mt-0.5">Import your data securely</p>
+            </div>
           </div>
-          <p className="text-white/95 text-base font-medium mt-3 ml-16">📁 Import your data securely and efficiently</p>
         </div>
 
-        <div className="p-8 sm:p-10 space-y-8 transition-colors duration-300">
+        <div className="p-6 sm:p-7 space-y-6 transition-colors duration-300">
           {/* Year and Month Selection */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="group">
-              <label className="block text-base font-bold text-slate-700 dark:text-slate-300 mb-3 uppercase tracking-widest transition-colors duration-300 flex items-center gap-2">
-                <span className="text-lg">📅</span> Select Year
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 transition-colors duration-300">
+                📅 Select Year
               </label>
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                className="w-full px-5 py-3.5 border-2 border-blue-300 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-semibold transition-all duration-300 hover:border-blue-500 dark:hover:border-slate-500 group-hover:shadow-lg cursor-pointer"
+                className="w-full px-3.5 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-medium transition-all duration-300 hover:border-blue-400 dark:hover:border-slate-500 cursor-pointer"
               >
                 {years.map(year => (
                   <option key={year} value={year}>{year}</option>
@@ -638,13 +640,13 @@ export default function UploadTab({ type }: UploadTabProps) {
             </div>
 
             <div className="group">
-              <label className="block text-base font-bold text-slate-700 dark:text-slate-300 mb-3 uppercase tracking-widest transition-colors duration-300 flex items-center gap-2">
-                <span className="text-lg">📆</span> Select Month
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 transition-colors duration-300">
+                📆 Select Month
               </label>
               <select
                 value={selectedMonth || ""}
                 onChange={(e) => setSelectedMonth(e.target.value ? parseInt(e.target.value) : null)}
-                className="w-full px-5 py-3.5 border-2 border-blue-300 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-semibold transition-all duration-300 hover:border-blue-500 dark:hover:border-slate-500 group-hover:shadow-lg cursor-pointer"
+                className="w-full px-3.5 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-medium transition-all duration-300 hover:border-blue-400 dark:hover:border-slate-500 cursor-pointer"
               >
                 <option value="">-- Choose Month --</option>
                 {MONTHS.map((month, idx) => (
@@ -656,11 +658,10 @@ export default function UploadTab({ type }: UploadTabProps) {
 
           {/* File Upload */}
           <div>
-            <label className="block text-base font-bold text-slate-900 dark:text-white mb-4 uppercase tracking-widest transition-colors duration-300 flex items-center gap-2">
-              <span className="text-xl">📂</span> Upload CSV/Excel File
+            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-3 transition-colors duration-300">
+              📂 Upload CSV/Excel File
             </label>
-            <div className="border-3 border-dashed border-blue-600 dark:border-blue-500 rounded-3xl p-10 text-center hover:border-orange-600 dark:hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/20 transition-all duration-300 cursor-pointer group relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-transparent opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+            <div className="border-2 border-dashed border-blue-400 dark:border-blue-500 rounded-xl p-7 text-center hover:border-orange-500 dark:hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/10 transition-all duration-300 cursor-pointer group relative overflow-hidden">
               <input
                 type="file"
                 accept=".csv,.xlsx,.xls"
@@ -669,17 +670,17 @@ export default function UploadTab({ type }: UploadTabProps) {
                 id="file-input"
               />
               <label htmlFor="file-input" className="cursor-pointer block relative z-10">
-                <div className="bg-gradient-to-br from-blue-100 to-orange-100 dark:from-blue-900/50 dark:to-orange-900/50 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-4 group-hover:scale-125 group-hover:rotate-6 transition-all duration-300 shadow-lg group-hover:shadow-2xl">
-                  <FileUp className="w-10 h-10 text-orange-600 group-hover:animate-bounce" />
+                <div className="bg-blue-100 dark:bg-blue-900/40 w-16 h-16 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-sm group-hover:shadow-md">
+                  <FileUp className="w-8 h-8 text-orange-600 group-hover:animate-bounce" />
                 </div>
-                <p className="text-slate-900 dark:text-white font-black text-lg transition-colors duration-300">Click to upload or drag & drop</p>
-                <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 font-semibold transition-colors duration-300">📊 CSV or Excel files up to 50MB</p>
+                <p className="text-slate-900 dark:text-white font-semibold text-sm transition-colors duration-300">Click to upload or drag & drop</p>
+                <p className="text-slate-600 dark:text-slate-400 text-xs mt-1 transition-colors duration-300">CSV or Excel files up to 50MB</p>
               </label>
             </div>
-            <div className="mt-5">
+            <div className="mt-4">
               <button
                 onClick={downloadDemoData}
-                className="w-full px-5 py-3.5 border-2 border-slate-900 dark:border-slate-400 text-slate-900 dark:text-white font-bold rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-300 hover:scale-105 transform hover:shadow-lg"
+                className="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-300 text-sm"
               >
                 📥 Download Demo File
               </button>
@@ -688,25 +689,25 @@ export default function UploadTab({ type }: UploadTabProps) {
 
           {/* File Info - Modern Card */}
           {fileData && (
-            <div className="bg-blue-50 dark:bg-blue-900/30 border-2 border-blue-600 rounded-2xl p-4 transition-colors duration-300 hover:shadow-lg">
-              <p className="text-sm text-slate-800 dark:text-slate-100 transition-colors duration-300 font-semibold">
-                <span className="text-orange-600 dark:text-orange-400">✓ File loaded:</span> <span className="text-blue-700 dark:text-blue-300">{fileData.rows}</span> rows, <span className="text-blue-700 dark:text-blue-300">{fileData.columns}</span> columns
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-600 rounded-lg p-3 transition-colors duration-300">
+              <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-100 transition-colors duration-300">
+                <span className="font-semibold text-orange-600 dark:text-orange-400">✓</span> File loaded: <span className="font-semibold text-blue-700 dark:text-blue-300">{fileData.rows}</span> rows, <span className="font-semibold text-blue-700 dark:text-blue-300">{fileData.columns}</span> columns
               </p>
             </div>
           )}
 
           {/* Validation Results */}
           {validationResult && validationResult.invalidCount > 0 && (
-            <div className="space-y-4">
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 border-2 border-orange-600 rounded-2xl transition-colors duration-300">
-                <div className="flex gap-3">
-                  <AlertCircle className="w-6 h-6 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
+            <div className="space-y-3">
+              <div className="p-3 bg-orange-50 dark:bg-orange-900/20 border border-orange-400 rounded-lg transition-colors duration-300">
+                <div className="flex gap-2.5">
+                  <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0" />
                   <div>
-                    <p className="text-sm font-bold text-orange-900 dark:text-orange-200 transition-colors duration-300">
-                      {validationResult.invalidCount} row(s) found that don't match the database
+                    <p className="text-xs sm:text-sm font-semibold text-orange-900 dark:text-orange-200 transition-colors duration-300">
+                      {validationResult.invalidCount} row(s) don't match the database
                     </p>
-                    <p className="text-sm text-slate-700 dark:text-slate-300 mt-1 transition-colors duration-300">
-                      Only {validationResult.validCount} valid row(s) will be uploaded. Invalid rows are listed below.
+                    <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5 transition-colors duration-300">
+                      Only {validationResult.validCount} valid row(s) will be uploaded.
                     </p>
                   </div>
                 </div>
@@ -714,19 +715,19 @@ export default function UploadTab({ type }: UploadTabProps) {
 
               {/* Invalid Rows List */}
               {validationResult.invalidRows.length > 0 && (
-                <div className="border-2 border-slate-900 dark:border-slate-700 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-700/50 transition-colors duration-300">
-                  <div className="bg-slate-900 dark:bg-slate-900 px-4 py-4 border-b-2 border-slate-900 dark:border-slate-800">
-                    <p className="text-sm font-bold text-white">⚠️ Invalid Rows to be Removed</p>
+                <div className="border border-slate-300 dark:border-slate-700 rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-700/30 transition-colors duration-300">
+                  <div className="bg-slate-900 px-3 py-2.5 border-b border-slate-900">
+                    <p className="text-xs font-semibold text-white">Invalid Rows</p>
                   </div>
-                  <div className="max-h-64 overflow-y-auto">
+                  <div className="max-h-48 overflow-y-auto">
                     {validationResult.invalidRows.map((row: any, idx: number) => (
-                      <div key={idx} className="px-4 py-3 border-b border-slate-200 dark:border-slate-600 last:border-b-0 hover:bg-slate-100 dark:hover:bg-slate-600/50 transition-colors duration-300">
-                        <div className="flex items-start gap-3">
-                          <X className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5 font-bold" />
-                          <div className="flex-1 text-sm">
-                            <p className="font-bold text-slate-900 dark:text-white transition-colors duration-300">Row {row.rowIndex}</p>
-                            <p className="text-orange-700 dark:text-orange-300 text-xs mt-1 font-medium transition-colors duration-300">{row.reason}</p>
-                            <p className="text-slate-600 dark:text-slate-400 text-xs mt-1 font-mono truncate bg-slate-200 dark:bg-slate-600 p-1.5 rounded mt-2 transition-colors duration-300">
+                      <div key={idx} className="px-3 py-2 border-b border-slate-200 dark:border-slate-600 last:border-b-0 hover:bg-slate-100 dark:hover:bg-slate-600/30 transition-colors text-xs">
+                        <div className="flex items-start gap-2">
+                          <X className="w-4 h-4 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5 font-bold" />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-slate-900 dark:text-white">Row {row.rowIndex}</p>
+                            <p className="text-orange-700 dark:text-orange-300 mt-0.5">{row.reason}</p>
+                            <p className="text-slate-600 dark:text-slate-400 font-mono truncate bg-slate-200 dark:bg-slate-600 p-1 rounded mt-1 text-[10px]">
                               {row.data.slice(0, 3).join(" | ")}...
                             </p>
                           </div>
@@ -741,18 +742,18 @@ export default function UploadTab({ type }: UploadTabProps) {
 
           {/* Messages */}
           {message && (
-            <div className={`p-4 rounded-2xl flex gap-3 border-2 transition-colors duration-300 ${
-              message.type === "success" ? "bg-blue-50 dark:bg-blue-900/30 border-blue-600" :
-              message.type === "error" ? "bg-orange-50 dark:bg-orange-900/30 border-orange-600" :
-              "bg-orange-50 dark:bg-orange-900/30 border-orange-600"
+            <div className={`p-3 rounded-lg flex gap-2.5 border transition-colors duration-300 ${
+              message.type === "success" ? "bg-blue-50 dark:bg-blue-900/20 border-blue-400" :
+              message.type === "error" ? "bg-orange-50 dark:bg-orange-900/20 border-orange-400" :
+              "bg-orange-50 dark:bg-orange-900/20 border-orange-400"
             }`}>
-              {message.type === "success" && <CheckCircle2 className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />}
-              {message.type === "error" && <AlertCircle className="w-6 h-6 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />}
-              {message.type === "warning" && <AlertCircle className="w-6 h-6 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />}
-              <p className={`text-sm font-medium transition-colors duration-300 ${
-                message.type === "success" ? "text-blue-900 dark:text-blue-200" :
-                message.type === "error" ? "text-orange-900 dark:text-orange-200" :
-                "text-orange-900 dark:text-orange-200"
+              {message.type === "success" && <CheckCircle2 className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0" />}
+              {message.type === "error" && <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0" />}
+              {message.type === "warning" && <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0" />}
+              <p className={`text-xs sm:text-sm transition-colors duration-300 ${
+                message.type === "success" ? "text-blue-800 dark:text-blue-200" :
+                message.type === "error" ? "text-orange-800 dark:text-orange-200" :
+                "text-orange-800 dark:text-orange-200"
               }`}>
                 {message.text}
               </p>
@@ -763,10 +764,10 @@ export default function UploadTab({ type }: UploadTabProps) {
           <button
             onClick={handleUpload}
             disabled={isLoading || !fileData || !selectedMonth}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 sm:py-5 rounded-2xl font-black text-lg hover:shadow-3xl hover:shadow-blue-500/60 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 uppercase tracking-widest relative overflow-hidden group"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 sm:py-3 rounded-lg font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/40 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 relative overflow-hidden group"
           >
             <div className="absolute inset-0 bg-white/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
-            <div className="relative flex items-center justify-center gap-2">
+            <div className="relative flex items-center justify-center gap-1.5">
               {isLoading ? (
                 <>
                   <span className="inline-block animate-spin">⏳</span>
@@ -774,8 +775,8 @@ export default function UploadTab({ type }: UploadTabProps) {
                 </>
               ) : (
                 <>
-                  <span className="text-xl group-hover:scale-125 transition-transform">🚀</span>
-                  <span>Upload Data Now</span>
+                  <span className="text-base">🚀</span>
+                  <span>Upload Data</span>
                 </>
               )}
             </div>
@@ -784,19 +785,19 @@ export default function UploadTab({ type }: UploadTabProps) {
       </div>
 
       {/* Months Status - Modern Grid Card */}
-      <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border-2 border-slate-900 dark:border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-3xl">
-        <div className="bg-blue-600 p-8 sm:p-10 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-lg">
+        <div className="bg-blue-600 p-5 sm:p-6 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-5">
             <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse"></div>
           </div>
           <div className="relative z-10">
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">📊 Upload Status</h2>
-            <p className="text-white/90 text-base font-semibold mt-2">Overview for {selectedYear}</p>
+            <h2 className="text-lg sm:text-xl font-bold text-white">📊 Upload Status</h2>
+            <p className="text-white/80 text-xs mt-1">Overview for {selectedYear}</p>
           </div>
         </div>
 
-        <div className="p-8 sm:p-10">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="p-5 sm:p-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {MONTHS.map((month, idx) => {
               const monthNum = idx + 1;
               const status = getMonthStatus(monthNum);
@@ -805,27 +806,24 @@ export default function UploadTab({ type }: UploadTabProps) {
               return (
                 <div
                   key={month}
-                  className={`relative group rounded-2xl p-5 sm:p-6 border-2 transition-all duration-300 cursor-default overflow-hidden ${
+                  className={`relative group rounded-lg p-3 sm:p-4 border transition-all duration-300 cursor-default overflow-hidden ${
                     isUploaded
-                      ? "bg-blue-50 dark:bg-blue-900/30 border-blue-500 hover:shadow-2xl hover:shadow-blue-400/50 hover:scale-110 dark:border-blue-600"
-                      : "bg-slate-50 dark:bg-slate-700 border-slate-300 dark:border-slate-600 hover:shadow-xl hover:shadow-slate-400/30 dark:hover:shadow-slate-900/50 hover:scale-105"
+                      ? "bg-blue-50 dark:bg-blue-900/20 border-blue-400 hover:shadow-md hover:shadow-blue-400/30 hover:scale-105 dark:border-blue-600"
+                      : "bg-slate-50 dark:bg-slate-700 border-slate-300 dark:border-slate-600 hover:shadow-md dark:hover:shadow-slate-900/30 hover:scale-105"
                   }`}
                 >
-                  {isUploaded && (
-                    <div className="absolute inset-0 bg-blue-200/20 animate-pulse"></div>
-                  )}
                   <div className="flex flex-col h-full relative z-10">
-                    <p className="text-sm sm:text-base font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-3 transition-colors duration-300">{month}</p>
-                    <div className="flex items-center gap-2.5 mb-4 flex-grow">
+                    <p className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide mb-2 transition-colors duration-300">{month}</p>
+                    <div className="flex items-center gap-2 mb-3 flex-grow">
                       {isUploaded ? (
                         <>
-                          <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 animate-pulse shadow-lg shadow-blue-600/50"></div>
-                          <span className="text-sm sm:text-base font-bold text-blue-700 dark:text-blue-300 transition-colors duration-300">✓ Uploaded</span>
+                          <div className="w-2 h-2 rounded-full bg-blue-600 animate-pulse shadow-md shadow-blue-600/40"></div>
+                          <span className="text-xs sm:text-sm font-semibold text-blue-700 dark:text-blue-300 transition-colors duration-300">Uploaded</span>
                         </>
                       ) : (
                         <>
-                          <div className="w-3 h-3 rounded-full bg-slate-400 dark:bg-slate-500 group-hover:animate-pulse"></div>
-                          <span className="text-sm sm:text-base font-bold text-slate-600 dark:text-slate-400 transition-colors duration-300">⏱ Pending</span>
+                          <div className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 group-hover:animate-pulse"></div>
+                          <span className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 transition-colors duration-300">Pending</span>
                         </>
                       )}
                     </div>
@@ -833,10 +831,10 @@ export default function UploadTab({ type }: UploadTabProps) {
                       <button
                         onClick={() => openDeleteDialog(monthNum)}
                         disabled={isDeleting}
-                        className="text-sm font-bold text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/50 px-3 py-2 rounded-xl transition-all duration-300 w-full disabled:opacity-50 group-hover:scale-110 transform"
+                        className="text-xs font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/30 px-2 py-1.5 rounded transition-all duration-300 w-full disabled:opacity-50"
                         title="Delete this month's data"
                       >
-                        🗑️ Delete Data
+                        🗑️ Delete
                       </button>
                     )}
                   </div>

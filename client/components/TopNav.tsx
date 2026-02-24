@@ -51,14 +51,14 @@ export default function TopNav() {
         ? "bg-slate-900 text-white border-b-2 border-slate-700"
         : "bg-white text-slate-900 border-b-2 border-slate-200"
     }`}>
-      <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
         {/* Logo */}
-        <h1 className="text-2xl font-black bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300 cursor-pointer">
+        <h1 className="text-lg sm:text-xl font-bold text-blue-600 hover:scale-105 transition-transform duration-300 cursor-pointer whitespace-nowrap">
           📊 Data Portal
         </h1>
 
         {/* Navigation Links */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {NAVIGATION.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.href;
@@ -66,18 +66,18 @@ export default function TopNav() {
               <Link
                 key={item.id}
                 to={item.href}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 relative group overflow-hidden ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-300 relative group overflow-hidden ${
                   isActive
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/50"
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/30"
                     : isDark
-                    ? "text-slate-300 hover:text-white hover:bg-slate-700/50"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-blue-50"
+                    ? "text-slate-300 hover:text-white hover:bg-slate-700/40"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 }`}
               >
-                <Icon className="w-4 h-4 transition-transform group-hover:rotate-12" />
-                <span>{item.label}</span>
+                <Icon className="w-3.5 h-3.5 transition-transform group-hover:rotate-12" />
+                <span className="hidden sm:inline">{item.label}</span>
                 {isActive && (
-                  <div className="absolute -bottom-1 left-0 right-0 h-1 bg-orange-500 animate-pulse"></div>
+                  <div className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-orange-500 animate-pulse"></div>
                 )}
               </Link>
             );
@@ -85,29 +85,29 @@ export default function TopNav() {
         </div>
 
         {/* Theme Toggle & Logout */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <button
             onClick={toggleTheme}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-110 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-300 hover:scale-105 ${
               isDark
-                ? "bg-slate-800/80 text-yellow-400 hover:bg-slate-700 shadow-lg hover:shadow-yellow-500/20"
-                : "bg-slate-100 text-slate-700 hover:bg-blue-100 shadow-lg hover:shadow-blue-500/20"
+                ? "bg-slate-800/70 text-yellow-400 hover:bg-slate-700 shadow-sm"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200 shadow-sm"
             }`}
             title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
-            {isDark ? <Sun className="w-5 h-5 animate-spin" style={{animationDuration: '3s'}} /> : <Moon className="w-5 h-5" />}
+            {isDark ? <Sun className="w-4 h-4 animate-spin" style={{animationDuration: '3s'}} /> : <Moon className="w-4 h-4" />}
             <span className="hidden sm:inline">{isDark ? "Light" : "Dark"}</span>
           </button>
 
           <button
             onClick={handleLogout}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 group ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-300 hover:scale-105 group ${
               isDark
                 ? "text-slate-300 hover:text-white hover:bg-red-600/20"
                 : "text-slate-600 hover:text-red-600 hover:bg-red-50"
             }`}
           >
-            <LogOut className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            <LogOut className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
             <span className="hidden sm:inline">Logout</span>
           </button>
         </div>
