@@ -131,39 +131,39 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                     className="w-3.5 h-3.5 xs:w-4 xs:h-4 cursor-pointer accent-blue-600"
                   />
                 </th>
-                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 sticky left-8 xs:left-10 sm:left-12 z-30 bg-slate-700/80 transition-colors duration-300 min-w-[120px] xs:min-w-[140px] sm:min-w-[150px]">
+                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r-2 border-blue-600/60 sticky left-8 xs:left-10 sm:left-12 z-30 bg-slate-700/80 transition-colors duration-300 min-w-[120px] xs:min-w-[140px] sm:min-w-[150px]">
                   Item Name
                 </th>
-                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 bg-slate-700/80 transition-colors duration-300 hidden xs:table-cell">
+                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r-2 border-blue-600/60 bg-slate-700/80 transition-colors duration-300 hidden xs:table-cell">
                   Group
                 </th>
-                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 bg-slate-700/80 transition-colors duration-300 hidden sm:table-cell">
+                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r-2 border-blue-600/60 bg-slate-700/80 transition-colors duration-300 hidden sm:table-cell">
                   Category
                 </th>
                 {uniqueVariationValues.length > 0 && (
-                  <th colSpan={uniqueVariationValues.length * 4} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-b border-slate-700 bg-slate-700/80 transition-colors duration-300 uppercase tracking-widest font-bold text-xs sm:text-sm lg:text-base text-blue-300">
-                    Variyation
+                  <th colSpan={uniqueVariationValues.length * 4} className="px-4 xs:px-6 sm:px-8 py-3 xs:py-4 sm:py-5 text-center bg-gradient-to-r from-blue-900/40 to-blue-800/20 border border-blue-600/50 rounded-t-xl transition-colors duration-300 uppercase tracking-widest font-bold text-xs sm:text-sm lg:text-base text-blue-200 shadow-lg shadow-blue-600/20">
+                    📊 Variations
                   </th>
                 )}
               </tr>
 
               {/* Row 2: Variation Values (e.g., 250 Gms, 500 Gms) */}
-              <tr className="bg-slate-700/50 text-gray-300 text-[8px] xs:text-[9px] sm:text-xs font-bold border-b border-slate-700 uppercase tracking-wider transition-colors duration-300">
-                {uniqueVariationValues.map((v) => (
-                  <th key={v} colSpan={4} className="px-1 xs:px-1.5 sm:px-2 py-1.5 xs:py-2 sm:py-2 text-center border-r border-slate-700 bg-slate-700/50 transition-colors duration-300">
-                    {v}
+              <tr className="bg-transparent text-gray-200 text-[8px] xs:text-[9px] sm:text-xs font-bold uppercase tracking-wider transition-colors duration-300 px-2 xs:px-3 sm:px-4 py-2">
+                {uniqueVariationValues.map((v, idx) => (
+                  <th key={v} colSpan={4} className={`px-2 xs:px-3 sm:px-4 py-2 xs:py-3 sm:py-4 text-center bg-gradient-to-b from-blue-900/50 to-blue-900/30 border border-blue-600/60 rounded-lg transition-colors duration-300 mx-1 shadow-lg shadow-blue-600/20 hover:bg-blue-900/60 ${idx < uniqueVariationValues.length - 1 ? '' : ''}`}>
+                    <span className="text-blue-200">💾 {v}</span>
                   </th>
                 ))}
               </tr>
 
               {/* Row 3: Channels (Dining, parcal, Swiggy, zomato) */}
-              <tr className="bg-slate-800/50 text-gray-400 text-[7px] xs:text-[8px] sm:text-[9px] font-bold border-b border-slate-700 uppercase tracking-tighter transition-colors duration-300">
-                {uniqueVariationValues.map((v) => (
+              <tr className="bg-transparent text-gray-300 text-[7px] xs:text-[8px] sm:text-[9px] font-bold uppercase tracking-tighter transition-colors duration-300">
+                {uniqueVariationValues.map((v, idx) => (
                   <React.Fragment key={`${v}-channels`}>
-                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1 xs:py-1.5 sm:py-2 text-center border-r border-slate-700 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px]">Dining</th>
-                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1 xs:py-1.5 sm:py-2 text-center border-r border-slate-700 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px]">Parcal</th>
-                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1 xs:py-1.5 sm:py-2 text-center border-r border-slate-700 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px]">Swiggy</th>
-                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1 xs:py-1.5 sm:py-2 text-center border-r border-slate-700 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px]">Zomato</th>
+                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1.5 xs:py-2 sm:py-2.5 text-center border border-blue-600/40 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px] mx-0.5 rounded-lg bg-blue-900/20">Dining</th>
+                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1.5 xs:py-2 sm:py-2.5 text-center border border-blue-600/40 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px] mx-0.5 rounded-lg bg-blue-900/20">Parcal</th>
+                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1.5 xs:py-2 sm:py-2.5 text-center border border-blue-600/40 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px] mx-0.5 rounded-lg bg-blue-900/20">Swiggy</th>
+                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1.5 xs:py-2 sm:py-2.5 text-center border border-blue-600/40 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px] mx-0.5 rounded-lg bg-blue-900/20">Zomato</th>
                   </React.Fragment>
                 ))}
               </tr>
@@ -201,12 +201,12 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   </td>
 
                   {/* Variation Prices */}
-                  {uniqueVariationValues.map((v) => (
+                  {uniqueVariationValues.map((v, idx) => (
                     <React.Fragment key={`${item.itemId}-${v}-prices`}>
-                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-semibold text-gray-300">{getPrice(item, v, "Dining")}</td>
-                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-semibold text-gray-300">{getPrice(item, v, "Parcal")}</td>
-                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-bold text-blue-400">{getPrice(item, v, "Swiggy")}</td>
-                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-bold text-orange-400">{getPrice(item, v, "Zomato")}</td>
+                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-semibold text-gray-300 mx-0.5 bg-slate-700/30">{getPrice(item, v, "Dining")}</td>
+                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-semibold text-gray-300 mx-0.5 bg-slate-700/30">{getPrice(item, v, "Parcal")}</td>
+                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-bold text-blue-400 mx-0.5 bg-slate-700/30">{getPrice(item, v, "Swiggy")}</td>
+                      <td className={`px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center font-bold text-orange-400 mx-0.5 bg-slate-700/30 border-r border-slate-700`}>{getPrice(item, v, "Zomato")}</td>
                     </React.Fragment>
                   ))}
                 </tr>
