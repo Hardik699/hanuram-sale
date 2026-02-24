@@ -209,10 +209,10 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   {/* Prices */}
                   {uniqueVariationValues.map((v) => (
                     <React.Fragment key={`${item.itemId}-${v}-prices`}>
-                      <td className="px-2 py-3 text-center font-semibold text-gray-200 mx-0.5 rounded border border-slate-600/30 text-xs">{getPrice(item, v, "Dining")}</td>
-                      <td className="px-2 py-3 text-center font-semibold text-gray-200 mx-0.5 rounded border border-slate-600/30 text-xs">{getPrice(item, v, "Parcal")}</td>
-                      <td className="px-2 py-3 text-center font-semibold text-gray-200 mx-0.5 rounded border border-slate-600/30 text-xs">{getPrice(item, v, "Swiggy")}</td>
-                      <td className="px-2 py-3 text-center font-semibold text-gray-200 mx-0.5 rounded border border-slate-600/30 text-xs">{getPrice(item, v, "Zomato")}</td>
+                      <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Dining")}</td>
+                      <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Parcal")}</td>
+                      <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Swiggy")}</td>
+                      <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Zomato")}</td>
                     </React.Fragment>
                   ))}
                 </tr>
@@ -290,19 +290,19 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                   <div className="grid grid-cols-4 gap-2">
                     <div className="text-center">
                       <p className="text-gray-400 text-[10px]">Dining</p>
-                      <p className="text-gray-200 font-semibold text-sm">{getPrice(item, uniqueVariationValues[0], "Dining")}</p>
+                      <p className="text-gray-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Dining")}</p>
                     </div>
                     <div className="text-center">
                       <p className="text-gray-400 text-[10px]">Parcal</p>
-                      <p className="text-gray-200 font-semibold text-sm">{getPrice(item, uniqueVariationValues[0], "Parcal")}</p>
+                      <p className="text-gray-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Parcal")}</p>
                     </div>
                     <div className="text-center">
                       <p className="text-gray-400 text-[10px]">Swiggy</p>
-                      <p className="text-gray-200 font-semibold text-sm">{getPrice(item, uniqueVariationValues[0], "Swiggy")}</p>
+                      <p className="text-gray-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Swiggy")}</p>
                     </div>
                     <div className="text-center">
                       <p className="text-gray-400 text-[10px]">Zomato</p>
-                      <p className="text-gray-200 font-semibold text-sm">{getPrice(item, uniqueVariationValues[0], "Zomato")}</p>
+                      <p className="text-gray-100 font-bold text-sm" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, uniqueVariationValues[0], "Zomato")}</p>
                     </div>
                   </div>
                 </div>
