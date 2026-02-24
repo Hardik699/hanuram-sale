@@ -542,31 +542,31 @@ export default function ItemDetail() {
   const CHANNELS = ["Dining", "Parcale", "Swiggy", "Zomato", "GS1"];
 
   return (
-    <div className="flex-1 p-3 xs:p-4 sm:p-6 lg:p-8">
+    <div className="flex-1 min-h-screen bg-gray-950 p-4 sm:p-6 lg:p-8 space-y-8 no-scrollbar">
       {/* Reset Confirmation Modal */}
       {showResetConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 rounded-lg">
-          <div className="bg-white rounded-lg sm:rounded-xl shadow-xl p-4 sm:p-6 max-w-md w-full mx-4">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl p-6 max-w-md w-full animate-in zoom-in duration-200">
+            <h2 className="text-xl font-bold text-white mb-4">
               Reset Sales Data?
             </h2>
-            <p className="text-sm sm:text-base text-gray-600 mb-6">
+            <p className="text-gray-400 mb-6">
               This will permanently delete all sales history for{" "}
-              <strong>{item?.itemName}</strong> across all variations. This
+              <strong className="text-white">{item?.itemName}</strong>. This
               action cannot be undone.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowResetConfirm(false)}
                 disabled={isResetting}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50"
+                className="flex-1 px-4 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl font-bold transition-all disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={handleResetSalesData}
                 disabled={isResetting}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg text-sm sm:text-base font-medium hover:bg-red-700 disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold transition-all disabled:opacity-50"
               >
                 {isResetting ? "Resetting..." : "Reset Data"}
               </button>
@@ -575,124 +575,155 @@ export default function ItemDetail() {
         </div>
       )}
 
-      {/* Back Button */}
-      <button
-        onClick={() => navigate("/items")}
-        className="flex items-center gap-2 text-[#7c3aed] hover:opacity-80 mb-6 font-semibold text-sm transition-all"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Items
-      </button>
+      {/* Back Button & Header */}
+      <div className="flex flex-col gap-6">
+        <button
+          onClick={() => navigate("/items")}
+          className="flex items-center gap-2 text-blue-400 hover:text-blue-300 font-bold text-sm transition-all w-fit group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          Back to Items
+        </button>
 
-      {/* Main Item Card */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-8">
-        {/* Card Header */}
-        <div className="p-6 sm:p-8 border-b border-slate-100">
-          <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-            <div className="min-w-0 flex-1">
-              <h1 className="text-3xl font-black text-slate-900 mb-2 capitalize">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+          <div className="flex items-center gap-4">
+            <div className="bg-emerald-500 p-3.5 rounded-xl shadow-lg shadow-emerald-500/20">
+              <Package className="w-7 h-7 text-black" />
+            </div>
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-black text-white capitalize tracking-tight">
                 {item.itemName}
               </h1>
-            </div>
-            <div className="flex gap-3 flex-shrink-0">
-              <button
-                onClick={() => navigate(`/items/${itemId}/edit`)}
-                className="p-2.5 hover:bg-emerald-50 rounded-xl transition-all text-emerald-500 border border-emerald-100"
-                title="Edit item"
-              >
-                <Edit className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => setShowResetConfirm(true)}
-                className="p-2.5 hover:bg-emerald-50 rounded-xl transition-all text-emerald-500 border border-emerald-100"
-                title="Reset sales data"
-              >
-                <RotateCcw className="w-5 h-5" />
-              </button>
-              <button
-                onClick={handleDelete}
-                className="p-2.5 hover:bg-red-50 rounded-xl transition-all text-red-500 border border-red-100"
-                title="Delete item"
-              >
-                <Trash2 className="w-5 h-5" />
-              </button>
+              <p className="text-gray-400 font-medium text-sm mt-1 max-w-xl">
+                {item.description || "Manage item variations and view sales analytics"}
+              </p>
             </div>
           </div>
 
-          {/* Tabs */}
-          <div className="flex gap-8 mt-8">
+          <div className="flex gap-2 w-full sm:w-auto">
             <button
-              onClick={() => setActiveTab("details")}
-              className={`pb-4 text-sm font-bold transition-all relative ${
-                activeTab === "details"
-                  ? "text-emerald-500"
-                  : "text-slate-400 hover:text-slate-600"
-              }`}
+              onClick={() => navigate(`/items/${itemId}/edit`)}
+              className="flex-1 sm:flex-none p-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl border border-gray-700 transition-all flex items-center justify-center gap-2"
+              title="Edit item"
             >
-              Item Details
-              {activeTab === "details" && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
-              )}
+              <Edit className="w-5 h-5" />
+              <span className="sm:hidden font-bold">Edit</span>
             </button>
             <button
-              onClick={() => setActiveTab("sales")}
-              className={`pb-4 text-sm font-bold transition-all relative ${
-                activeTab === "sales"
-                  ? "text-emerald-500"
-                  : "text-slate-400 hover:text-slate-600"
-              }`}
+              onClick={() => setShowResetConfirm(true)}
+              className="flex-1 sm:flex-none p-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl border border-gray-700 transition-all flex items-center justify-center gap-2"
+              title="Reset sales data"
             >
-              Sales Information
-              {activeTab === "sales" && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
-              )}
+              <RotateCcw className="w-5 h-5" />
+              <span className="sm:hidden font-bold">Reset</span>
+            </button>
+            <button
+              onClick={handleDelete}
+              className="flex-1 sm:flex-none p-3 bg-red-900/20 hover:bg-red-900/40 text-red-400 rounded-xl border border-red-900/50 transition-all flex items-center justify-center gap-2"
+              title="Delete item"
+            >
+              <Trash2 className="w-5 h-5" />
+              <span className="sm:hidden font-bold">Delete</span>
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Card Content */}
-        <div className="p-6 sm:p-8">
+      {/* Navigation Tabs */}
+      <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+        {[
+          { id: "details", label: "Item Details", color: "bg-blue-600" },
+          { id: "sales", label: "Sales Information", color: "bg-emerald-500" }
+        ].map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`px-6 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2 group relative overflow-hidden ${
+                isActive
+                  ? `${tab.color} text-white shadow-lg shadow-white/10`
+                  : `bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-200 border border-gray-700`
+              }`}
+            >
+              {isActive && <div className="w-2 h-2 rounded-full bg-white/80 animate-pulse"></div>}
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="h-px bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800"></div>
+
+      {/* Main Card Container */}
+      <div className="overflow-hidden border border-gray-800 rounded-2xl shadow-2xl shadow-blue-500/5 hover:border-blue-600/30 transition-all duration-300">
+        {/* Card Header Section */}
+        <div className="bg-gradient-to-r from-slate-600 to-slate-700 px-6 sm:px-8 py-6 border-b border-slate-600">
+          <div className="flex items-start gap-4">
+            <div className="bg-slate-500/50 p-3 rounded-xl">
+              {activeTab === "details" ? (
+                <Package className="w-6 h-6 text-white" />
+              ) : (
+                <TrendingUp className="w-6 h-6 text-white" />
+              )}
+            </div>
+            <div>
+              <h2 className="text-2xl font-black text-white tracking-tight capitalize">
+                {activeTab === "details" ? "Product Specifications" : "Market Performance"}
+              </h2>
+              <p className="text-slate-300 text-sm font-medium mt-0.5">
+                {activeTab === "details" ? "Comprehensive item details and variations" : "Sales analytics and distribution data"}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Card Content Section */}
+        <div className="p-6 sm:p-8 bg-gray-950">
           {activeTab === "details" ? (
             /* Details Tab Content */
             <div className="space-y-12">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {/* Left Section - Images */}
+                {/* Images Section */}
                 <div className="lg:col-span-4">
-                  <div className="aspect-square bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden flex items-center justify-center relative group">
+                  <div className="aspect-square bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden flex items-center justify-center group relative shadow-inner">
                     {item.images && item.images.length > 0 ? (
                       <img
                         src={typeof item.images[0] === 'string' ? item.images[0] : (item.images[0].url || item.images[0].preview)}
                         alt={item.itemName}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
-                      <span className="text-slate-400 font-medium text-sm">No images</span>
+                      <div className="flex flex-col items-center gap-3 text-gray-600">
+                        <Package className="w-12 h-12" />
+                        <span className="font-bold text-sm">No images available</span>
+                      </div>
                     )}
                   </div>
                 </div>
 
-                {/* Right Section - Item Info */}
+                {/* Info Grid Section */}
                 <div className="lg:col-span-8">
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                     {[
-                      { label: "Item ID", value: item.itemId },
+                      { label: "Item ID", value: item.itemId, color: "text-blue-400" },
                       { label: "Short Code", value: item.shortCode },
                       { label: "Group", value: item.group },
                       { label: "Category", value: item.category },
                       { label: "Item Type", value: item.itemType },
                       { label: "Unit Type", value: item.unitType },
                       { label: "HSN Code", value: item.hsnCode || "-" },
-                      { label: "GST (%)", value: `${item.gst || 0}%`, highlight: true },
-                      { label: "Profit Margin (%)", value: `${item.profitMargin || 0}%`, highlight: true },
+                      { label: "GST (%)", value: `${item.gst || 0}%`, color: "text-emerald-400" },
+                      { label: "Profit Margin (%)", value: `${item.profitMargin || 0}%`, color: "text-emerald-400" },
                     ].map((info, idx) => (
                       <div
                         key={idx}
-                        className="bg-[#f0fdf4] p-5 rounded-2xl border border-[#dcfce7] flex flex-col gap-1 shadow-sm hover:shadow-md transition-shadow duration-300"
+                        className="bg-gray-900 p-5 rounded-2xl border border-gray-800 group hover:border-gray-700 transition-all duration-300"
                       >
-                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                        <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1 block">
                           {info.label}
                         </span>
-                        <span className={`text-lg font-black ${info.highlight ? "text-emerald-500" : "text-slate-900"}`}>
+                        <span className={`text-lg font-black truncate block ${info.color || "text-white"}`}>
                           {info.value}
                         </span>
                       </div>
@@ -702,75 +733,76 @@ export default function ItemDetail() {
               </div>
 
               {/* Variations Section */}
-              <div className="pt-8 border-t border-slate-100">
-                <h2 className="text-2xl font-black text-slate-900 mb-8 flex items-center gap-3">
-                  Variations
-                  <span className="text-sm font-bold bg-slate-100 text-slate-500 px-3 py-1 rounded-full">
-                    {item.variations?.length || 0}
+              <div className="space-y-8 pt-8 border-t border-gray-800">
+                <h3 className="text-2xl font-black text-white flex items-center gap-4">
+                  Available Variations
+                  <div className="h-px flex-1 bg-gradient-to-r from-gray-800 to-transparent"></div>
+                  <span className="bg-gray-900 text-gray-400 px-4 py-1.5 rounded-full text-xs font-black border border-gray-800">
+                    {item.variations?.length || 0} TOTAL
                   </span>
-                </h2>
+                </h3>
 
                 {item.variations && item.variations.length > 0 ? (
                   <div className="grid grid-cols-1 gap-6">
                     {item.variations.map((variation: any, idx: number) => (
                       <div
                         key={idx}
-                        className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-xl hover:border-emerald-200 transition-all duration-300 group"
+                        className="bg-gray-900/50 border border-gray-800 rounded-2xl p-6 hover:bg-gray-900 hover:border-gray-700 transition-all duration-300"
                       >
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
                           {[
-                            { label: "Variation Value", value: variation.value, highlight: true },
-                            { label: "Base Price", value: `₹${variation.price}`, highlight: true },
-                            { label: "SAP Code", value: variation.sapCode || "-" },
-                            { label: "Profit Margin (%)", value: `${variation.profitMargin || 0}%`, highlight: true },
-                            { label: "Sale Type", value: variation.saleType || "QTY" },
+                            { label: "Variation", value: variation.value, color: "text-blue-400" },
+                            { label: "Base Price", value: `₹${variation.price}`, color: "text-emerald-400" },
+                            { label: "SAP Code", value: variation.sapCode || "-", color: "text-gray-300" },
+                            { label: "Profit Margin", value: `${variation.profitMargin || 0}%`, color: "text-emerald-400" },
+                            { label: "Sale Type", value: variation.saleType || "QTY", color: "text-gray-400" },
                           ].map((vInfo, vIdx) => (
                             <div key={vIdx} className="flex flex-col gap-1">
-                              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                              <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
                                 {vInfo.label}
                               </span>
-                              <span className={`text-base font-bold ${vInfo.highlight ? "text-emerald-600" : "text-slate-900"}`}>
+                              <span className={`text-base font-black ${vInfo.color}`}>
                                 {vInfo.value}
                               </span>
                             </div>
                           ))}
                         </div>
 
-                        {/* Channel Prices */}
-                        <div className="pt-6 border-t border-slate-50">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">
-                            Channel Prices
+                        {/* Channels Section */}
+                        <div className="pt-6 border-t border-gray-800/50">
+                          <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4">
+                            Channel Price Breakdown
                           </p>
                           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                             {["Dining", "Parcale", "Swiggy", "Zomato", "GS1"].map((channel) => {
-                              const isAutoCalculated = ["Zomato", "Swiggy", "GS1"].includes(channel);
-                              let displayPrice = variation.channels?.[channel];
+                              const isAuto = ["Zomato", "Swiggy", "GS1"].includes(channel);
+                              let price = variation.channels?.[channel];
 
-                              if (!displayPrice || displayPrice === 0) {
-                                if (isAutoCalculated && variation.price) {
-                                  const autoPrices = calculateAutoPrices(variation.price);
-                                  displayPrice = autoPrices[channel as keyof typeof autoPrices];
+                              if (!price || price === 0) {
+                                if (isAuto && variation.price) {
+                                  const autos = calculateAutoPrices(variation.price);
+                                  price = autos[channel as keyof typeof autos];
                                 } else {
-                                  displayPrice = variation.price || "-";
+                                  price = variation.price || "-";
                                 }
                               }
 
                               return (
                                 <div
                                   key={channel}
-                                  className={`rounded-xl p-4 transition-all duration-300 border ${
-                                    isAutoCalculated
-                                      ? "bg-emerald-50/50 border-emerald-100 hover:bg-emerald-50"
-                                      : "bg-slate-50/50 border-slate-100 hover:bg-slate-50"
+                                  className={`rounded-xl p-4 transition-all border ${
+                                    isAuto
+                                      ? "bg-emerald-900/10 border-emerald-900/30 hover:bg-emerald-900/20"
+                                      : "bg-gray-800/30 border-gray-800 hover:bg-gray-800/50"
                                   }`}
                                 >
                                   <div className="flex flex-col gap-1">
-                                    <span className="text-[10px] font-bold text-slate-500">
-                                      {channel}
-                                      {isAutoCalculated && <span className="text-emerald-500 ml-1">(auto)</span>}
+                                    <span className={`text-[10px] font-black ${isAuto ? "text-emerald-500" : "text-gray-500"}`}>
+                                      {channel.toUpperCase()}
+                                      {isAuto && <span className="ml-1 opacity-60">(AUTO)</span>}
                                     </span>
-                                    <span className={`text-lg font-black ${isAutoCalculated ? "text-emerald-600" : "text-slate-900"}`}>
-                                      ₹{displayPrice}
+                                    <span className={`text-lg font-black ${isAuto ? "text-emerald-400" : "text-white"}`}>
+                                      ₹{price}
                                     </span>
                                   </div>
                                 </div>
@@ -782,54 +814,50 @@ export default function ItemDetail() {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-slate-50 rounded-2xl p-12 text-center border-2 border-dashed border-slate-200">
-                    <p className="text-slate-400 font-medium">No variations found for this item.</p>
+                  <div className="bg-gray-900/30 rounded-2xl p-12 text-center border border-dashed border-gray-800">
+                    <p className="text-gray-500 font-bold">No product variations defined</p>
                   </div>
                 )}
               </div>
             </div>
           ) : (
-            /* Sales Tab Content - Kept original logic but updated styling */
+            /* Sales Tab Content */
             <div className="space-y-8">
-              {/* Restaurant & Date Filter */}
-              <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Filter Area */}
+              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 grid grid-cols-1 md:grid-cols-2 gap-6 shadow-inner">
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-bold text-slate-700">
-                    Select Restaurant
+                  <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
+                    Source Restaurant
                   </label>
                   <select
                     value={selectedRestaurant}
                     onChange={(e) => setSelectedRestaurant(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none appearance-none bg-white transition-all font-medium text-slate-700"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-800 bg-gray-950 text-white font-bold text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none cursor-pointer hover:bg-gray-900"
                   >
-                    <option value="">All Restaurants</option>
-                    {restaurants.map((restaurant) => (
-                      <option key={restaurant} value={restaurant}>
-                        {restaurant}
-                      </option>
+                    <option value="">All Registered Locations</option>
+                    {restaurants.map((res) => (
+                      <option key={res} value={res}>{res}</option>
                     ))}
                   </select>
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-bold text-slate-700">
-                    Date Range
+                  <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
+                    Reporting Interval
                   </label>
                   <DateFilter
-                    onDateRangeChange={(start, end) => {
-                      setDateRange({ start, end });
-                    }}
+                    onDateRangeChange={(start, end) => setDateRange({ start, end })}
                   />
                 </div>
               </div>
 
               {salesLoading ? (
-                <div className="p-12 text-center">
-                  <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                  <p className="text-slate-500 font-bold">Fetching sales data...</p>
+                <div className="p-20 text-center flex flex-col items-center gap-4">
+                  <div className="w-12 h-12 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+                  <p className="text-gray-500 font-black text-sm uppercase tracking-widest animate-pulse">Synchronizing Data...</p>
                 </div>
               ) : salesData ? (
-                <div className="space-y-12">
+                <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <SalesSummaryCards
                     zomatoData={salesData.zomatoData}
                     swiggyData={salesData.swiggyData}
@@ -838,11 +866,15 @@ export default function ItemDetail() {
                     saleType={item?.variations?.[0]?.saleType || "QTY"}
                   />
 
+                  <div className="h-px bg-gray-800"></div>
+
                   <SalesDataTable
                     data={salesData.salesTableData}
                     itemName={item.itemName}
                     saleType={item?.variations?.[0]?.saleType || "QTY"}
                   />
+
+                  <div className="h-px bg-gray-800"></div>
 
                   <SalesCharts
                     monthlyData={salesData.monthlyData}
@@ -851,17 +883,22 @@ export default function ItemDetail() {
                   />
                 </div>
               ) : (
-                <div className="bg-slate-50 rounded-2xl p-12 text-center border-2 border-dashed border-slate-200">
-                  <p className="text-slate-400 font-medium">
-                    {dateRange.start && dateRange.end
-                      ? "No sales data found for the selected range"
-                      : "Please select a date range"}
+                <div className="bg-gray-900/30 rounded-2xl p-12 text-center border border-dashed border-gray-800">
+                  <p className="text-gray-500 font-bold">
+                    No transaction data found for selected interval
                   </p>
                 </div>
               )}
             </div>
           )}
         </div>
+      </div>
+
+      {/* Footer Branding */}
+      <div className="pt-8 pb-4 text-center">
+        <p className="text-gray-700 text-[10px] font-black uppercase tracking-[0.2em]">
+          Data Portal Analytics Engine • Premium System
+        </p>
       </div>
     </div>
   );
