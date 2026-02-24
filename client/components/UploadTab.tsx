@@ -680,7 +680,7 @@ export default function UploadTab({ type }: UploadTabProps) {
             <div className="mt-4">
               <button
                 onClick={downloadDemoData}
-                className="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-300 text-sm"
+                className="w-full px-4 py-2.5 bg-blue-600/20 border border-blue-600/60 text-blue-300 font-semibold rounded-lg hover:bg-blue-600/30 hover:border-blue-500 transition-all duration-300 text-sm shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-500/40"
               >
                 📥 Download Demo File
               </button>
@@ -767,9 +767,9 @@ export default function UploadTab({ type }: UploadTabProps) {
           <button
             onClick={handleUpload}
             disabled={isLoading || !fileData || !selectedMonth}
-            className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-orange-500 hover:from-blue-400 hover:via-purple-400 hover:to-orange-400 text-white py-2.5 sm:py-3 rounded-lg font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/60 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 relative overflow-hidden group tracking-wide"
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 sm:py-3 rounded-lg font-semibold text-sm shadow-lg shadow-blue-600/50 hover:shadow-xl hover:shadow-blue-500/80 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 relative overflow-hidden group tracking-wide"
           >
-            <div className="absolute inset-0 bg-white/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+            <div className="absolute inset-0 bg-white/10 translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
             <div className="relative flex items-center justify-center gap-1.5">
               {isLoading ? (
                 <>
@@ -808,27 +808,44 @@ export default function UploadTab({ type }: UploadTabProps) {
               const status = getMonthStatus(monthNum);
               const isUploaded = status === "uploaded";
 
+              const isBlueCard = idx % 2 === 0;
               return (
                 <div
                   key={month}
-                  className="relative group rounded-lg p-3 sm:p-4 border border-slate-600 bg-slate-700/50 hover:bg-slate-700 hover:shadow-md hover:shadow-slate-600/30 hover:scale-105 shadow-sm transition-all duration-300 cursor-default overflow-hidden"
+                  className={`relative group rounded-xl p-4 sm:p-5 border backdrop-blur-sm transition-all duration-300 cursor-default overflow-hidden shadow-lg ${
+                    isUploaded
+                      ? isBlueCard
+                        ? `bg-gradient-to-br from-blue-900/50 to-blue-800/30 border-blue-500/50 hover:border-blue-400/70 hover:shadow-xl hover:shadow-blue-500/40 hover:bg-gradient-to-br hover:from-blue-900/60 hover:to-blue-800/40`
+                        : `bg-gradient-to-br from-orange-900/50 to-orange-800/30 border-orange-500/50 hover:border-orange-400/70 hover:shadow-xl hover:shadow-orange-500/40 hover:bg-gradient-to-br hover:from-orange-900/60 hover:to-orange-800/40`
+                      : `bg-gradient-to-br from-slate-800/40 to-slate-700/20 border-slate-600/40 hover:border-slate-500/60 hover:shadow-xl hover:shadow-slate-500/20 hover:bg-gradient-to-br hover:from-slate-800/50 hover:to-slate-700/30`
+                  }`}
                 >
+                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{
+                    background: isUploaded ? (isBlueCard ? 'radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.15), transparent)' : 'radial-gradient(circle at 100% 0%, rgba(234, 88, 12, 0.15), transparent)') : 'none'
+                  }}></div>
+
                   <div className="flex flex-col h-full relative z-10">
-                    <p className="text-xs sm:text-sm font-normal text-white uppercase tracking-wider mb-2 transition-colors duration-300">{month}</p>
-                    <div className="flex items-center gap-2 mb-3 flex-grow">
+                    <p className={`text-xs sm:text-sm font-bold uppercase tracking-widest mb-3 transition-colors duration-300 ${
+                      isUploaded
+                        ? isBlueCard
+                          ? "text-blue-100 group-hover:text-blue-50"
+                          : "text-orange-100 group-hover:text-orange-50"
+                        : "text-white group-hover:text-slate-100"
+                    }`}>{month}</p>
+                    <div className="flex items-center gap-2.5 mb-4 flex-grow">
                       {isUploaded ? (
                         <>
-                          <div className={`w-2 h-2 rounded-full animate-pulse shadow-md ${
-                            idx % 3 === 0 ? "bg-blue-500 shadow-blue-500/60" : idx % 3 === 1 ? "bg-orange-500 shadow-orange-500/60" : "bg-green-500 shadow-green-500/60"
+                          <div className={`w-3 h-3 rounded-full animate-pulse shadow-lg ${
+                            idx % 3 === 0 ? "bg-blue-400 shadow-blue-400/80" : idx % 3 === 1 ? "bg-orange-400 shadow-orange-400/80" : "bg-green-400 shadow-green-400/80"
                           }`}></div>
-                          <span className={`text-xs sm:text-sm font-normal transition-colors duration-300 ${
+                          <span className={`text-xs sm:text-sm font-semibold transition-colors duration-300 ${
                             idx % 3 === 0 ? "text-blue-300" : idx % 3 === 1 ? "text-orange-300" : "text-green-300"
                           }`}>Uploaded</span>
                         </>
                       ) : (
                         <>
-                          <div className="w-2 h-2 rounded-full bg-slate-500 group-hover:animate-pulse"></div>
-                          <span className="text-xs sm:text-sm font-normal text-slate-400 transition-colors duration-300">Pending</span>
+                          <div className="w-3 h-3 rounded-full bg-slate-500 group-hover:animate-pulse transition-all duration-300"></div>
+                          <span className="text-xs sm:text-sm font-semibold text-slate-400 group-hover:text-slate-300 transition-colors duration-300">Pending</span>
                         </>
                       )}
                     </div>
@@ -836,7 +853,11 @@ export default function UploadTab({ type }: UploadTabProps) {
                       <button
                         onClick={() => openDeleteDialog(monthNum)}
                         disabled={isDeleting}
-                        className="text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-red-900/30 px-2 py-1.5 rounded transition-all duration-300 w-full disabled:opacity-50"
+                        className={`text-xs font-semibold px-3 py-2 rounded-lg transition-all duration-300 w-full disabled:opacity-50 active:scale-95 border ${
+                          isBlueCard
+                            ? "text-blue-300 hover:text-blue-100 hover:bg-blue-500/25 border-blue-500/40 hover:border-blue-400/70"
+                            : "text-orange-300 hover:text-orange-100 hover:bg-orange-500/25 border-orange-500/40 hover:border-orange-400/70"
+                        }`}
                         title="Delete this month's data"
                       >
                         🗑️ Delete

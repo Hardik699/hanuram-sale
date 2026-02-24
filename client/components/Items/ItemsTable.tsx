@@ -104,8 +104,8 @@ export default function ItemsTable({ items }: ItemsTableProps) {
 
   if (items.length === 0) {
     return (
-      <div className="bg-white dark:bg-slate-800 rounded-lg sm:rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-8 text-center shadow-sm transition-colors duration-300">
-        <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-medium">No items added yet</p>
+      <div className="bg-slate-800/50 border border-slate-700 rounded-lg sm:rounded-xl p-4 sm:p-8 text-center shadow-lg shadow-blue-600/10">
+        <p className="text-gray-400 text-xs sm:text-sm font-medium">No items added yet</p>
       </div>
     );
   }
@@ -113,14 +113,14 @@ export default function ItemsTable({ items }: ItemsTableProps) {
   return (
     <div className="space-y-3 sm:space-y-4">
       {/* Responsive Table */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg sm:rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm transition-colors duration-300">
-        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-blue-300 dark:scrollbar-thumb-slate-600 scrollbar-track-blue-100 dark:scrollbar-track-slate-700">
+      <div className="bg-slate-800/40 backdrop-blur-sm rounded-xl border border-slate-700 overflow-hidden shadow-lg shadow-blue-600/20">
+        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
           <table className="w-full min-w-full border-collapse">
             {/* Table Header */}
             <thead>
               {/* Row 1: Basic Info and Variyation (merged) */}
-              <tr className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-slate-700 dark:to-slate-700 text-slate-700 dark:text-slate-200 text-[10px] xs:text-xs sm:text-sm font-bold border-b border-slate-200 dark:border-slate-600 transition-colors duration-300">
-                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-200 dark:border-slate-600 sticky left-0 z-30 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-slate-700 dark:to-slate-700 transition-colors duration-300">
+              <tr className="bg-gradient-to-r from-slate-700/80 to-slate-700/50 text-gray-200 text-[10px] xs:text-xs sm:text-sm font-bold border-b border-slate-700 transition-colors duration-300">
+                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 sticky left-0 z-30 bg-slate-700/80 transition-colors duration-300">
                   <input
                     type="checkbox"
                     checked={
@@ -131,39 +131,39 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                     className="w-3.5 h-3.5 xs:w-4 xs:h-4 cursor-pointer accent-blue-600"
                   />
                 </th>
-                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-200 dark:border-slate-600 sticky left-8 xs:left-10 sm:left-12 z-30 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-slate-700 dark:to-slate-700 transition-colors duration-300 min-w-[120px] xs:min-w-[140px] sm:min-w-[150px]">
+                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r-2 border-blue-600/60 sticky left-8 xs:left-10 sm:left-12 z-30 bg-slate-700/80 transition-colors duration-300 min-w-[120px] xs:min-w-[140px] sm:min-w-[150px]">
                   Item Name
                 </th>
-                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-200 dark:border-slate-600 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-slate-700 dark:to-slate-700 transition-colors duration-300 hidden xs:table-cell">
+                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r-2 border-blue-600/60 bg-slate-700/80 transition-colors duration-300 hidden xs:table-cell">
                   Group
                 </th>
-                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-200 dark:border-slate-600 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-slate-700 dark:to-slate-700 transition-colors duration-300 hidden sm:table-cell">
+                <th rowSpan={3} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r-2 border-blue-600/60 bg-slate-700/80 transition-colors duration-300 hidden sm:table-cell">
                   Category
                 </th>
                 {uniqueVariationValues.length > 0 && (
-                  <th colSpan={uniqueVariationValues.length * 4} className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-b border-slate-200 dark:border-slate-600 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-slate-700 dark:to-slate-700 transition-colors duration-300 uppercase tracking-widest font-bold text-xs sm:text-sm lg:text-base">
-                    Variyation
+                  <th colSpan={uniqueVariationValues.length * 4} className="px-4 xs:px-6 sm:px-8 py-3 xs:py-4 sm:py-5 text-center bg-gradient-to-r from-blue-900/40 to-blue-800/20 border border-blue-600/50 rounded-t-xl transition-colors duration-300 uppercase tracking-widest font-bold text-xs sm:text-sm lg:text-base text-blue-200 shadow-lg shadow-blue-600/20">
+                    📊 Variations
                   </th>
                 )}
               </tr>
 
               {/* Row 2: Variation Values (e.g., 250 Gms, 500 Gms) */}
-              <tr className="bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[8px] xs:text-[9px] sm:text-xs font-bold border-b border-slate-200 dark:border-slate-600 uppercase tracking-wider transition-colors duration-300">
-                {uniqueVariationValues.map((v) => (
-                  <th key={v} colSpan={4} className="px-1 xs:px-1.5 sm:px-2 py-1.5 xs:py-2 sm:py-2 text-center border-r border-slate-200 dark:border-slate-600 bg-blue-50 dark:bg-slate-700/50 transition-colors duration-300">
-                    {v}
+              <tr className="bg-transparent text-gray-200 text-[8px] xs:text-[9px] sm:text-xs font-bold uppercase tracking-wider transition-colors duration-300 px-2 xs:px-3 sm:px-4 py-2">
+                {uniqueVariationValues.map((v, idx) => (
+                  <th key={v} colSpan={4} className={`px-2 xs:px-3 sm:px-4 py-2 xs:py-3 sm:py-4 text-center bg-gradient-to-b from-blue-900/50 to-blue-900/30 border border-blue-600/60 rounded-lg transition-colors duration-300 mx-1 shadow-lg shadow-blue-600/20 hover:bg-blue-900/60 ${idx < uniqueVariationValues.length - 1 ? '' : ''}`}>
+                    <span className="text-blue-200">💾 {v}</span>
                   </th>
                 ))}
               </tr>
 
               {/* Row 3: Channels (Dining, parcal, Swiggy, zomato) */}
-              <tr className="bg-white dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[7px] xs:text-[8px] sm:text-[9px] font-bold border-b border-slate-200 dark:border-slate-600 uppercase tracking-tighter transition-colors duration-300">
-                {uniqueVariationValues.map((v) => (
+              <tr className="bg-transparent text-gray-300 text-[7px] xs:text-[8px] sm:text-[9px] font-bold uppercase tracking-tighter transition-colors duration-300">
+                {uniqueVariationValues.map((v, idx) => (
                   <React.Fragment key={`${v}-channels`}>
-                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1 xs:py-1.5 sm:py-2 text-center border-r border-slate-200 dark:border-slate-600 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px]">Dining</th>
-                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1 xs:py-1.5 sm:py-2 text-center border-r border-slate-200 dark:border-slate-600 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px]">Parcal</th>
-                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1 xs:py-1.5 sm:py-2 text-center border-r border-slate-200 dark:border-slate-600 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px]">Swiggy</th>
-                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1 xs:py-1.5 sm:py-2 text-center border-r border-slate-200 dark:border-slate-600 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px]">Zomato</th>
+                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1.5 xs:py-2 sm:py-2.5 text-center border border-blue-600/40 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px] mx-0.5 rounded-lg bg-blue-900/20">Dining</th>
+                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1.5 xs:py-2 sm:py-2.5 text-center border border-blue-600/40 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px] mx-0.5 rounded-lg bg-blue-900/20">Parcal</th>
+                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1.5 xs:py-2 sm:py-2.5 text-center border border-blue-600/40 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px] mx-0.5 rounded-lg bg-blue-900/20">Swiggy</th>
+                    <th className="px-0.5 xs:px-1 sm:px-1.5 py-1.5 xs:py-2 sm:py-2.5 text-center border border-blue-600/40 min-w-[50px] xs:min-w-[55px] sm:min-w-[60px] mx-0.5 rounded-lg bg-blue-900/20">Zomato</th>
                   </React.Fragment>
                 ))}
               </tr>
@@ -175,38 +175,38 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                 <tr
                   key={item.itemId}
                   onClick={() => navigate(`/items/${item.itemId}`)}
-                  className={`border-b border-slate-200 dark:border-slate-600 hover:bg-blue-100 dark:hover:bg-slate-700/50 transition-colors duration-300 cursor-pointer text-[8px] xs:text-[9px] sm:text-xs whitespace-nowrap ${
-                    selectedRows.has(item.itemId) ? "bg-blue-100 dark:bg-slate-700/50" : "bg-white dark:bg-slate-800"
+                  className={`border-b border-slate-700 transition-colors duration-300 cursor-pointer text-[8px] xs:text-[9px] sm:text-xs whitespace-nowrap ${
+                    selectedRows.has(item.itemId) ? "bg-blue-600/20" : "bg-slate-800/50 hover:bg-slate-700/50"
                   }`}
                 >
                   {/* Checkbox - Sticky */}
-                  <td className={`px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-200 dark:border-slate-600 sticky left-0 z-10 transition-colors duration-300 ${selectedRows.has(item.itemId) ? "bg-blue-100 dark:bg-slate-700/50" : "bg-white dark:bg-slate-800"}`} onClick={(e) => e.stopPropagation()}>
+                  <td className={`px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 sticky left-0 z-10 transition-colors duration-300 ${selectedRows.has(item.itemId) ? "bg-blue-600/20" : "bg-slate-800/50"}`} onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selectedRows.has(item.itemId)}
                       onChange={() => toggleRowSelection(item.itemId)}
-                      className="w-3.5 h-3.5 xs:w-4 xs:h-4 accent-blue-600"
+                      className="w-3.5 h-3.5 xs:w-4 xs:h-4 accent-blue-500"
                     />
                   </td>
 
                   {/* Basic Info - Sticky Item Name */}
-                  <td className={`px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-slate-900 dark:text-white font-bold xs:font-black sticky left-8 xs:left-10 sm:left-12 z-10 border-r border-slate-200 dark:border-slate-600 min-w-[120px] xs:min-w-[140px] sm:min-w-[150px] first-letter:capitalize transition-colors duration-300 ${selectedRows.has(item.itemId) ? "bg-blue-100 dark:bg-slate-700/50" : "bg-white dark:bg-slate-800"}`}>
+                  <td className={`px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-white font-bold xs:font-black sticky left-8 xs:left-10 sm:left-12 z-10 border-r border-slate-700 min-w-[120px] xs:min-w-[140px] sm:min-w-[150px] first-letter:capitalize transition-colors duration-300 ${selectedRows.has(item.itemId) ? "bg-blue-600/20" : "bg-slate-800/50"}`}>
                     {item.itemName}
                   </td>
-                  <td className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-slate-700 dark:text-slate-300 border-r border-slate-200 dark:border-slate-600 text-center font-bold hidden xs:table-cell transition-colors duration-300">
+                  <td className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-gray-300 border-r border-slate-700 text-center font-bold hidden xs:table-cell transition-colors duration-300">
                     {item.group}
                   </td>
-                  <td className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-slate-700 dark:text-slate-300 border-r border-slate-200 dark:border-slate-600 text-center font-bold hidden sm:table-cell transition-colors duration-300">
+                  <td className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 text-gray-300 border-r border-slate-700 text-center font-bold hidden sm:table-cell transition-colors duration-300">
                     {item.category}
                   </td>
 
                   {/* Variation Prices */}
-                  {uniqueVariationValues.map((v) => (
+                  {uniqueVariationValues.map((v, idx) => (
                     <React.Fragment key={`${item.itemId}-${v}-prices`}>
-                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-100 dark:border-slate-600 font-semibold text-slate-700 dark:text-slate-300">{getPrice(item, v, "Dining")}</td>
-                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-100 dark:border-slate-600 font-semibold text-slate-700 dark:text-slate-300">{getPrice(item, v, "Parcal")}</td>
-                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-100 dark:border-slate-600 font-bold text-blue-600 dark:text-blue-400">{getPrice(item, v, "Swiggy")}</td>
-                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-200 dark:border-slate-600 font-bold text-blue-600 dark:text-blue-400">{getPrice(item, v, "Zomato")}</td>
+                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-semibold text-gray-300 mx-0.5 bg-slate-700/30">{getPrice(item, v, "Dining")}</td>
+                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-semibold text-gray-300 mx-0.5 bg-slate-700/30">{getPrice(item, v, "Parcal")}</td>
+                      <td className="px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center border-r border-slate-700 font-bold text-blue-400 mx-0.5 bg-slate-700/30">{getPrice(item, v, "Swiggy")}</td>
+                      <td className={`px-0.5 xs:px-1 sm:px-1.5 py-2 xs:py-2.5 sm:py-3 text-center font-bold text-orange-400 mx-0.5 bg-slate-700/30 border-r border-slate-700`}>{getPrice(item, v, "Zomato")}</td>
                     </React.Fragment>
                   ))}
                 </tr>
@@ -216,26 +216,26 @@ export default function ItemsTable({ items }: ItemsTableProps) {
         </div>
 
         {/* Footer with Pagination */}
-        <div className="px-3 xs:px-4 sm:px-6 py-3 xs:py-4 border-t border-slate-200 dark:border-slate-600 flex flex-col gap-3 xs:gap-4 bg-white dark:bg-slate-800 transition-colors duration-300">
+        <div className="px-3 xs:px-4 sm:px-6 py-3 xs:py-4 border-t border-slate-700 flex flex-col gap-3 xs:gap-4 bg-slate-800/30 transition-colors duration-300">
           {/* Info Row */}
           <div className="flex items-center justify-between gap-2 flex-wrap">
-            <div className="text-[10px] xs:text-xs sm:text-sm text-slate-600 dark:text-slate-400 transition-colors duration-300">
+            <div className="text-[10px] xs:text-xs sm:text-sm text-gray-400 transition-colors duration-300">
               {selectedRows.size > 0 && (
-                <span className="font-medium">{selectedRows.size} selected · </span>
+                <span className="font-medium text-blue-300">{selectedRows.size} selected · </span>
               )}
               <span className="hidden xs:inline">Showing {startIdx + 1} to{" "}</span>
               {Math.min(startIdx + itemsPerPage, items.length)}<span className="hidden xs:inline"> of {items.length}</span>
             </div>
 
             <div className="flex items-center gap-1.5 xs:gap-2">
-              <span className="text-[9px] xs:text-xs sm:text-sm text-slate-500 dark:text-slate-400 transition-colors duration-300">Rows:</span>
+              <span className="text-[9px] xs:text-xs sm:text-sm text-gray-500 transition-colors duration-300">Rows:</span>
               <select
                 value={itemsPerPage}
                 onChange={(e) => {
                   setItemsPerPage(Number(e.target.value));
                   setCurrentPage(0);
                 }}
-                className="text-[9px] xs:text-xs sm:text-sm border border-slate-300 dark:border-slate-600 rounded px-1.5 xs:px-2 py-0.5 xs:py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors duration-300"
+                className="text-[9px] xs:text-xs sm:text-sm border border-slate-600 rounded px-1.5 xs:px-2 py-0.5 xs:py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-700 text-white transition-colors duration-300"
               >
                 {[5, 10, 15, 20, 30, 50].map((value) => (
                   <option key={value} value={value}>
@@ -251,7 +251,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
             <button
               onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
               disabled={currentPage === 0}
-              className="p-1 xs:p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg disabled:opacity-50 transition-colors duration-300 text-slate-700 dark:text-slate-300"
+              className="p-1 xs:p-1.5 sm:p-2 hover:bg-slate-700 rounded-lg disabled:opacity-50 transition-colors duration-300 text-gray-400 hover:text-gray-300"
             >
               <ChevronLeft className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
             </button>
@@ -267,8 +267,8 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                     onClick={() => setCurrentPage(displayIdx)}
                     className={`w-5 h-5 xs:w-6 xs:h-6 sm:w-8 sm:h-8 rounded text-[9px] xs:text-xs sm:text-sm font-medium transition-all duration-300 ${
                       currentPage === displayIdx
-                        ? "bg-blue-600 text-white shadow-md shadow-blue-500/40"
-                        : "hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300"
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-500/60"
+                        : "hover:bg-slate-700 text-gray-400 hover:text-gray-300"
                     }`}
                   >
                     {displayIdx + 1}
@@ -280,7 +280,7 @@ export default function ItemsTable({ items }: ItemsTableProps) {
             <button
               onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
               disabled={currentPage === totalPages - 1}
-              className="p-1 xs:p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg disabled:opacity-50 transition-colors duration-300 text-slate-700 dark:text-slate-300"
+              className="p-1 xs:p-1.5 sm:p-2 hover:bg-slate-700 rounded-lg disabled:opacity-50 transition-colors duration-300 text-gray-400 hover:text-gray-300"
             >
               <ChevronRight className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
             </button>
