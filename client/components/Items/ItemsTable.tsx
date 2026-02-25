@@ -119,10 +119,10 @@ export default function ItemsTable({ items }: ItemsTableProps) {
 
   return (
     <div className="space-y-4">
-      {/* Desktop View - Full Table */}
-      <div className="hidden lg:block bg-slate-800/30 border border-slate-700/40 rounded-xl overflow-hidden shadow-md">
-        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
-          <table className="w-full border-collapse">
+      {/* Desktop/Tablet View - Full Table */}
+      <div className="hidden md:block bg-slate-800/30 border border-slate-700/40 rounded-xl overflow-hidden shadow-md">
+        <div className="overflow-x-auto custom-scrollbar">
+          <table className="min-w-max w-full border-collapse">
             {/* Table Header */}
             <thead>
               {/* Row 1: Basic Info and Variation */}
@@ -215,34 +215,6 @@ export default function ItemsTable({ items }: ItemsTableProps) {
                       <td className="px-2 py-3 text-center font-bold text-gray-100 mx-0.5 rounded border border-slate-600/30 bg-slate-700/20 text-xs" style={{ fontFamily: "Poppins, sans-serif" }}>{getPrice(item, v, "Zomato")}</td>
                     </React.Fragment>
                   ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Tablet View - Simplified */}
-      <div className="hidden md:lg:block lg:hidden bg-slate-800/30 border border-slate-700/40 rounded-xl overflow-hidden shadow-md">
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-slate-900/60 text-gray-100 text-xs font-bold border-b border-slate-700/40">
-                <th className="px-3 py-3 text-left border-r border-slate-700/40">Item</th>
-                <th className="px-3 py-3 text-center border-r border-slate-700/40">Group</th>
-                <th className="px-3 py-3 text-center">Category</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedItems.map((item) => (
-                <tr
-                  key={item.itemId}
-                  onClick={() => navigate(`/items/${item.itemId}`)}
-                  className="border-b border-slate-700/30 cursor-pointer bg-slate-800/20 hover:bg-slate-800/50 hover:shadow-md hover:shadow-slate-900/40 transition-all duration-200"
-                >
-                  <td className="px-3 py-4 text-white font-semibold text-sm truncate">{item.itemName}</td>
-                  <td className="px-3 py-4 text-gray-300 text-center text-xs">{item.group}</td>
-                  <td className="px-3 py-4 text-gray-300 text-center text-xs">{item.category}</td>
                 </tr>
               ))}
             </tbody>
