@@ -717,8 +717,8 @@ export default function ItemEdit() {
         Back to Item
       </button>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6 sm:p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-1">Edit Item</h1>
+      <div className="overflow-hidden transition-all duration-300 border border-gray-800 rounded-xl shadow-xl shadow-blue-500/10 hover:shadow-blue-500/20 hover:border-blue-600/50 bg-gray-950">
+        <h1 className="text-3xl font-bold text-white mb-1 px-6 sm:px-8 pt-6 sm:pt-8 tracking-tight">Edit Item</h1>
 
         {/* Area-wise Price Summary Row (Vertical Stack per Area) */}
         {variations.length > 0 && (
@@ -739,14 +739,14 @@ export default function ItemEdit() {
               if (!price) return null;
 
               return (
-                <div key={channel} className="flex flex-col items-center min-w-[80px] bg-white px-3 py-2 rounded-lg border border-purple-100 shadow-sm">
-                  <span className="text-[10px] font-bold text-purple-600 truncate max-w-[70px] mb-0.5" title={variation.value}>
+                <div key={channel} className="flex flex-col items-center min-w-[80px] bg-slate-700 px-3 py-2 rounded-lg border border-slate-600 shadow-sm">
+                  <span className="text-[10px] font-bold text-blue-400 truncate max-w-[70px] mb-0.5" title={variation.value}>
                     {variation.value}
                   </span>
-                  <span className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                  <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
                     {channel}
                   </span>
-                  <span className="text-sm font-black text-gray-900">
+                  <span className="text-sm font-black text-white">
                     ₹{price}
                   </span>
                 </div>
@@ -756,14 +756,14 @@ export default function ItemEdit() {
         )}
 
         {/* Form Tabs */}
-        <div className="flex gap-4 border-b border-gray-200 mb-8">
+        <div className="flex gap-4 border-b border-slate-600 mb-8 px-6 sm:px-8 pt-6 sm:pt-8">
           <button
             type="button"
             onClick={() => setActiveTab("general")}
             className={`px-4 py-2 font-semibold border-b-2 transition ${
               activeTab === "general"
-                ? "border-purple-600 text-purple-600"
-                : "border-transparent text-gray-600 hover:text-gray-900"
+                ? "border-green-500 text-white"
+                : "border-transparent text-slate-400 hover:text-slate-300"
             }`}
           >
             General Info
@@ -773,8 +773,8 @@ export default function ItemEdit() {
             onClick={() => setActiveTab("variations")}
             className={`px-4 py-2 font-semibold border-b-2 transition ${
               activeTab === "variations"
-                ? "border-purple-600 text-purple-600"
-                : "border-transparent text-gray-600 hover:text-gray-900"
+                ? "border-green-500 text-white"
+                : "border-transparent text-slate-400 hover:text-slate-300"
             }`}
           >
             Variations ({variations.length})
@@ -784,65 +784,65 @@ export default function ItemEdit() {
             onClick={() => setActiveTab("images")}
             className={`px-4 py-2 font-semibold border-b-2 transition ${
               activeTab === "images"
-                ? "border-purple-600 text-purple-600"
-                : "border-transparent text-gray-600 hover:text-gray-900"
+                ? "border-green-500 text-white"
+                : "border-transparent text-slate-400 hover:text-slate-300"
             }`}
           >
             Images ({images.length})
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 px-6 sm:px-8 pb-6 sm:pb-8">
           {activeTab === "general" && (
             <div className="space-y-6 animate-in fade-in duration-300">
               {/* Basic Info */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-3">
                     Item ID (Read-only)
                   </label>
                   <input
                     type="text"
                     value={itemId}
                     disabled
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
+                    className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-800 text-slate-400 font-semibold text-sm transition-all duration-300"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-3">
                     Item Name *
                   </label>
                   <input
                     type="text"
                     value={itemName}
                     onChange={(e) => setItemName(toTitleCase(e.target.value))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-3">
                     Short Code (Read-only)
                   </label>
                   <input
                     type="text"
                     value={shortCode}
                     disabled
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600"
+                    className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-800 text-slate-400 font-semibold text-sm transition-all duration-300"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-3">
                     HSN Code
                   </label>
                   <div className="flex gap-2">
                     <select
                       value={hsnCode}
                       onChange={(e) => setHsnCode(e.target.value)}
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                      className="flex-1 px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500 cursor-pointer"
                     >
                       <option value="">Select HSN Code</option>
                       {hsnCodes.map((code) => (
@@ -855,7 +855,7 @@ export default function ItemEdit() {
                       <button
                         type="button"
                         onClick={() => openEditHsnCodeModal(hsnCode)}
-                        className="px-3 py-2 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 font-semibold"
+                        className="px-3 py-2 bg-amber-900/30 text-amber-400 rounded-lg hover:bg-amber-900/50 font-semibold border border-amber-600/40 hover:border-amber-500/60 transition-all duration-300"
                         title="Edit selected HSN code"
                       >
                         ✏️
@@ -864,7 +864,7 @@ export default function ItemEdit() {
                     <button
                       type="button"
                       onClick={() => setNewHsnCode("")}
-                      className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
+                      className="px-3 py-2 bg-blue-900/30 text-blue-400 rounded-lg hover:bg-blue-900/50 font-semibold border border-blue-600/40 hover:border-blue-500/60 transition-all duration-300"
                     >
                       +
                     </button>
@@ -877,12 +877,12 @@ export default function ItemEdit() {
                         onChange={(e) => setNewHsnCode(e.target.value)}
                         placeholder="Enter new HSN Code"
                         autoFocus
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        className="flex-1 px-3 py-2 border border-slate-600 rounded-lg text-sm bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                       />
                       <button
                         type="button"
                         onClick={addHsnCode}
-                        className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
+                        className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold transition-all duration-300"
                       >
                         Add
                       </button>
@@ -891,13 +891,13 @@ export default function ItemEdit() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-3">
                     GST (%)
                   </label>
                   <select
                     value={gst}
                     onChange={(e) => setGst(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500 cursor-pointer"
                   >
                     <option value="">Select GST</option>
                     {GST_OPTIONS.map((option) => (
@@ -912,14 +912,14 @@ export default function ItemEdit() {
               {/* Group & Category */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-3">
                     Group *
                   </label>
                   <div className="flex gap-2">
                     <select
                       value={group}
                       onChange={(e) => setGroup(e.target.value)}
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                      className="flex-1 px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500 cursor-pointer"
                       required
                     >
                       <option value="">Select Group</option>
@@ -933,7 +933,7 @@ export default function ItemEdit() {
                       <button
                         type="button"
                         onClick={() => openEditGroupModal(group)}
-                        className="px-3 py-2 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 font-semibold"
+                        className="px-3 py-2 bg-amber-900/30 text-amber-400 rounded-lg hover:bg-amber-900/50 font-semibold border border-amber-600/40 hover:border-amber-500/60 transition-all duration-300"
                         title="Edit selected group"
                       >
                         ✏️
@@ -942,7 +942,7 @@ export default function ItemEdit() {
                     <button
                       type="button"
                       onClick={() => setNewGroup("")}
-                      className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
+                      className="px-3 py-2 bg-blue-900/30 text-blue-400 rounded-lg hover:bg-blue-900/50 font-semibold border border-blue-600/40 hover:border-blue-500/60 transition-all duration-300"
                     >
                       +
                     </button>
@@ -955,12 +955,12 @@ export default function ItemEdit() {
                         onChange={(e) => setNewGroup(toTitleCase(e.target.value))}
                         placeholder="Enter new group"
                         autoFocus
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        className="flex-1 px-3 py-2 border border-slate-600 rounded-lg text-sm bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                       />
                       <button
                         type="button"
                         onClick={addGroup}
-                        className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
+                        className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold transition-all duration-300"
                       >
                         Add
                       </button>
@@ -969,14 +969,14 @@ export default function ItemEdit() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-3">
                     Category *
                   </label>
                   <div className="flex gap-2">
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                      className="flex-1 px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500 cursor-pointer"
                       required
                     >
                       <option value="">Select Category</option>
@@ -990,7 +990,7 @@ export default function ItemEdit() {
                       <button
                         type="button"
                         onClick={() => openEditCategoryModal(category)}
-                        className="px-3 py-2 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 font-semibold"
+                        className="px-3 py-2 bg-amber-900/30 text-amber-400 rounded-lg hover:bg-amber-900/50 font-semibold border border-amber-600/40 hover:border-amber-500/60 transition-all duration-300"
                         title="Edit selected category"
                       >
                         ✏️
@@ -999,7 +999,7 @@ export default function ItemEdit() {
                     <button
                       type="button"
                       onClick={() => setNewCategory("")}
-                      className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
+                      className="px-3 py-2 bg-blue-900/30 text-blue-400 rounded-lg hover:bg-blue-900/50 font-semibold border border-blue-600/40 hover:border-blue-500/60 transition-all duration-300"
                     >
                       +
                     </button>
@@ -1012,12 +1012,12 @@ export default function ItemEdit() {
                         onChange={(e) => setNewCategory(toTitleCase(e.target.value))}
                         placeholder="Enter new category"
                         autoFocus
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        className="flex-1 px-3 py-2 border border-slate-600 rounded-lg text-sm bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                       />
                       <button
                         type="button"
                         onClick={addCategory}
-                        className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
+                        className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold transition-all duration-300"
                       >
                         Add
                       </button>
@@ -1029,7 +1029,7 @@ export default function ItemEdit() {
               {/* Item Type & Unit Type */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-3">
                     Profit Margin (%)
                   </label>
                   <input
@@ -1037,18 +1037,18 @@ export default function ItemEdit() {
                     value={profitMargin}
                     onChange={(e) => setProfitMargin(e.target.value)}
                     step="0.01"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-3">
                     Item Type
                   </label>
                   <select
                     value={itemType}
                     onChange={(e) => setItemType(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500 cursor-pointer"
                   >
                     {ITEM_TYPES.map((type) => (
                       <option key={type} value={type}>
@@ -1059,13 +1059,13 @@ export default function ItemEdit() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-3">
                     Unit Type
                   </label>
                   <select
                     value={unitType}
                     onChange={(e) => setUnitType(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500 cursor-pointer"
                   >
                     {UNIT_TYPES.map((type) => (
                       <option key={type} value={type}>
@@ -1077,13 +1077,13 @@ export default function ItemEdit() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-3">
                   Description
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(toTitleCase(e.target.value))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 min-h-[100px]"
+                  className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500 min-h-[100px]"
                   placeholder="Enter item description"
                 />
               </div>
@@ -1093,15 +1093,15 @@ export default function ItemEdit() {
           {activeTab === "variations" && (
             <div className="space-y-6 animate-in slide-in-from-right duration-300">
               {/* Variations Section */}
-              <div className="border-t pt-6">
+              <div className="border-t border-slate-600 pt-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-lg font-semibold text-white">
                     Variations
                   </h3>
                   <button
                     type="button"
                     onClick={addVariation}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300"
                   >
                     <Plus className="w-4 h-4" />
                     Add Variation
@@ -1112,11 +1112,11 @@ export default function ItemEdit() {
                   variations.map((variation) => (
                     <div
                       key={variation.id}
-                      className="mb-6 p-4 border border-gray-200 rounded-lg"
+                      className="mb-6 p-4 border border-slate-600 rounded-lg bg-slate-800/50 transition-colors duration-300"
                     >
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-300 mb-3">
                             Variation Value
                           </label>
                           <div className="flex gap-2">
@@ -1125,7 +1125,7 @@ export default function ItemEdit() {
                               onChange={(e) =>
                                 updateVariation(variation.id, "value", e.target.value)
                               }
-                              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                              className="flex-1 px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500 cursor-pointer"
                             >
                               <option value="">Select Variation</option>
                               {variationValues.map((val) => (
@@ -1138,7 +1138,7 @@ export default function ItemEdit() {
                               <button
                                 type="button"
                                 onClick={() => openEditVariationValueModal(variation.value)}
-                                className="px-3 py-2 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 font-semibold"
+                                className="px-3 py-2 bg-amber-900/30 text-amber-400 rounded-lg hover:bg-amber-900/50 font-semibold border border-amber-600/40 hover:border-amber-500/60 transition-all duration-300"
                                 title="Edit selected variation value"
                               >
                                 ✏️
@@ -1147,7 +1147,7 @@ export default function ItemEdit() {
                             <button
                               type="button"
                               onClick={() => setNewVariationValue("")}
-                              className="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold"
+                              className="px-3 py-2 bg-blue-900/30 text-blue-400 rounded-lg hover:bg-blue-900/50 font-semibold border border-blue-600/40 hover:border-blue-500/60 transition-all duration-300"
                             >
                               +
                             </button>
@@ -1163,12 +1163,12 @@ export default function ItemEdit() {
                                   }
                                   placeholder="e.g., 300 Gms, 1.5 L"
                                   autoFocus
-                                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                  className="flex-1 px-3 py-2 border border-slate-600 rounded-lg text-sm bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                                 />
                                 <button
                                   type="button"
                                   onClick={addVariationValue}
-                                  className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
+                                  className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold transition-all duration-300"
                                 >
                                   Add
                                 </button>
@@ -1177,7 +1177,7 @@ export default function ItemEdit() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-300 mb-3">
                             Price
                           </label>
                           <input
@@ -1192,12 +1192,12 @@ export default function ItemEdit() {
                             }
                             placeholder="0"
                             step="0.01"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-300 mb-3">
                             SAP Code
                           </label>
                           <input
@@ -1206,12 +1206,12 @@ export default function ItemEdit() {
                             onChange={(e) =>
                               updateVariation(variation.id, "sapCode", e.target.value)
                             }
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-300 mb-3">
                             Profit Margin (%)
                           </label>
                           <input
@@ -1225,12 +1225,12 @@ export default function ItemEdit() {
                               )
                             }
                             step="0.01"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-300 mb-3">
                             Sale Type
                           </label>
                           <select
@@ -1242,12 +1242,12 @@ export default function ItemEdit() {
                                 e.target.value as "QTY" | "KG"
                               )
                             }
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500 cursor-pointer"
                           >
                             <option value="QTY">QTY (Quantity)</option>
                             <option value="KG">KG (Kilogram)</option>
                           </select>
-                          <p className="text-[10px] text-gray-500 mt-1 italic">
+                          <p className="text-[10px] text-slate-400 mt-1 italic">
                             {variation.saleType === "KG"
                               ? "KG: Converts value (e.g. 250 Gms) to weight (0.25)"
                               : "QTY: Counts each unit as 1.0"}
@@ -1258,10 +1258,10 @@ export default function ItemEdit() {
                       {/* Channel Prices */}
                       <div className="mb-4">
                         <div className="flex justify-between items-center mb-3">
-                          <label className="block text-sm font-medium text-gray-700">
+                          <label className="block text-sm font-medium text-gray-300">
                             Channel Prices (Area-wise)
                           </label>
-                          <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded space-y-1">
+                          <div className="text-xs text-blue-300 bg-blue-900/30 px-2 py-1 rounded space-y-1 border border-blue-600/40">
                             <p>Zomato & Swiggy: auto +15% (rounded to 5)</p>
                             <p>GS1: auto +20% (rounded to 5) - Optional</p>
                           </div>
@@ -1275,12 +1275,12 @@ export default function ItemEdit() {
                       );
                       return (
                         <div key={channel} className="flex flex-col">
-                          <div className="flex flex-col mb-1 text-center bg-gray-50 rounded p-1 border border-gray-100">
-                             <span className="text-[9px] font-bold text-purple-600 truncate" title={variation.value}>{variation.value}</span>
-                             <span className="text-[8px] font-semibold text-gray-500 uppercase tracking-tight leading-none">
+                          <div className="flex flex-col mb-1 text-center bg-slate-700 rounded p-1 border border-slate-600">
+                             <span className="text-[9px] font-bold text-blue-400 truncate" title={variation.value}>{variation.value}</span>
+                             <span className="text-[8px] font-semibold text-slate-400 uppercase tracking-tight leading-none">
                               {channel}
                               {isAutoCalculated && (
-                                <span className="text-blue-600 ml-1">(auto)</span>
+                                <span className="text-green-400 ml-1">(auto)</span>
                               )}
                              </span>
                           </div>
@@ -1297,10 +1297,10 @@ export default function ItemEdit() {
                             placeholder="0"
                             step="0.01"
                             disabled={isAutoCalculated}
-                            className={`w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 ${
+                            className={`w-full px-3 py-2 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500 ${
                               isAutoCalculated
-                                ? "bg-blue-50 text-gray-500 cursor-not-allowed font-bold"
-                                : ""
+                                ? "bg-blue-900/30 text-blue-300 cursor-not-allowed font-bold border-blue-600/40"
+                                : "bg-slate-700 text-white placeholder-slate-400"
                             }`}
                           />
                         </div>
@@ -1309,7 +1309,7 @@ export default function ItemEdit() {
                         </div>
 
                         {/* GS1 with Checkbox and Code */}
-                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 space-y-3">
+                        <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600 space-y-3 transition-colors duration-300">
                           <div className="flex items-center gap-3">
                             <input
                               type="checkbox"
@@ -1322,11 +1322,11 @@ export default function ItemEdit() {
                                   e.target.checked,
                                 )
                               }
-                              className="w-4 h-4 border-gray-300 rounded focus:ring-2 focus:ring-purple-600 cursor-pointer"
+                              className="w-4 h-4 border-slate-600 rounded focus:ring-2 focus:ring-green-500 cursor-pointer bg-slate-700"
                             />
                             <label
                               htmlFor={`gs1-checkbox-${variation.id}`}
-                              className="text-sm font-medium text-gray-700 cursor-pointer flex-1"
+                              className="text-sm font-medium text-gray-300 cursor-pointer flex-1"
                             >
                               Enable GS1 Channel
                             </label>
@@ -1336,9 +1336,9 @@ export default function ItemEdit() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {/* GS1 Price */}
                         <div>
-                          <div className="flex flex-col mb-1 text-center bg-blue-50 rounded p-1 border border-blue-100">
-                             <span className="text-[9px] font-bold text-purple-600 truncate">{variation.value}</span>
-                             <span className="text-[8px] font-semibold text-gray-500 uppercase tracking-tight leading-none">GS1 (auto)</span>
+                          <div className="flex flex-col mb-1 text-center bg-blue-900/30 rounded p-1 border border-blue-600/40">
+                             <span className="text-[9px] font-bold text-blue-400 truncate">{variation.value}</span>
+                             <span className="text-[8px] font-semibold text-blue-300 uppercase tracking-tight leading-none">GS1 (auto)</span>
                           </div>
                           <input
                             type="number"
@@ -1346,16 +1346,16 @@ export default function ItemEdit() {
                             placeholder="Auto: 0"
                             step="0.01"
                             disabled
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-blue-50 text-gray-500 cursor-not-allowed font-bold"
+                            className="w-full px-3 py-2 border border-blue-600/40 rounded-lg text-sm bg-blue-900/30 text-blue-300 cursor-not-allowed font-bold"
                           />
-                          <p className="text-[10px] text-blue-600 mt-1 italic">
+                          <p className="text-[10px] text-blue-300 mt-1 italic">
                             Auto +20% (rounded to 5)
                           </p>
                         </div>
 
                         {/* GS1 Code */}
                         <div>
-                          <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">
+                          <label className="block text-xs font-semibold text-gray-300 uppercase mb-1">
                             GS1 Code
                           </label>
                           <input
@@ -1369,7 +1369,7 @@ export default function ItemEdit() {
                               )
                             }
                             placeholder="Enter GS1 code"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            className="w-full px-3 py-2 border border-slate-600 rounded-lg text-sm bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                           />
                         </div>
                       </div>
@@ -1380,7 +1380,7 @@ export default function ItemEdit() {
                         <button
                           type="button"
                           onClick={() => removeVariation(variation.id)}
-                          className="flex items-center gap-2 text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition"
+                          className="flex items-center gap-2 text-red-400 hover:text-red-300 hover:bg-red-900/30 px-3 py-2 rounded-lg transition-all duration-300 border border-red-600/40 hover:border-red-500/60"
                         >
                           <Trash2 className="w-4 h-4" />
                           Remove
@@ -1388,8 +1388,8 @@ export default function ItemEdit() {
                       </div>
                     ))
                   ) : (
-                    <div className="p-8 text-center bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                      <p className="text-gray-500">No variations added yet. Click "Add Variation" to start.</p>
+                    <div className="p-8 text-center bg-slate-800/50 rounded-lg border border-dashed border-slate-600">
+                      <p className="text-slate-400">No variations added yet. Click "Add Variation" to start.</p>
                     </div>
                   )}
                 </div>
@@ -1399,12 +1399,12 @@ export default function ItemEdit() {
             {activeTab === "images" && (
               <div className="space-y-6 animate-in slide-in-from-left duration-300">
                 {/* Image Upload */}
-                <div className="border-t pt-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-6">📸 Images by Channel</h3>
+                <div className="border-t border-slate-600 pt-6">
+                  <h3 className="text-lg font-semibold text-white mb-6">📸 Images by Channel</h3>
 
                   {/* Upload Area */}
                   <div className="mb-6">
-                    <div className="border-2 border-dashed border-purple-400 rounded-lg p-10 text-center bg-gradient-to-b from-purple-50 to-blue-50 hover:from-purple-100 hover:to-blue-100 transition cursor-pointer">
+                    <div className="border-2 border-dashed border-green-600 rounded-lg p-10 text-center bg-slate-800 hover:bg-slate-700/50 transition cursor-pointer group">
                       <input
                         type="file"
                         multiple
@@ -1415,11 +1415,11 @@ export default function ItemEdit() {
                       />
                       <label htmlFor="image-input" className="cursor-pointer block">
                         <p className="text-3xl mb-2">📁</p>
-                        <p className="text-gray-900 font-bold text-lg">
+                        <p className="text-white font-bold text-lg group-hover:text-slate-100 transition-colors duration-300">
                           Click to upload images
                         </p>
-                        <p className="text-gray-600 text-sm mt-2">PNG, JPG up to 10MB</p>
-                        <p className="text-purple-600 text-xs mt-3 font-semibold">
+                        <p className="text-slate-400 text-sm mt-2 group-hover:text-slate-300 transition-colors duration-300">PNG, JPG up to 10MB</p>
+                        <p className="text-green-400 text-xs mt-3 font-semibold group-hover:text-green-300 transition-colors duration-300">
                           Select channel in the popup that appears
                         </p>
                       </label>
@@ -1429,7 +1429,7 @@ export default function ItemEdit() {
                   {/* Image Previews Grouped by Channel */}
                   {images.length > 0 && (
                     <div className="space-y-8 mt-8">
-                      <h4 className="text-lg font-bold text-gray-900 mb-4">
+                      <h4 className="text-lg font-bold text-white mb-4">
                         📷 Uploaded Images ({images.length})
                       </h4>
                       {["Website", "Zomato", "Swiggy", "GS1"]
@@ -1437,8 +1437,8 @@ export default function ItemEdit() {
                         .map((channel) => {
                           const channelImages = images.filter((img) => img.channel === channel);
                           return (
-                            <div key={channel} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                              <h4 className="text-sm font-bold text-gray-900 mb-4 pb-2 border-b border-gray-300">
+                            <div key={channel} className="bg-slate-800/50 rounded-lg p-4 border border-slate-600 transition-colors duration-300">
+                              <h4 className="text-sm font-bold text-white mb-4 pb-2 border-b border-slate-600">
                                 {channel === "Website" && "🌐"}
                                 {channel === "Zomato" && "🔴"}
                                 {channel === "Swiggy" && "🟠"}
@@ -1457,7 +1457,7 @@ export default function ItemEdit() {
                                     <button
                                       type="button"
                                       onClick={() => removeImage(images.findIndex((i) => i === img))}
-                                      className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 shadow-lg opacity-0 group-hover:opacity-100 transition"
+                                      className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300"
                                       title="Delete image"
                                     >
                                       <X className="w-4 h-4" />
@@ -1477,12 +1477,12 @@ export default function ItemEdit() {
           {/* Channel Selection Modal */}
           {showChannelModal && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 rounded-lg p-4">
-              <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              <div className="bg-gray-900 rounded-xl shadow-2xl shadow-blue-500/20 p-8 max-w-md w-full border border-slate-700">
+                <h2 className="text-2xl font-bold text-white mb-6 text-center">
                   📁 Select Channel for Images
                 </h2>
 
-                <p className="text-gray-600 text-center mb-6">
+                <p className="text-slate-300 text-center mb-6">
                   Choose which channel these images will be uploaded to:
                 </p>
 
@@ -1492,14 +1492,14 @@ export default function ItemEdit() {
                       key={channel}
                       type="button"
                       onClick={() => handleChannelSelect(channel)}
-                      className="px-4 py-3 rounded-lg font-semibold border-2 border-gray-300 hover:border-purple-600 hover:bg-purple-50 transition text-gray-700"
+                      className="px-4 py-3 rounded-lg font-semibold border-2 border-slate-600 hover:border-green-500 hover:bg-green-900/30 transition-all duration-300 text-slate-300 hover:text-green-300"
                     >
                       {channel}
                     </button>
                   ))}
                 </div>
 
-                <p className="text-xs text-gray-500 text-center">
+                <p className="text-xs text-slate-400 text-center">
                   Click a channel to confirm upload
                 </p>
               </div>
@@ -1507,11 +1507,11 @@ export default function ItemEdit() {
           )}
 
           {/* Submit */}
-          <div className="flex gap-3 border-t pt-6">
+          <div className="flex gap-3 border-t border-slate-600 pt-6">
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold transition disabled:opacity-50"
+              className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-green-600/20 hover:shadow-xl hover:shadow-green-500/40"
             >
               {saving ? "Saving..." : "Save Changes"}
             </button>
@@ -1519,7 +1519,7 @@ export default function ItemEdit() {
               type="button"
               onClick={() => navigate(`/items/${itemId}`)}
               disabled={saving}
-              className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition disabled:opacity-50"
+              className="flex-1 px-6 py-3 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 hover:text-white font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed border border-slate-600 hover:border-slate-500"
             >
               Cancel
             </button>
@@ -1529,27 +1529,27 @@ export default function ItemEdit() {
         {/* Edit Group Modal */}
         {showEditGroupModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            <div className="bg-gray-900 rounded-xl shadow-2xl shadow-blue-500/20 p-8 max-w-md w-full max-h-[90vh] overflow-y-auto border border-slate-700">
+              <h2 className="text-2xl font-bold text-white mb-6">
                 ✏️ Edit Group
               </h2>
 
               {/* Rename Group */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-3">
                   Group Name
                 </label>
                 <input
                   type="text"
                   value={editingGroupName}
                   onChange={(e) => setEditingGroupName(toTitleCase(e.target.value))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                 />
               </div>
 
               {/* Manage Categories */}
-              <div className="mb-6 border-t pt-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="mb-6 border-t border-slate-600 pt-4">
+                <h3 className="text-lg font-semibold text-white mb-4">
                   Categories in this Group
                 </h3>
 
@@ -1560,12 +1560,12 @@ export default function ItemEdit() {
                     value={newGroupCategory}
                     onChange={(e) => setNewGroupCategory(toTitleCase(e.target.value))}
                     placeholder="Add new category"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="flex-1 px-3 py-2 border border-slate-600 rounded-lg text-sm bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                   />
                   <button
                     type="button"
                     onClick={addCategoryToGroup}
-                    className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold"
+                    className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-semibold transition-all duration-300"
                   >
                     Add
                   </button>
@@ -1577,37 +1577,37 @@ export default function ItemEdit() {
                     groupCategories.map((cat) => (
                       <div
                         key={cat}
-                        className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200"
+                        className="flex items-center justify-between bg-slate-800/50 p-3 rounded-lg border border-slate-600"
                       >
-                        <span className="text-sm text-gray-700">{cat}</span>
+                        <span className="text-sm text-slate-300">{cat}</span>
                         <button
                           type="button"
                           onClick={() => removeCategoryFromGroup(cat)}
-                          className="text-red-600 hover:bg-red-50 px-2 py-1 rounded transition text-sm"
+                          className="text-red-400 hover:text-red-300 hover:bg-red-900/30 px-2 py-1 rounded transition text-sm border border-red-600/40 hover:border-red-500/60"
                         >
                           Remove
                         </button>
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-gray-500 italic">No categories yet</p>
+                    <p className="text-sm text-slate-400 italic">No categories yet</p>
                   )}
                 </div>
               </div>
 
               {/* Modal Actions */}
-              <div className="flex gap-3 border-t pt-4">
+              <div className="flex gap-3 border-t border-slate-600 pt-4">
                 <button
                   type="button"
                   onClick={saveGroupChanges}
-                  className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold transition"
+                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition-all duration-300 shadow-lg shadow-green-600/20"
                 >
                   Save Changes
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowEditGroupModal(false)}
-                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition"
+                  className="flex-1 px-4 py-2 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 hover:text-white font-semibold transition-all duration-300 border border-slate-600 hover:border-slate-500"
                 >
                   Cancel
                 </button>
@@ -1619,29 +1619,29 @@ export default function ItemEdit() {
         {/* Edit Category Modal */}
         {showEditCategoryModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">✏️ Edit Category</h2>
+            <div className="bg-gray-900 rounded-xl shadow-2xl shadow-blue-500/20 p-8 max-w-md w-full border border-slate-700">
+              <h2 className="text-2xl font-bold text-white mb-6">✏️ Edit Category</h2>
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Category Name</label>
+                <label className="block text-sm font-medium text-gray-300 mb-3">Category Name</label>
                 <input
                   type="text"
                   value={editingCategoryName}
                   onChange={(e) => setEditingCategoryName(toTitleCase(e.target.value))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                 />
               </div>
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={saveCategoryChanges}
-                  className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold"
+                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition-all duration-300 shadow-lg shadow-green-600/20"
                 >
                   Save
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowEditCategoryModal(false)}
-                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold"
+                  className="flex-1 px-4 py-2 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 hover:text-white font-semibold transition-all duration-300 border border-slate-600 hover:border-slate-500"
                 >
                   Cancel
                 </button>
@@ -1687,29 +1687,29 @@ export default function ItemEdit() {
         {/* Edit Variation Value Modal */}
         {showEditVariationValueModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">✏️ Edit Variation Value</h2>
+            <div className="bg-gray-900 rounded-xl shadow-2xl shadow-blue-500/20 p-8 max-w-md w-full border border-slate-700">
+              <h2 className="text-2xl font-bold text-white mb-6">✏️ Edit Variation Value</h2>
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Variation Value</label>
+                <label className="block text-sm font-medium text-gray-300 mb-3">Variation Value</label>
                 <input
                   type="text"
                   value={editingVariationValue}
                   onChange={(e) => setEditingVariationValue(toTitleCase(e.target.value))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                  className="w-full px-3.5 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 hover:border-slate-500"
                 />
               </div>
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={saveVariationValueChanges}
-                  className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold"
+                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition-all duration-300 shadow-lg shadow-green-600/20"
                 >
                   Save
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowEditVariationValueModal(false)}
-                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold"
+                  className="flex-1 px-4 py-2 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 hover:text-white font-semibold transition-all duration-300 border border-slate-600 hover:border-slate-500"
                 >
                   Cancel
                 </button>
