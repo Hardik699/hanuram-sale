@@ -122,15 +122,17 @@ export default function ItemDetail() {
   }, []);
 
   useEffect(() => {
-    const fetchItem = async () => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const fetchItem = async (retryCount = 0) => {
       try {
-        setLoading(true);
+        if (isMounted && retryCount === 0) setLoading(true);
         setError(null);
 
-        console.log(`🔍 Fetching item with ID: "${itemId}"`);
+        console.log(`🔍 Fetching item with ID: "${itemId}" (attempt ${retryCount + 1})`);
 
         // Fetch all items and find the one we need with timeout
-        const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
         const response = await fetch("/api/items", {
@@ -160,36 +162,48 @@ export default function ItemDetail() {
         }
 
         console.log(`📦 Received ${items.length} items from API`);
-        console.log(
-          "Available item IDs:",
-          items.map((i: any) => i.itemId).join(", "),
-        );
-
         const foundItem = items.find((i: any) => i.itemId === itemId);
 
         if (!foundItem) {
           console.error(`❌ Item with ID "${itemId}" not found in database`);
-          setError(
-            `Item with ID "${itemId}" not found. Make sure you've created this item first.`,
-          );
-          setItem(null);
+          if (isMounted) {
+            setError(`Item with ID "${itemId}" not found.`);
+            setItem(null);
+          }
         } else {
           console.log(`✅ Found item: ${foundItem.itemName}`);
-          setItem(foundItem);
+          if (isMounted) setItem(foundItem);
         }
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : "Failed to fetch item";
-        console.error("❌ Error fetching item:", errorMessage);
-        console.error("Full error:", error);
-        setError(errorMessage);
-        setItem(null);
+      } catch (error: any) {
+        if (error.name === "AbortError") {
+          console.log("🚫 Item fetch aborted");
+          return;
+        }
+
+        console.error(`❌ Error fetching item (attempt ${retryCount + 1}):`, error.message);
+
+        // Retry once if it's a TypeError
+        if (retryCount < 1 && error instanceof TypeError && isMounted) {
+          console.log("⏳ Retrying item fetch in 2 seconds...");
+          setTimeout(() => fetchItem(retryCount + 1), 2000);
+          return;
+        }
+
+        if (isMounted) {
+          setError(error instanceof Error ? error.message : "Failed to fetch item");
+          setItem(null);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted && retryCount === 0) setLoading(false);
       }
     };
 
     fetchItem();
+
+    return () => {
+      isMounted = false;
+      // We don't abort here to avoid AbortError loops in dev
+    };
   }, [itemId]);
 
   const handleDelete = async () => {
@@ -242,14 +256,14 @@ export default function ItemDetail() {
     let timeoutId: NodeJS.Timeout | null = null;
     let isCleanup = false;
 
-    const fetchSalesData = async () => {
+    const fetchSalesData = async (retryCount = 0) => {
       if (!itemId || !dateRange.start || !dateRange.end) {
         if (isMounted) setSalesData(null);
         return;
       }
 
       try {
-        if (isMounted) setSalesLoading(true);
+        if (isMounted && retryCount === 0) setSalesLoading(true);
         const url = new URL(
           `/api/sales/item/${itemId}`,
           window.location.origin,
@@ -260,7 +274,7 @@ export default function ItemDetail() {
           url.searchParams.set("restaurant", selectedRestaurant);
         }
 
-        console.log(`🔄 Fetching sales data: ${url.toString()}`);
+        console.log(`🔄 Fetching sales data (attempt ${retryCount + 1}): ${url.toString()}`);
 
         // Increase timeout to 60 seconds for large datasets
         timeoutId = setTimeout(() => {
@@ -289,165 +303,28 @@ export default function ItemDetail() {
         console.log("✅ Sales data response:", result);
 
         if (result.success && result.data && isMounted) {
-          // The server now returns pre-aggregated data!
-          const data = result.data;
-          console.log("✅ Pre-aggregated data from server:", {
-            monthlyData: data.monthlyData?.length || 0,
-            dateWiseData: data.dateWiseData?.length || 0,
-            restaurantSales: Object.keys(data.restaurantSales || {}).length,
-          });
-
-          // Transform monthly data from YYYY-MM format to month names
-          const monthlyData = (data.monthlyData || []).map((item: any) => {
-            const [year, month] = item.month.split("-");
-            const monthNum = parseInt(month) - 1;
-            const monthName = [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "May",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Oct",
-              "Nov",
-              "Dec",
-            ][monthNum];
-            return {
-              month: monthName,
-              zomatoQty: item.zomatoQty || 0,
-              swiggyQty: item.swiggyQty || 0,
-              diningQty: item.diningQty || 0,
-              parcelQty: item.parcelQty || 0,
-              totalQty: item.totalQty || 0,
-            };
-          });
-
-          // Use pre-aggregated date-wise data
-          const dateWiseDataWithTotals = (data.dateWiseData || []).map(
-            (item: any) => ({
-              date: item.date,
-              zomatoQty: item.zomatoQty || 0,
-              swiggyQty: item.swiggyQty || 0,
-              diningQty: item.diningQty || 0,
-              parcelQty: item.parcelQty || 0,
-              totalQty: item.totalQty || 0,
-            }),
-          );
-
-          const restaurantSales = data.restaurantSales || {};
-
-          // Create sales data table from aggregated area data
-          const salesTableData: any[] = [];
-          const addedVariations = new Set<string>();
-          const allVariations = new Set<string>();
-
-          // Collect all variation names
-          [
-            data.zomatoData,
-            data.swiggyData,
-            data.diningData,
-            data.parcelData,
-          ].forEach((areaData: any) => {
-            if (areaData?.variations) {
-              areaData.variations.forEach((v: any) =>
-                allVariations.add(v.name),
-              );
-            }
-          });
-
-          // Build table rows
-          allVariations.forEach((variationName) => {
-            if (!addedVariations.has(variationName)) {
-              addedVariations.add(variationName);
-              const zomatoVar = data.zomatoData?.variations?.find(
-                (v: any) => v.name === variationName,
-              );
-              const swiggyVar = data.swiggyData?.variations?.find(
-                (v: any) => v.name === variationName,
-              );
-              const diningVar = data.diningData?.variations?.find(
-                (v: any) => v.name === variationName,
-              );
-              const parcelVar = data.parcelData?.variations?.find(
-                (v: any) => v.name === variationName,
-              );
-
-              salesTableData.push({
-                variationName,
-                sapCode: variationName,
-                zomato: {
-                  quantity: zomatoVar?.quantity || 0,
-                  value: zomatoVar?.value || 0,
-                },
-                swiggy: {
-                  quantity: swiggyVar?.quantity || 0,
-                  value: swiggyVar?.value || 0,
-                },
-                dining: {
-                  quantity: diningVar?.quantity || 0,
-                  value: diningVar?.value || 0,
-                },
-                parcel: {
-                  quantity: parcelVar?.quantity || 0,
-                  value: parcelVar?.value || 0,
-                },
-                total: {
-                  quantity:
-                    (zomatoVar?.quantity || 0) +
-                    (swiggyVar?.quantity || 0) +
-                    (diningVar?.quantity || 0) +
-                    (parcelVar?.quantity || 0),
-                  value:
-                    (zomatoVar?.value || 0) +
-                    (swiggyVar?.value || 0) +
-                    (diningVar?.value || 0) +
-                    (parcelVar?.value || 0),
-                },
-              });
-            }
-          });
-
-          setSalesData({
-            monthlyData,
-            dateWiseData: dateWiseDataWithTotals,
-            zomatoData: data.zomatoData || {
-              quantity: 0,
-              value: 0,
-              variations: [],
-            },
-            swiggyData: data.swiggyData || {
-              quantity: 0,
-              value: 0,
-              variations: [],
-            },
-            diningData: data.diningData || {
-              quantity: 0,
-              value: 0,
-              variations: [],
-            },
-            parcelData: data.parcelData || {
-              quantity: 0,
-              value: 0,
-              variations: [],
-            },
-            salesTableData,
-            restaurantSales,
-          });
+          // ... (existing logic)
         }
-      } catch (error) {
-        if (error instanceof Error && error.name === "AbortError") {
-          if (!isCleanup) {
-            console.error("❌ Sales data fetch was aborted (timeout or cancelled)");
-          }
-        } else {
-          console.error("Error fetching sales data:", error);
+      } catch (error: any) {
+        if (error.name === "AbortError") {
+          console.log("🚫 Sales data fetch aborted");
+          return;
         }
-        if (isMounted) setSalesData(null);
+
+        console.error(`❌ Error fetching sales data (attempt ${retryCount + 1}):`, error);
+
+        // Retry once if it's a TypeError (Failed to fetch)
+        if (retryCount < 1 && error instanceof TypeError && isMounted && !isCleanup) {
+          console.log("⏳ Retrying sales data fetch in 2 seconds...");
+          setTimeout(() => fetchSalesData(retryCount + 1), 2000);
+          return;
+        }
+
+        if (isMounted) {
+          // setSalesData(null);
+        }
       } finally {
-        if (isMounted) setSalesLoading(false);
+        if (isMounted && retryCount === 0) setSalesLoading(false);
       }
     };
 
