@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Trash2, Edit, RotateCcw } from "lucide-react";
+import { ArrowLeft, Trash2, Edit, RotateCcw, Package, FileText, TrendingUp } from "lucide-react";
 import SalesSummaryCards from "@/components/ItemDetail/SalesSummaryCards";
 import DateFilter from "@/components/ItemDetail/DateFilter";
 import SalesDataTable from "@/components/ItemDetail/SalesDataTable";
