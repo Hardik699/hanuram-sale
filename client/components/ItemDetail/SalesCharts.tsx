@@ -72,15 +72,32 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
   };
 
   // Create data for all 12 months (fill missing months with 0)
-  const allMonthsData = MONTH_NAMES.map(month => {
-    const found = monthlyData.find(d => d.month === month);
-    return found || {
-      month,
-      zomatoQty: 0,
-      swiggyQty: 0,
-      diningQty: 0,
-      parcelQty: 0,
-      totalQty: 0,
+  const allMonthsData = MONTH_NAMES.map((monthName, index) => {
+    const monthNum = (index + 1).toString().padStart(2, '0');
+
+    // The server sends month as "YYYY-MM" (e.g., "2025-01")
+    // If selectedYear is not provided, we might have multiple years, but
+    // the current implementation focuses on one year at a time.
+    const found = monthlyData.find(d => {
+      // Check if it's already a month name (for backward compatibility if server changes)
+      if (d.month === monthName) return true;
+
+      // Check if it's in YYYY-MM format
+      if (d.month.includes('-')) {
+        const parts = d.month.split('-');
+        return parts[1] === monthNum;
+      }
+
+      return false;
+    });
+
+    return {
+      month: monthName,
+      zomatoQty: found?.zomatoQty || 0,
+      swiggyQty: found?.swiggyQty || 0,
+      diningQty: found?.diningQty || 0,
+      parcelQty: found?.parcelQty || 0,
+      totalQty: found?.totalQty || 0,
     };
   });
 
@@ -91,7 +108,12 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
 
   // Filter date-wise data if a month is selected
   const filteredDateWiseData = selectedMonth && dateWiseData
-    ? dateWiseData.filter(d => d.date.startsWith(selectedMonth))
+    ? dateWiseData.filter(d => {
+        const monthIndex = MONTH_NAMES.indexOf(selectedMonth);
+        if (monthIndex === -1) return true;
+        const monthStr = (monthIndex + 1).toString().padStart(2, '0');
+        return d.date.includes(`-${monthStr}-`);
+      })
     : dateWiseData;
 
   return (
@@ -112,6 +134,12 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
             <BarChart
               data={allMonthsData}
               margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+              onClick={(data) => {
+                if (data && data.activeLabel) {
+                  setSelectedMonth(data.activeLabel);
+                }
+              }}
+              style={{ cursor: 'pointer' }}
             >
               <defs>
                 <linearGradient id="zomatoGradient" x1="0" y1="0" x2="0" y2="1">
