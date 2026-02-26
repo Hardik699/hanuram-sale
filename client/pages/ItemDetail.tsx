@@ -706,21 +706,50 @@ export default function ItemDetail() {
             /* Sales Tab Content */
             <div className="space-y-8">
               {/* Filter Area */}
-              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 max-w-md shadow-inner">
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
-                    Source Restaurant
-                  </label>
-                  <select
-                    value={selectedRestaurant}
-                    onChange={(e) => setSelectedRestaurant(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-800 bg-gray-950 text-white font-bold text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none cursor-pointer hover:bg-gray-900"
-                  >
-                    <option value="">All Registered Locations</option>
-                    {restaurants.map((res) => (
-                      <option key={res} value={res}>{res}</option>
-                    ))}
-                  </select>
+              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 shadow-inner">
+                <div className="space-y-4">
+                  {/* Restaurant Selection */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
+                      Source Restaurant
+                    </label>
+                    <select
+                      value={selectedRestaurant}
+                      onChange={(e) => setSelectedRestaurant(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-800 bg-gray-950 text-white font-bold text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none cursor-pointer hover:bg-gray-900"
+                    >
+                      <option value="">All Registered Locations</option>
+                      {restaurants.map((res) => (
+                        <option key={res} value={res}>{res}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Date Range Selection */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
+                        Start Date
+                      </label>
+                      <input
+                        type="date"
+                        value={dateRange.start}
+                        onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+                        className="px-4 py-3 rounded-xl border border-gray-800 bg-gray-950 text-white font-bold text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all hover:bg-gray-900"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
+                        End Date
+                      </label>
+                      <input
+                        type="date"
+                        value={dateRange.end}
+                        onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+                        className="px-4 py-3 rounded-xl border border-gray-800 bg-gray-950 text-white font-bold text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all hover:bg-gray-900"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
