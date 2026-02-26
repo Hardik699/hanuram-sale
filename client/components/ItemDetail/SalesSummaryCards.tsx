@@ -146,20 +146,11 @@ export default function SalesSummaryCards({
 }: SalesSummaryCardsProps) {
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-primary" />
-          <h2 className="text-xl font-bold text-gray-900">
-            Sales Summary by Area
-          </h2>
-        </div>
-        {selectedYear && (
-          <div className="px-4 py-1.5 bg-orange-100 border border-orange-200 rounded-full">
-            <span className="text-sm font-black text-orange-700 uppercase tracking-wider">
-              Year: {selectedYear}
-            </span>
-          </div>
-        )}
+      <div className="flex items-center gap-2 mb-3 xs:mb-4">
+        <TrendingUp className="w-4 xs:w-5 h-4 xs:h-5 text-primary" />
+        <h2 className="text-base xs:text-lg sm:text-xl font-bold text-gray-900">
+          Sales Summary by Area
+        </h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 xs:gap-4 sm:gap-6">
         <SalesCard
