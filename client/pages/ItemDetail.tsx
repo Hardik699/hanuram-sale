@@ -563,7 +563,7 @@ export default function ItemDetail() {
             </div>
             <div>
               <h2 className="text-2xl font-black text-white tracking-tight capitalize">
-                {activeTab === "details" ? "Product Specifications" : "Market Performance"}
+                {activeTab === "details" ? "Product Specifications" : `Market Performance ${selectedYear}`}
               </h2>
               <p className="text-slate-300 text-sm font-medium mt-0.5">
                 {activeTab === "details" ? "Comprehensive item details and variations" : "Sales analytics and distribution data"}
@@ -720,6 +720,23 @@ export default function ItemDetail() {
               {/* Filter Area */}
               <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 shadow-inner">
                 <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Year Selection */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
+                      Analysis Year
+                    </label>
+                    <select
+                      value={selectedYear}
+                      onChange={(e) => handleYearChange(Number(e.target.value))}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-800 bg-gray-950 text-white font-bold text-sm focus:ring-2 focus:ring-orange-500 outline-none transition-all appearance-none cursor-pointer hover:bg-gray-900"
+                    >
+                      {[2025, 2024, 2023].map((year) => (
+                        <option key={year} value={year}>{year} Sales Report</option>
+                      ))}
+                    </select>
+                  </div>
+
                   {/* Restaurant Selection */}
                   <div className="flex flex-col gap-2">
                     <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
@@ -736,6 +753,7 @@ export default function ItemDetail() {
                       ))}
                     </select>
                   </div>
+                </div>
 
                   {/* Date Range Selection */}
                   <div className="grid grid-cols-2 gap-3">
@@ -781,6 +799,7 @@ export default function ItemDetail() {
                     diningData={salesData.diningData}
                     parcelData={salesData.parcelData}
                     saleType={item?.variations?.[0]?.saleType || "QTY"}
+                    selectedYear={selectedYear}
                   />
 
                   <div className="h-px bg-gray-800"></div>

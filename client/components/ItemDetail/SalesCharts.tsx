@@ -24,8 +24,7 @@ interface SalesChartsProps {
   monthlyData: MonthlyData[];
   dateWiseData?: DateWiseData[];
   restaurantSales?: { [key: string]: number };
-  selectedYear: number;
-  onYearChange: (year: number) => void;
+  selectedYear?: number;
 }
 
 const RESTAURANT_COLORS = [
@@ -63,7 +62,7 @@ const CustomMonthlyTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales = {}, selectedYear, onYearChange }: SalesChartsProps) {
+export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales = {}, selectedYear }: SalesChartsProps) {
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const selectedChannels = {
     zomato: true,
@@ -106,28 +105,7 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
           <h2 className="text-2xl font-bold text-white">Monthly Sales Quantity</h2>
         </div>
 
-        {/* Year Selection Filter */}
-        <div className="mb-4 p-4 bg-gray-900/50 rounded-lg border border-gray-800">
-          <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Select Year</p>
-          <div className="relative w-full sm:w-48">
-            <select
-              value={selectedYear}
-              onChange={(e) => onYearChange(Number(e.target.value))}
-              className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-white font-bold text-sm focus:ring-2 focus:ring-orange-500 outline-none transition-all appearance-none cursor-pointer hover:bg-gray-700"
-            >
-              {[2025, 2024, 2023].map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-              <TrendingUp className="w-4 h-4" />
-            </div>
-          </div>
-        </div>
-
-        <p className="text-sm text-gray-300 mb-4">Area-wise sales across all 12 months</p>
+        <p className="text-sm text-gray-300 mb-4">Area-wise sales across {selectedYear || 'selected period'}</p>
 
         <div className="w-full h-96 bg-gray-900/30 rounded-lg p-4 border border-gray-800">
           <ResponsiveContainer width="100%" height="100%">
