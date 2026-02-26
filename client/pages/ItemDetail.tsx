@@ -5,6 +5,7 @@ import SalesSummaryCards from "@/components/ItemDetail/SalesSummaryCards";
 import SalesDataTable from "@/components/ItemDetail/SalesDataTable";
 import SalesCharts from "@/components/ItemDetail/SalesCharts";
 import MarketPerformanceChart from "@/components/ItemDetail/MarketPerformanceChart";
+import VariationWiseSalesCards from "@/components/ItemDetail/VariationWiseSalesCards";
 
 console.log("📄 ItemDetail module loaded");
 
@@ -29,6 +30,15 @@ const calculateAutoPrices = (basePrice: number) => {
   return { Zomato: autoPriceZomato, Swiggy: autoPriceSwiggy, GS1: autoPriceGS1 };
 };
 
+// Move outside component to prevent recalculation on every render
+const getDefaultDateRange = () => {
+  const endDate = new Date().toISOString().split("T")[0];
+  const startDate = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  return { start: startDate, end: endDate };
+};
+
 export default function ItemDetail() {
   console.log("🎯 ItemDetail component rendering");
   const params = useParams<{ itemId: string }>();
@@ -39,16 +49,8 @@ export default function ItemDetail() {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"details" | "sales">("details");
 
-  // Initialize with default date range (last 365 days)
-  const getDefaultDateRange = () => {
-    const endDate = new Date().toISOString().split("T")[0];
-    const startDate = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .split("T")[0];
-    return { start: startDate, end: endDate };
-  };
-
-  const [dateRange, setDateRange] = useState(getDefaultDateRange());
+  // Initialize with default date range (last 365 days) - only once on mount
+  const [dateRange, setDateRange] = useState(() => getDefaultDateRange());
   const [selectedRestaurant, setSelectedRestaurant] = useState<string>("");
   const [restaurants, setRestaurants] = useState<string[]>([]);
   const [restaurantsLoading, setRestaurantsLoading] = useState(false);
@@ -724,8 +726,20 @@ export default function ItemDetail() {
                 </div>
               </div>
 
+              {/* Variation-wise Sales Cards */}
+              {salesData && (
+                <VariationWiseSalesCards
+                  pickupData={salesData.parcelData}
+                  diningData={salesData.diningData}
+                  zomatoData={salesData.zomatoData}
+                  swiggyData={salesData.swiggyData}
+                  saleType={item?.variations?.[0]?.saleType || "QTY"}
+                />
+              )}
+
               {/* Market Performance Chart */}
               <MarketPerformanceChart
+                dateWiseData={salesData?.dateWiseData}
                 dateRange={dateRange}
                 onDateRangeChange={(start, end) => setDateRange({ start, end })}
               />

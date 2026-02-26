@@ -33,6 +33,21 @@ interface SalesDataTableProps {
 
 export default function SalesDataTable({ data, itemName, saleType = "QTY" }: SalesDataTableProps) {
   const calculateTotals = () => {
+    if (!data || !Array.isArray(data) || data.length === 0) {
+      return {
+        zomatoQty: 0,
+        zomatoValue: 0,
+        swiggyQty: 0,
+        swiggyValue: 0,
+        diningQty: 0,
+        diningValue: 0,
+        parcelQty: 0,
+        parcelValue: 0,
+        totalQty: 0,
+        totalValue: 0,
+      };
+    }
+
     return data.reduce(
       (acc, row) => ({
         zomatoQty: acc.zomatoQty + row.zomato.quantity,
@@ -99,7 +114,7 @@ export default function SalesDataTable({ data, itemName, saleType = "QTY" }: Sal
             </tr>
           </thead>
           <tbody>
-            {data.map((row, idx) => (
+            {data && Array.isArray(data) && data.length > 0 ? data.map((row, idx) => (
               <tr key={idx} className="border-b border-gray-200 hover:bg-gray-50 transition">
                 <td className="px-4 py-3 font-medium text-gray-900">{row.variationName}</td>
                 <td className="px-4 py-3 text-gray-600 font-mono">{row.sapCode || "-"}</td>
@@ -136,7 +151,13 @@ export default function SalesDataTable({ data, itemName, saleType = "QTY" }: Sal
                   ₹{row.total.value.toLocaleString()}
                 </td>
               </tr>
-            ))}
+            )) : (
+              <tr>
+                <td colSpan={12} className="px-4 py-8 text-center text-gray-500 font-medium">
+                  No sales data available
+                </td>
+              </tr>
+            )}
           </tbody>
           <tfoot>
             <tr className="bg-purple-50 border-t-2 border-purple-200 font-semibold text-gray-900">
