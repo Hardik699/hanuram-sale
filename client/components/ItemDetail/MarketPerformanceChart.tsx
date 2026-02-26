@@ -58,22 +58,52 @@ export default function MarketPerformanceChart({
     payload,
   }: {
     active?: boolean;
-    payload?: Array<{ value: number; name: string; color: string }>;
+    payload?: Array<{ value: number; name: string; color: string; payload: DateWiseData }>;
   }) => {
     if (active && payload && payload.length) {
-      const total = payload.reduce((sum, entry) => sum + entry.value, 0);
+      const data = payload[0].payload;
+      const total = data.zomatoQty + data.swiggyQty + data.diningQty + data.parcelQty;
+
       return (
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 shadow-lg">
-          <p className="text-xs font-bold text-gray-300 mb-2">
-            {payload[0].payload.date}
+        <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 shadow-lg min-w-max">
+          <p className="text-xs font-bold text-gray-300 mb-3 border-b border-gray-600 pb-2">
+            {data.date}
           </p>
-          {payload.map((entry, index) => (
-            <p key={index} className="text-xs font-semibold" style={{ color: entry.color }}>
-              {entry.name}: {entry.value.toLocaleString()}
+
+          {/* Zomato */}
+          <div className="mb-2">
+            <p className="text-xs font-semibold text-red-400">
+              🔴 Zomato: <span className="text-white">{data.zomatoQty.toLocaleString()} qty</span>
             </p>
-          ))}
-          <p className="text-xs font-bold text-white mt-2 border-t border-gray-600 pt-2">
-            Total: {total.toLocaleString()} qty
+            {data.zomatoValue && <p className="text-xs text-gray-400">₹{data.zomatoValue.toLocaleString()}</p>}
+          </div>
+
+          {/* Swiggy */}
+          <div className="mb-2">
+            <p className="text-xs font-semibold text-orange-400">
+              🟠 Swiggy: <span className="text-white">{data.swiggyQty.toLocaleString()} qty</span>
+            </p>
+            {data.swiggyValue && <p className="text-xs text-gray-400">₹{data.swiggyValue.toLocaleString()}</p>}
+          </div>
+
+          {/* Dining */}
+          <div className="mb-2">
+            <p className="text-xs font-semibold text-blue-400">
+              🔵 Dining: <span className="text-white">{data.diningQty.toLocaleString()} qty</span>
+            </p>
+            {data.diningValue && <p className="text-xs text-gray-400">₹{data.diningValue.toLocaleString()}</p>}
+          </div>
+
+          {/* Parcel */}
+          <div className="mb-3">
+            <p className="text-xs font-semibold text-green-400">
+              🟢 Parcel: <span className="text-white">{data.parcelQty.toLocaleString()} qty</span>
+            </p>
+            {data.parcelValue && <p className="text-xs text-gray-400">₹{data.parcelValue.toLocaleString()}</p>}
+          </div>
+
+          <p className="text-xs font-bold text-yellow-400 border-t border-gray-600 pt-2">
+            📊 Total: {total.toLocaleString()} qty
           </p>
         </div>
       );
