@@ -336,48 +336,6 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
         </div>
       )}
 
-      {/* Restaurant Sales Comparison - Donut Chart */}
-      {Object.keys(restaurantSales || {}).length > 0 && restaurantData.length > 0 && (
-        <div className="bg-gradient-to-br from-white via-orange-50/20 to-orange-50 rounded-2xl border border-orange-200/50 p-8 shadow-lg hover:shadow-xl transition">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-3 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 rounded-xl shadow-lg">
-              <BarChart3 className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900">Restaurant Sales Comparison</h2>
-              <p className="text-xs text-orange-600 font-semibold mt-0.5">Total sales distribution by platform</p>
-            </div>
-          </div>
-
-          <div className="flex justify-center items-center bg-white rounded-xl border border-gray-100 shadow-lg p-6">
-            <div className="w-72 h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={restaurantData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={100}
-                    paddingAngle={2}
-                    dataKey="value"
-                    isAnimationActive={true}
-                    animationDuration={600}
-                  >
-                    {restaurantData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={RESTAURANT_COLORS[index % RESTAURANT_COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    formatter={(value) => value.toLocaleString()}
-                    contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb", borderRadius: "8px" }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

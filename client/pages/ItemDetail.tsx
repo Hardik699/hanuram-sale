@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Trash2, Edit, RotateCcw, Package, FileText, TrendingUp } from "lucide-react";
 import SalesSummaryCards from "@/components/ItemDetail/SalesSummaryCards";
-import SalesDataTable from "@/components/ItemDetail/SalesDataTable";
 import SalesCharts from "@/components/ItemDetail/SalesCharts";
-import VariationWiseSalesCards from "@/components/ItemDetail/VariationWiseSalesCards";
 
 console.log("📄 ItemDetail module loaded");
 
@@ -726,16 +724,6 @@ export default function ItemDetail() {
                 </div>
               </div>
 
-              {/* Variation-wise Sales Cards */}
-              {salesData && (
-                <VariationWiseSalesCards
-                  pickupData={salesData.parcelData}
-                  diningData={salesData.diningData}
-                  zomatoData={salesData.zomatoData}
-                  swiggyData={salesData.swiggyData}
-                  saleType={item?.variations?.[0]?.saleType || "QTY"}
-                />
-              )}
 
 
 
@@ -760,12 +748,6 @@ export default function ItemDetail() {
                     monthlyData={salesData.monthlyData}
                     dateWiseData={salesData.dateWiseData}
                     restaurantSales={salesData.restaurantSales}
-                  />
-
-                  <SalesDataTable
-                    data={salesData.salesTableData}
-                    itemName={item.itemName}
-                    saleType={item?.variations?.[0]?.saleType || "QTY"}
                   />
 
                 </div>
