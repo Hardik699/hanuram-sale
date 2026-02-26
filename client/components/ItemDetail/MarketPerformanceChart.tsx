@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
 import { Calendar } from "lucide-react";
 import {
-  BarChart,
+  ComposedChart,
   Bar,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -18,6 +19,10 @@ interface DateWiseData {
   diningQty: number;
   parcelQty: number;
   totalQty: number;
+  zomatoValue?: number;
+  swiggyValue?: number;
+  diningValue?: number;
+  parcelValue?: number;
 }
 
 interface MarketPerformanceChartProps {
@@ -133,29 +138,17 @@ export default function MarketPerformanceChart({
       {/* Chart */}
       <div className="bg-gray-900/30 rounded-xl p-6 border border-gray-800 shadow-inner">
         <ResponsiveContainer width="100%" height={400}>
-          <BarChart
+          <ComposedChart
             data={chartData}
             margin={{ top: 20, right: 30, left: 0, bottom: 60 }}
           >
             <defs>
-              <linearGradient id="zomatoGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#ef4444" stopOpacity={0.8} />
-                <stop offset="100%" stopColor="#ef4444" stopOpacity={0.6} />
-              </linearGradient>
-              <linearGradient id="swiggyGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#f97316" stopOpacity={0.8} />
-                <stop offset="100%" stopColor="#f97316" stopOpacity={0.6} />
-              </linearGradient>
-              <linearGradient id="diningGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8} />
-                <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.6} />
-              </linearGradient>
-              <linearGradient id="parcelGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#10b981" stopOpacity={0.8} />
-                <stop offset="100%" stopColor="#10b981" stopOpacity={0.6} />
+              <linearGradient id="shipmentGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#fbbf24" stopOpacity={0.9} />
+                <stop offset="95%" stopColor="#fbbf24" stopOpacity={0.3} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#374151" verticalPoints={[0]} />
             <XAxis
               dataKey="date"
               stroke="#9ca3af"
@@ -176,48 +169,45 @@ export default function MarketPerformanceChart({
                 fontSize: "12px",
                 fontWeight: 600,
               }}
-              iconType="square"
+              iconType="circle"
             />
             <Bar
-              dataKey="zomatoQty"
-              stackId="sales"
-              fill="url(#zomatoGradient)"
-              name="Zomato"
+              dataKey="totalQty"
+              fill="url(#shipmentGradient)"
+              name="Daily Sales"
               radius={[8, 8, 0, 0]}
               isAnimationActive={true}
             />
-            <Bar
-              dataKey="swiggyQty"
-              stackId="sales"
-              fill="url(#swiggyGradient)"
-              name="Swiggy"
+            <Line
+              type="monotone"
+              dataKey="zomatoQty"
+              stroke="#a78bfa"
+              strokeWidth={3}
+              name="Zomato Trend"
+              dot={{
+                fill: "#a78bfa",
+                r: 5,
+                strokeWidth: 2,
+                stroke: "#6d28d9",
+              }}
+              activeDot={{ r: 7 }}
               isAnimationActive={true}
             />
-            <Bar
-              dataKey="diningQty"
-              stackId="sales"
-              fill="url(#diningGradient)"
-              name="Dining"
-              isAnimationActive={true}
-            />
-            <Bar
-              dataKey="parcelQty"
-              stackId="sales"
-              fill="url(#parcelGradient)"
-              name="Parcel"
-              isAnimationActive={true}
-            />
-          </BarChart>
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
 
       {/* Chart Legend */}
       <div className="bg-gray-900/30 rounded-xl p-4 border border-gray-800">
-        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Channel Legend</p>
+        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Sales Breakdown</p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded" style={{ backgroundColor: "#ef4444" }}></div>
-            <span className="text-xs text-gray-300 font-medium">Zomato</span>
+            <div className="w-3 h-3 rounded" style={{ backgroundColor: "#fbbf24" }}></div>
+            <span className="text-xs text-gray-300 font-medium">Daily Sales Qty</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded" style={{ backgroundColor: "#a78bfa" }}></div>
+            <span className="text-xs text-gray-300 font-medium">Zomato Trend</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: "#f97316" }}></div>
@@ -225,11 +215,7 @@ export default function MarketPerformanceChart({
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: "#3b82f6" }}></div>
-            <span className="text-xs text-gray-300 font-medium">Dining</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded" style={{ backgroundColor: "#10b981" }}></div>
-            <span className="text-xs text-gray-300 font-medium">Parcel</span>
+            <span className="text-xs text-gray-300 font-medium">Dining & Parcel</span>
           </div>
         </div>
       </div>
