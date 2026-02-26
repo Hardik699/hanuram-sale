@@ -134,8 +134,8 @@ export default function MarketPerformanceChart({
       </div>
 
       {/* Date Range Section */}
-      <div className="bg-gray-900/50 rounded-xl p-5 border border-gray-800">
-        <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+      <div className="bg-orange-900/30 rounded-xl p-5 border border-orange-700/50">
+        <label className="block text-xs font-black text-orange-400 uppercase tracking-widest mb-3 flex items-center gap-2">
           <Calendar className="w-4 h-4" />
           Date Range
         </label>
@@ -148,7 +148,7 @@ export default function MarketPerformanceChart({
                 setStartDate(e.target.value);
                 onDateRangeChange(e.target.value, endDate);
               }}
-              className="w-full px-3 py-2 rounded-lg border border-gray-700 bg-gray-800 text-white font-semibold text-xs focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer"
+              className="w-full px-3 py-2 rounded-lg border border-orange-700/50 bg-orange-900/20 text-white font-semibold text-xs focus:ring-2 focus:ring-orange-500 outline-none transition-all cursor-pointer"
             />
           </div>
           <div>
@@ -159,14 +159,14 @@ export default function MarketPerformanceChart({
                 setEndDate(e.target.value);
                 onDateRangeChange(startDate, e.target.value);
               }}
-              className="w-full px-3 py-2 rounded-lg border border-gray-700 bg-gray-800 text-white font-semibold text-xs focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer"
+              className="w-full px-3 py-2 rounded-lg border border-orange-700/50 bg-orange-900/20 text-white font-semibold text-xs focus:ring-2 focus:ring-orange-500 outline-none transition-all cursor-pointer"
             />
           </div>
         </div>
       </div>
 
       {/* Chart */}
-      <div className="bg-gray-900/30 rounded-xl p-6 border border-gray-800 shadow-inner">
+      <div className="bg-orange-900/20 rounded-xl p-6 border border-orange-700/30 shadow-inner">
         <ResponsiveContainer width="100%" height={400}>
           <ComposedChart
             data={chartData}
@@ -174,8 +174,8 @@ export default function MarketPerformanceChart({
           >
             <defs>
               <linearGradient id="shipmentGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#fbbf24" stopOpacity={0.9} />
-                <stop offset="95%" stopColor="#fbbf24" stopOpacity={0.3} />
+                <stop offset="5%" stopColor="#f97316" stopOpacity={0.9} />
+                <stop offset="95%" stopColor="#f97316" stopOpacity={0.3} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" verticalPoints={[0]} />
@@ -228,8 +228,8 @@ export default function MarketPerformanceChart({
       </div>
 
       {/* Chart Legend */}
-      <div className="bg-gray-900/30 rounded-xl p-4 border border-gray-800">
-        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Sales Breakdown</p>
+      <div className="bg-orange-900/20 rounded-xl p-4 border border-orange-700/30">
+        <p className="text-xs font-bold text-orange-400 uppercase tracking-widest mb-3">Sales Breakdown</p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: "#fbbf24" }}></div>
