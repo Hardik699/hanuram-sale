@@ -3,6 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Trash2, Edit, RotateCcw, Package, FileText, TrendingUp } from "lucide-react";
 import SalesSummaryCards from "@/components/ItemDetail/SalesSummaryCards";
 import SalesDataTable from "@/components/ItemDetail/SalesDataTable";
+import SalesCharts from "@/components/ItemDetail/SalesCharts";
+import MarketPerformanceChart from "@/components/ItemDetail/MarketPerformanceChart";
+import VariationWiseSalesCards from "@/components/ItemDetail/VariationWiseSalesCards";
 
 console.log("📄 ItemDetail module loaded");
 
@@ -723,6 +726,37 @@ export default function ItemDetail() {
                 </div>
               </div>
 
+              {/* Monthly Sales Quantity Chart */}
+              {salesData && (
+                <SalesCharts
+                  monthlyData={salesData.monthlyData}
+                  dateWiseData={[]}
+                  restaurantSales={{}}
+                />
+              )}
+
+              <div className="h-px bg-gray-800"></div>
+
+              {/* Variation-wise Sales Cards */}
+              {salesData && (
+                <VariationWiseSalesCards
+                  pickupData={salesData.parcelData}
+                  diningData={salesData.diningData}
+                  zomatoData={salesData.zomatoData}
+                  swiggyData={salesData.swiggyData}
+                  saleType={item?.variations?.[0]?.saleType || "QTY"}
+                />
+              )}
+
+              {/* Market Performance Chart */}
+              <MarketPerformanceChart
+                dateWiseData={salesData?.dateWiseData}
+                dateRange={dateRange}
+                onDateRangeChange={(start, end) => setDateRange({ start, end })}
+              />
+
+              <div className="h-px bg-gray-800"></div>
+
 
               {salesLoading ? (
                 <div className="p-20 text-center flex flex-col items-center gap-4">
@@ -740,6 +774,12 @@ export default function ItemDetail() {
                   />
 
                   <div className="h-px bg-gray-800"></div>
+
+                  <SalesCharts
+                    monthlyData={salesData.monthlyData}
+                    dateWiseData={salesData.dateWiseData}
+                    restaurantSales={salesData.restaurantSales}
+                  />
 
                   <SalesDataTable
                     data={salesData.salesTableData}
