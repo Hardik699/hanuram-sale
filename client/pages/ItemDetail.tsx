@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Trash2, Edit, RotateCcw, Package, FileText, TrendingUp } from "lucide-react";
 import SalesSummaryCards from "@/components/ItemDetail/SalesSummaryCards";
-import DateFilter from "@/components/ItemDetail/DateFilter";
 import SalesDataTable from "@/components/ItemDetail/SalesDataTable";
 import SalesCharts from "@/components/ItemDetail/SalesCharts";
+import MarketPerformanceChart from "@/components/ItemDetail/MarketPerformanceChart";
 
 console.log("📄 ItemDetail module loaded");
 
@@ -303,7 +303,10 @@ export default function ItemDetail() {
         console.log("✅ Sales data response:", result);
 
         if (result.success && result.data && isMounted) {
-          // ... (existing logic)
+          setSalesData(result.data);
+        } else if (!result.success && isMounted) {
+          console.warn("⚠️ Sales API returned success=false");
+          setSalesData(null);
         }
       } catch (error: any) {
         if (error.name === "AbortError") {
@@ -320,8 +323,10 @@ export default function ItemDetail() {
           return;
         }
 
-        if (isMounted) {
-          // setSalesData(null);
+        if (isMounted && retryCount > 0) {
+          // Only set to null after all retries are exhausted
+          setSalesData(null);
+          console.warn("⚠️ Failed to fetch sales data after retries. Showing empty state.");
         }
       } finally {
         if (isMounted && retryCount === 0) setSalesLoading(false);
@@ -701,7 +706,7 @@ export default function ItemDetail() {
             /* Sales Tab Content */
             <div className="space-y-8">
               {/* Filter Area */}
-              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 grid grid-cols-1 md:grid-cols-2 gap-6 shadow-inner">
+              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 max-w-md shadow-inner">
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
                     Source Restaurant
@@ -717,16 +722,15 @@ export default function ItemDetail() {
                     ))}
                   </select>
                 </div>
-
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
-                    Reporting Interval
-                  </label>
-                  <DateFilter
-                    onDateRangeChange={(start, end) => setDateRange({ start, end })}
-                  />
-                </div>
               </div>
+
+              {/* Market Performance Chart */}
+              <MarketPerformanceChart
+                dateRange={dateRange}
+                onDateRangeChange={(start, end) => setDateRange({ start, end })}
+              />
+
+              <div className="h-px bg-gray-800"></div>
 
               {salesLoading ? (
                 <div className="p-20 text-center flex flex-col items-center gap-4">
