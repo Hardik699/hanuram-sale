@@ -393,7 +393,14 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
       parcel: {},
     };
 
-    const monthlyByArea: { [key: string]: { [area: string]: number } } = {};
+    const monthlyByArea: {
+      [month: string]: {
+        [area: string]: {
+          total: number;
+          variations: { [name: string]: number };
+        }
+      }
+    } = {};
     const dailyByArea: { [key: string]: { [area: string]: number } } = {};
     const restaurantSales: { [key: string]: number } = {};
 
@@ -491,8 +498,13 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
         // Aggregate by month & area
         const month = recordDate.toISOString().substring(0, 7);
         if (!monthlyByArea[month]) monthlyByArea[month] = {};
-        monthlyByArea[month][normalizedArea] =
-          (monthlyByArea[month][normalizedArea] || 0) + adjustedQuantity;
+        if (!monthlyByArea[month][normalizedArea]) {
+          monthlyByArea[month][normalizedArea] = { total: 0, variations: {} };
+        }
+
+        monthlyByArea[month][normalizedArea].total += adjustedQuantity;
+        monthlyByArea[month][normalizedArea].variations[variationName] =
+          (monthlyByArea[month][normalizedArea].variations[variationName] || 0) + adjustedQuantity;
 
         // Aggregate by day & area
         const day = recordDate.toISOString().substring(0, 10);
@@ -528,15 +540,19 @@ export const handleGetItemSales: RequestHandler = async (req, res) => {
       .sort(([monthA], [monthB]) => monthA.localeCompare(monthB))
       .map(([month, areas]) => ({
         month,
-        zomatoQty: areas.zomato || 0,
-        swiggyQty: areas.swiggy || 0,
-        diningQty: areas.dining || 0,
-        parcelQty: areas.parcel || 0,
+        zomatoQty: areas.zomato?.total || 0,
+        swiggyQty: areas.swiggy?.total || 0,
+        diningQty: areas.dining?.total || 0,
+        parcelQty: areas.parcel?.total || 0,
+        zomatoVariations: areas.zomato?.variations || {},
+        swiggyVariations: areas.swiggy?.variations || {},
+        diningVariations: areas.dining?.variations || {},
+        parcelVariations: areas.parcel?.variations || {},
         totalQty:
-          (areas.zomato || 0) +
-          (areas.swiggy || 0) +
-          (areas.dining || 0) +
-          (areas.parcel || 0),
+          (areas.zomato?.total || 0) +
+          (areas.swiggy?.total || 0) +
+          (areas.dining?.total || 0) +
+          (areas.parcel?.total || 0),
       }));
 
     // Build daily chart data

@@ -8,6 +8,10 @@ interface MonthlyData {
   swiggyQty: number;
   diningQty: number;
   parcelQty: number;
+  zomatoVariations?: { [name: string]: number };
+  swiggyVariations?: { [name: string]: number };
+  diningVariations?: { [name: string]: number };
+  parcelVariations?: { [name: string]: number };
   totalQty: number;
 }
 
@@ -45,17 +49,45 @@ const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Se
 // Custom tooltip to show both quantity and value
 const CustomMonthlyTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length > 0) {
+    const data = payload[0].payload as MonthlyData;
     return (
-      <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
-        <p className="font-semibold text-gray-900 mb-2">{payload[0]?.payload?.month || "Month"}</p>
-        {payload.map((entry: any, idx: number) => (
-          <p key={idx} style={{ color: entry.color }} className="text-sm font-medium">
-            {entry.name}: {entry.value.toLocaleString()}
-          </p>
-        ))}
-        <p className="text-sm font-bold text-gray-700 mt-2 border-t border-gray-200 pt-2">
-          Total: {payload.reduce((sum: number, p: any) => sum + p.value, 0).toLocaleString()}
+      <div className="bg-white border-2 border-orange-200 rounded-xl shadow-2xl p-4 min-w-[200px]">
+        <p className="font-black text-gray-900 mb-3 text-lg border-b border-gray-100 pb-2 flex items-center gap-2">
+          📅 {data.month.includes('-') ? MONTH_NAMES[parseInt(data.month.split('-')[1]) - 1] : data.month}
         </p>
+
+        <div className="space-y-4">
+          {[
+            { key: 'zomato', name: 'Zomato', color: '#ef4444', qty: data.zomatoQty, variations: data.zomatoVariations },
+            { key: 'swiggy', name: 'Swiggy', color: '#f97316', qty: data.swiggyQty, variations: data.swiggyVariations },
+            { key: 'dining', name: 'Dining', color: '#3b82f6', qty: data.diningQty, variations: data.diningVariations },
+            { key: 'parcel', name: 'Parcel', color: '#10b981', qty: data.parcelQty, variations: data.parcelVariations },
+          ].map((area) => (
+            area.qty > 0 && (
+              <div key={area.key} className="space-y-1">
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-sm" style={{ color: area.color }}>{area.name}</span>
+                  <span className="font-black text-sm" style={{ color: area.color }}>{area.qty.toLocaleString()}</span>
+                </div>
+                {area.variations && Object.keys(area.variations).length > 0 && (
+                  <div className="pl-3 border-l-2 border-gray-100 space-y-0.5">
+                    {Object.entries(area.variations).map(([name, val]) => (
+                      <div key={name} className="flex justify-between text-[10px] text-gray-500 font-medium">
+                        <span className="truncate max-w-[120px]">{name}</span>
+                        <span>{val.toLocaleString()}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          ))}
+        </div>
+
+        <div className="mt-4 pt-3 border-t-2 border-gray-100 flex justify-between items-center">
+          <span className="text-xs font-black text-gray-500 uppercase tracking-widest">Grand Total</span>
+          <span className="text-base font-black text-gray-900">{data.totalQty.toLocaleString()}</span>
+        </div>
       </div>
     );
   }
@@ -97,6 +129,10 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
       swiggyQty: found?.swiggyQty || 0,
       diningQty: found?.diningQty || 0,
       parcelQty: found?.parcelQty || 0,
+      zomatoVariations: found?.zomatoVariations || {},
+      swiggyVariations: found?.swiggyVariations || {},
+      diningVariations: found?.diningVariations || {},
+      parcelVariations: found?.parcelVariations || {},
       totalQty: found?.totalQty || 0,
     };
   });
