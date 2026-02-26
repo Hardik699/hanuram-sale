@@ -206,10 +206,10 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
 
       {/* Date-wise Daily Sales Chart */}
       {filteredDateWiseData && filteredDateWiseData.length > 0 && (
-        <div className="bg-gradient-to-br from-slate-50 to-green-50 rounded-xl border border-gray-200 p-6 shadow-sm">
+        <div className="bg-gradient-to-br from-slate-50 to-orange-50 rounded-xl border border-orange-200 p-6 shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg">
+              <div className="p-2 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg">
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900">
@@ -219,7 +219,7 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
             {selectedMonth && (
               <button
                 onClick={() => setSelectedMonth(null)}
-                className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-300 text-sm font-semibold transition shadow-sm hover:shadow"
+                className="px-4 py-2 bg-white hover:bg-orange-50 text-orange-700 rounded-lg border border-orange-300 text-sm font-semibold transition shadow-sm hover:shadow"
               >
                 Clear Filter
               </button>
