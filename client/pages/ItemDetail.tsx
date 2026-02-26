@@ -46,8 +46,20 @@ export default function ItemDetail() {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"details" | "sales">("details");
 
-  // Initialize with default date range (last 365 days) - only once on mount
-  const [dateRange, setDateRange] = useState(() => getDefaultDateRange());
+  // Initialize with current year's date range
+  const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear());
+  const [dateRange, setDateRange] = useState(() => ({
+    start: `${new Date().getFullYear()}-01-01`,
+    end: `${new Date().getFullYear()}-12-31`
+  }));
+
+  const handleYearChange = (year: number) => {
+    setSelectedYear(year);
+    setDateRange({
+      start: `${year}-01-01`,
+      end: `${year}-12-31`
+    });
+  };
   const [selectedRestaurant, setSelectedRestaurant] = useState<string>("");
   const [restaurants, setRestaurants] = useState<string[]>([]);
   const [restaurantsLoading, setRestaurantsLoading] = useState(false);
@@ -777,6 +789,8 @@ export default function ItemDetail() {
                     monthlyData={salesData.monthlyData}
                     dateWiseData={salesData.dateWiseData}
                     restaurantSales={salesData.restaurantSales}
+                    selectedYear={selectedYear}
+                    onYearChange={handleYearChange}
                   />
 
                 </div>

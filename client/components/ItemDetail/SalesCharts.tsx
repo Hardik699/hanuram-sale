@@ -24,6 +24,8 @@ interface SalesChartsProps {
   monthlyData: MonthlyData[];
   dateWiseData?: DateWiseData[];
   restaurantSales?: { [key: string]: number };
+  selectedYear: number;
+  onYearChange: (year: number) => void;
 }
 
 const RESTAURANT_COLORS = [
@@ -61,19 +63,14 @@ const CustomMonthlyTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales = {} }: SalesChartsProps) {
+export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales = {}, selectedYear, onYearChange }: SalesChartsProps) {
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
-  const [selectedChannels, setSelectedChannels] = useState<{
-    zomato: boolean;
-    swiggy: boolean;
-    dining: boolean;
-    parcel: boolean;
-  }>({
+  const selectedChannels = {
     zomato: true,
     swiggy: true,
     dining: true,
     parcel: true,
-  });
+  };
 
   // Create data for all 12 months (fill missing months with 0)
   const allMonthsData = MONTH_NAMES.map(month => {
@@ -109,41 +106,24 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
           <h2 className="text-2xl font-bold text-white">Monthly Sales Quantity</h2>
         </div>
 
-        {/* Channel Selection Filter */}
+        {/* Year Selection Filter */}
         <div className="mb-4 p-4 bg-gray-900/50 rounded-lg border border-gray-800">
-          <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Select Channels</p>
-          <div className="flex flex-wrap gap-2">
-            {[
-              { key: "zomato", label: "Zomato", color: "#ef4444" },
-              { key: "swiggy", label: "Swiggy", color: "#f97316" },
-              { key: "dining", label: "Dining", color: "#3b82f6" },
-              { key: "parcel", label: "Parcel", color: "#10b981" },
-            ].map((channel) => (
-              <button
-                key={channel.key}
-                onClick={() =>
-                  setSelectedChannels((prev) => ({
-                    ...prev,
-                    [channel.key]: !prev[channel.key as keyof typeof prev],
-                  }))
-                }
-                className={`px-4 py-2 rounded-lg font-bold text-sm transition-all border ${
-                  selectedChannels[channel.key as keyof typeof selectedChannels]
-                    ? "bg-opacity-80 border-opacity-100 text-white"
-                    : "bg-gray-800 border-gray-700 text-gray-500 opacity-50"
-                }`}
-                style={
-                  selectedChannels[channel.key as keyof typeof selectedChannels]
-                    ? {
-                        backgroundColor: channel.color,
-                        borderColor: channel.color,
-                      }
-                    : undefined
-                }
-              >
-                {channel.label}
-              </button>
-            ))}
+          <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Select Year</p>
+          <div className="relative w-full sm:w-48">
+            <select
+              value={selectedYear}
+              onChange={(e) => onYearChange(Number(e.target.value))}
+              className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-white font-bold text-sm focus:ring-2 focus:ring-orange-500 outline-none transition-all appearance-none cursor-pointer hover:bg-gray-700"
+            >
+              {[2025, 2024, 2023].map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+              <TrendingUp className="w-4 h-4" />
+            </div>
           </div>
         </div>
 
