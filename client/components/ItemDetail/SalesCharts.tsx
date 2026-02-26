@@ -211,7 +211,7 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
       </div>
 
       {/* Date-wise Daily Sales Chart */}
-      {filteredDateWiseData && filteredDateWiseData.length > 0 && (
+      {dateWiseData && dateWiseData.length > 0 && filteredDateWiseData && filteredDateWiseData.length > 0 && (
         <div className="bg-gradient-to-br from-white via-orange-50/30 to-orange-50 rounded-2xl border border-orange-200/60 p-8 shadow-lg hover:shadow-xl transition">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
             <div className="flex items-center gap-3">
@@ -343,7 +343,7 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
       )}
 
       {/* Restaurant Sales Comparison - Donut Chart */}
-      {restaurantData.length > 0 && (
+      {Object.keys(restaurantSales || {}).length > 0 && restaurantData.length > 0 && (
         <div className="bg-gradient-to-br from-white via-orange-50/20 to-orange-50 rounded-2xl border border-orange-200/50 p-8 shadow-lg hover:shadow-xl transition">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-3 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 rounded-xl shadow-lg">

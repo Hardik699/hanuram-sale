@@ -726,6 +726,17 @@ export default function ItemDetail() {
                 </div>
               </div>
 
+              {/* Monthly Sales Quantity Chart */}
+              {salesData && (
+                <SalesCharts
+                  monthlyData={salesData.monthlyData}
+                  dateWiseData={[]}
+                  restaurantSales={{}}
+                />
+              )}
+
+              <div className="h-px bg-gray-800"></div>
+
               {/* Variation-wise Sales Cards */}
               {salesData && (
                 <VariationWiseSalesCards
