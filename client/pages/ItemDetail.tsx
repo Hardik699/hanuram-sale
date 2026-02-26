@@ -2,10 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Trash2, Edit, RotateCcw, Package, FileText, TrendingUp } from "lucide-react";
 import SalesSummaryCards from "@/components/ItemDetail/SalesSummaryCards";
-import SalesDataTable from "@/components/ItemDetail/SalesDataTable";
 import SalesCharts from "@/components/ItemDetail/SalesCharts";
-import MarketPerformanceChart from "@/components/ItemDetail/MarketPerformanceChart";
-import VariationWiseSalesCards from "@/components/ItemDetail/VariationWiseSalesCards";
 
 console.log("📄 ItemDetail module loaded");
 
@@ -63,26 +60,22 @@ export default function ItemDetail() {
   // Fetch unique restaurants (non-blocking)
   useEffect(() => {
     let isMounted = true;
-    const controller = new AbortController();
     let timeoutId: NodeJS.Timeout | null = null;
 
-    const fetchRestaurants = async () => {
+    const fetchRestaurants = async (retryCount = 0) => {
       try {
         if (!isMounted) return;
-        setRestaurantsLoading(true);
+        if (retryCount === 0) setRestaurantsLoading(true);
 
-        // Set timeout for 15 seconds
-        timeoutId = setTimeout(() => {
-          if (!isMounted) return;
-          controller.abort();
-        }, 15000);
+        const controller = new AbortController();
+        const abortTimeoutId = setTimeout(() => controller.abort(), 15000);
 
         const response = await fetch("/api/sales/restaurants", {
           signal: controller.signal,
         });
 
+        clearTimeout(abortTimeoutId);
         if (!isMounted) return;
-        if (timeoutId) clearTimeout(timeoutId);
 
         if (!response.ok) {
           console.warn("⚠️ Failed to fetch restaurants:", response.status);
@@ -100,15 +93,20 @@ export default function ItemDetail() {
           }
         }
       } catch (error) {
-        // Only log non-abort errors
         if (error instanceof Error && error.name !== "AbortError") {
-          console.warn("⚠️ Restaurant fetch failed (non-critical):", error);
+          console.warn(`⚠️ Restaurant fetch failed (attempt ${retryCount + 1}):`, error);
+          // Retry once on network errors
+          if (retryCount < 1 && error instanceof TypeError && isMounted) {
+            console.log("⏳ Retrying restaurant fetch in 2 seconds...");
+            timeoutId = setTimeout(() => fetchRestaurants(retryCount + 1), 2000);
+            return;
+          }
         }
         if (isMounted) {
           setRestaurants([]);
         }
       } finally {
-        if (isMounted) {
+        if (isMounted && retryCount === 0) {
           setRestaurantsLoading(false);
         }
       }
@@ -116,7 +114,7 @@ export default function ItemDetail() {
 
     fetchRestaurants();
 
-    // Cleanup function - just mark as unmounted, don't abort
+    // Cleanup function
     return () => {
       isMounted = false;
       if (timeoutId) clearTimeout(timeoutId);
@@ -708,54 +706,55 @@ export default function ItemDetail() {
             /* Sales Tab Content */
             <div className="space-y-8">
               {/* Filter Area */}
-              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 max-w-md shadow-inner">
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
-                    Source Restaurant
-                  </label>
-                  <select
-                    value={selectedRestaurant}
-                    onChange={(e) => setSelectedRestaurant(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-800 bg-gray-950 text-white font-bold text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none cursor-pointer hover:bg-gray-900"
-                  >
-                    <option value="">All Registered Locations</option>
-                    {restaurants.map((res) => (
-                      <option key={res} value={res}>{res}</option>
-                    ))}
-                  </select>
+              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 shadow-inner">
+                <div className="space-y-4">
+                  {/* Restaurant Selection */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
+                      Source Restaurant
+                    </label>
+                    <select
+                      value={selectedRestaurant}
+                      onChange={(e) => setSelectedRestaurant(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-800 bg-gray-950 text-white font-bold text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none cursor-pointer hover:bg-gray-900"
+                    >
+                      <option value="">All Registered Locations</option>
+                      {restaurants.map((res) => (
+                        <option key={res} value={res}>{res}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Date Range Selection */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
+                        Start Date
+                      </label>
+                      <input
+                        type="date"
+                        value={dateRange.start}
+                        onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+                        className="px-4 py-3 rounded-xl border border-gray-800 bg-gray-950 text-white font-bold text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all hover:bg-gray-900"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
+                        End Date
+                      </label>
+                      <input
+                        type="date"
+                        value={dateRange.end}
+                        onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+                        className="px-4 py-3 rounded-xl border border-gray-800 bg-gray-950 text-white font-bold text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all hover:bg-gray-900"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Monthly Sales Quantity Chart */}
-              {salesData && (
-                <SalesCharts
-                  monthlyData={salesData.monthlyData}
-                  dateWiseData={[]}
-                  restaurantSales={{}}
-                />
-              )}
 
-              <div className="h-px bg-gray-800"></div>
 
-              {/* Variation-wise Sales Cards */}
-              {salesData && (
-                <VariationWiseSalesCards
-                  pickupData={salesData.parcelData}
-                  diningData={salesData.diningData}
-                  zomatoData={salesData.zomatoData}
-                  swiggyData={salesData.swiggyData}
-                  saleType={item?.variations?.[0]?.saleType || "QTY"}
-                />
-              )}
-
-              {/* Market Performance Chart */}
-              <MarketPerformanceChart
-                dateWiseData={salesData?.dateWiseData}
-                dateRange={dateRange}
-                onDateRangeChange={(start, end) => setDateRange({ start, end })}
-              />
-
-              <div className="h-px bg-gray-800"></div>
 
               {salesLoading ? (
                 <div className="p-20 text-center flex flex-col items-center gap-4">
@@ -774,19 +773,12 @@ export default function ItemDetail() {
 
                   <div className="h-px bg-gray-800"></div>
 
-                  <SalesDataTable
-                    data={salesData.salesTableData}
-                    itemName={item.itemName}
-                    saleType={item?.variations?.[0]?.saleType || "QTY"}
-                  />
-
-                  <div className="h-px bg-gray-800"></div>
-
                   <SalesCharts
                     monthlyData={salesData.monthlyData}
                     dateWiseData={salesData.dateWiseData}
                     restaurantSales={salesData.restaurantSales}
                   />
+
                 </div>
               ) : (
                 <div className="bg-gray-900/30 rounded-2xl p-12 text-center border border-dashed border-gray-800">
