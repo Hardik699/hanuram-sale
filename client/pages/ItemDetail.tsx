@@ -303,7 +303,10 @@ export default function ItemDetail() {
         console.log("✅ Sales data response:", result);
 
         if (result.success && result.data && isMounted) {
-          // ... (existing logic)
+          setSalesData(result.data);
+        } else if (!result.success && isMounted) {
+          console.warn("⚠️ Sales API returned success=false");
+          setSalesData(null);
         }
       } catch (error: any) {
         if (error.name === "AbortError") {
@@ -320,8 +323,10 @@ export default function ItemDetail() {
           return;
         }
 
-        if (isMounted) {
-          // setSalesData(null);
+        if (isMounted && retryCount > 0) {
+          // Only set to null after all retries are exhausted
+          setSalesData(null);
+          console.warn("⚠️ Failed to fetch sales data after retries. Showing empty state.");
         }
       } finally {
         if (isMounted && retryCount === 0) setSalesLoading(false);
