@@ -250,36 +250,28 @@ export default function MarketPerformanceChart({
         </ResponsiveContainer>
       </div>
 
-      {/* Chart Legend Info */}
-      <div className="bg-gradient-to-r from-orange-900/30 to-orange-800/20 rounded-xl p-6 border border-orange-700/40 backdrop-blur-sm">
-        <p className="text-xs font-bold text-orange-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-orange-500"></span>
+      {/* Chart Legend Info - Light Theme */}
+      <div className="bg-gradient-to-r from-orange-50 via-orange-100/30 to-orange-50 rounded-xl p-6 border border-orange-200/60">
+        <p className="text-xs font-bold text-orange-700 uppercase tracking-widest mb-4 flex items-center gap-2">
+          <span className="inline-block w-2 h-2 rounded-full bg-orange-600"></span>
           Legend & Metrics
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="flex flex-col items-start gap-1 p-3 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-orange-600/50 transition">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#f97316" }}></div>
-              <span className="text-xs font-semibold text-orange-300">Daily Sales</span>
-            </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
+            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#f97316" }}></div>
+            <span className="text-sm font-semibold text-gray-700">Daily Sales</span>
           </div>
-          <div className="flex flex-col items-start gap-1 p-3 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-purple-600/50 transition">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#a78bfa" }}></div>
-              <span className="text-xs font-semibold text-purple-300">Trend Line</span>
-            </div>
+          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
+            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#a78bfa" }}></div>
+            <span className="text-sm font-semibold text-gray-700">Zomato Trend</span>
           </div>
-          <div className="flex flex-col items-start gap-1 p-3 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-red-600/50 transition">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#ef4444" }}></div>
-              <span className="text-xs font-semibold text-red-300">Zomato</span>
-            </div>
+          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
+            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#ef4444" }}></div>
+            <span className="text-sm font-semibold text-gray-700">Zomato</span>
           </div>
-          <div className="flex flex-col items-start gap-1 p-3 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-blue-600/50 transition">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#3b82f6" }}></div>
-              <span className="text-xs font-semibold text-blue-300">Other Areas</span>
-            </div>
+          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
+            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#3b82f6" }}></div>
+            <span className="text-sm font-semibold text-gray-700">Other Areas</span>
           </div>
         </div>
       </div>
