@@ -231,8 +231,8 @@ export default function Items() {
 
       {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-lg z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
-          <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-slate-900/80 border border-slate-700/50 backdrop-blur-xl">
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-gray-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-black/60 border border-gray-800 backdrop-blur-xl">
             <ItemForm
               onSuccess={handleAddItem}
               onClose={() => setShowForm(false)}
