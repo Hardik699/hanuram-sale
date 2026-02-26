@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, ComposedChart, Line } from "recharts";
 import { TrendingUp, BarChart3 } from "lucide-react";
 import { useState } from "react";
 
@@ -87,6 +87,31 @@ const CustomMonthlyTooltip = ({ active, payload }: any) => {
         <div className="mt-4 pt-3 border-t-2 border-gray-100 flex justify-between items-center">
           <span className="text-xs font-black text-gray-500 uppercase tracking-widest">Grand Total</span>
           <span className="text-base font-black text-gray-900">{data.totalQty.toLocaleString()}</span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+// Custom tooltip for daily chart (dark theme)
+const CustomDailyTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length > 0) {
+    const data = payload[0].payload as DateWiseData;
+    return (
+      <div className="bg-[#0b0e14] border border-[#1f2937] rounded-lg shadow-2xl p-4 min-w-[160px]">
+        <p className="text-[#9ca3af] font-medium text-xs mb-3 border-b border-[#1f2937] pb-2">
+          {data.date}
+        </p>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center gap-4">
+            <span className="text-sm font-bold text-[#f59e0b]">Daily Sales</span>
+            <span className="text-sm font-black text-white">{data.totalQty.toLocaleString()}</span>
+          </div>
+          <div className="flex justify-between items-center gap-4">
+            <span className="text-sm font-bold text-[#a78bfa]">Zomato Trend</span>
+            <span className="text-sm font-black text-white">{data.zomatoQty.toLocaleString()}</span>
+          </div>
         </div>
       </div>
     );
@@ -284,133 +309,121 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
         </div>
       </div>
 
-      {/* Date-wise Daily Sales Chart */}
+      {/* Date-wise Daily Sales Chart - Styled as requested */}
       {dateWiseData && dateWiseData.length > 0 && filteredDateWiseData && filteredDateWiseData.length > 0 && (
-        <div className="bg-gradient-to-br from-white via-orange-50/30 to-orange-50 rounded-2xl border border-orange-200/60 p-8 shadow-lg hover:shadow-xl transition">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 rounded-xl shadow-lg">
-                <TrendingUp className="w-6 h-6 text-white" />
+        <div className="bg-[#0b0e14] rounded-2xl border border-[#1f2937] p-8 shadow-2xl overflow-hidden relative group">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-br from-orange-500 to-orange-700 rounded-xl shadow-lg shadow-orange-500/10">
+                <BarChart3 className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="text-3xl font-bold text-gray-900">
+                <h2 className="text-2xl font-black text-white tracking-tight">
                   Daily Sales Breakdown
                 </h2>
-                {selectedMonth && (
-                  <p className="text-sm text-orange-600 font-semibold mt-1">📅 Filtered by {selectedMonth}</p>
+                {selectedMonth ? (
+                  <p className="text-xs text-orange-400 font-black uppercase tracking-widest mt-1">📅 FILTERED: {selectedMonth}</p>
+                ) : (
+                  <p className="text-xs text-gray-500 font-black uppercase tracking-widest mt-1">📊 FULL PERIOD ANALYSIS</p>
                 )}
               </div>
             </div>
             {selectedMonth && (
               <button
                 onClick={() => setSelectedMonth(null)}
-                className="px-5 py-2.5 bg-white hover:bg-orange-50 text-orange-700 rounded-lg border border-orange-300 text-sm font-bold transition shadow-md hover:shadow-lg hover:border-orange-400"
+                className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-orange-400 rounded-lg border border-orange-500/20 text-xs font-black transition-all uppercase tracking-widest flex items-center gap-2"
               >
-                ✕ Clear Filter
+                ✕ Reset View
               </button>
             )}
           </div>
-          <p className="text-sm font-medium text-gray-600 mb-6">Daily area-wise sales for {selectedMonth || 'selected period'}</p>
 
-          <div className="w-full bg-white rounded-xl p-6 border border-gray-100 shadow-lg">
+          <div className="w-full h-[450px] bg-[#0b0e14]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart
+              <ComposedChart
                 data={filteredDateWiseData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+                margin={{ top: 20, right: 30, left: 0, bottom: 60 }}
               >
                 <defs>
-                  <linearGradient id="zomatoGradientDaily" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#ef4444" stopOpacity={0.8} />
-                    <stop offset="100%" stopColor="#ef4444" stopOpacity={0.6} />
-                  </linearGradient>
-                  <linearGradient id="swiggyGradientDaily" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#f97316" stopOpacity={0.8} />
-                    <stop offset="100%" stopColor="#f97316" stopOpacity={0.6} />
-                  </linearGradient>
-                  <linearGradient id="diningGradientDaily" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8} />
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.6} />
-                  </linearGradient>
-                  <linearGradient id="parcelGradientDaily" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.8} />
-                    <stop offset="100%" stopColor="#10b981" stopOpacity={0.6} />
+                  <linearGradient id="dailyBarGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#d97706" stopOpacity={0.6} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={true} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
                 <XAxis
                   dataKey="date"
-                  stroke="#6b7280"
-                  tick={{ fill: "#374151", fontSize: 11, fontWeight: 500 }}
+                  stroke="#4b5563"
+                  tick={{ fill: "#9ca3af", fontSize: 11, fontWeight: 600 }}
                   angle={-45}
                   textAnchor="end"
-                  height={100}
+                  height={80}
+                  interval={Math.ceil(filteredDateWiseData.length / 15)}
                 />
                 <YAxis
-                  stroke="#6b7280"
-                  tick={{ fill: "#374151", fontSize: 12 }}
-                  label={{ value: 'Quantity', angle: -90, position: 'insideLeft', style: { fill: '#374151' } }}
+                  stroke="#4b5563"
+                  tick={{ fill: "#9ca3af", fontSize: 11, fontWeight: 600 }}
+                  label={{ value: 'Qty', angle: -90, position: 'insideLeft', offset: 10, style: { fill: '#9ca3af', fontWeight: 700, fontSize: 13 } }}
                 />
                 <Tooltip
-                  content={<CustomMonthlyTooltip />}
-                  cursor={{ fill: "rgba(34, 197, 94, 0.1)" }}
+                  content={<CustomDailyTooltip />}
+                  cursor={{ fill: "rgba(245, 158, 11, 0.05)" }}
                 />
                 <Legend
-                  wrapperStyle={{ paddingTop: "20px", fontSize: 13 }}
-                  iconType="square"
+                  wrapperStyle={{ paddingTop: "40px" }}
+                  content={({ payload }) => (
+                    <div className="flex justify-center items-center gap-8 mt-4">
+                      {payload?.map((entry: any, index: number) => (
+                        <div key={`item-${index}`} className="flex items-center gap-2">
+                          <div
+                            className={`w-3.5 h-3.5 rounded-full`}
+                            style={{ backgroundColor: entry.color }}
+                          />
+                          <span className="text-sm font-bold text-gray-300">
+                            {entry.value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 />
                 <Bar
+                  dataKey="totalQty"
+                  name="Daily Sales"
+                  fill="url(#dailyBarGradient)"
+                  barSize={40}
+                  radius={[6, 6, 0, 0]}
+                  isAnimationActive={true}
+                  animationDuration={800}
+                />
+                <Line
+                  type="monotone"
                   dataKey="zomatoQty"
-                  stackId="daily"
-                  fill="url(#zomatoGradientDaily)"
-                  name="Zomato"
+                  name="Zomato Trend"
+                  stroke="#a78bfa"
+                  strokeWidth={3}
+                  dot={{ fill: "#a78bfa", strokeWidth: 2, r: 4, stroke: "#0b0e14" }}
+                  activeDot={{ r: 6, stroke: "#a78bfa", strokeWidth: 2, fill: "#0b0e14" }}
                   isAnimationActive={true}
-                  animationDuration={600}
+                  animationDuration={1000}
                 />
-                <Bar
-                  dataKey="swiggyQty"
-                  stackId="daily"
-                  fill="url(#swiggyGradientDaily)"
-                  name="Swiggy"
-                  isAnimationActive={true}
-                  animationDuration={600}
-                />
-                <Bar
-                  dataKey="diningQty"
-                  stackId="daily"
-                  fill="url(#diningGradientDaily)"
-                  name="Dining"
-                  isAnimationActive={true}
-                  animationDuration={600}
-                />
-                <Bar
-                  dataKey="parcelQty"
-                  stackId="daily"
-                  fill="url(#parcelGradientDaily)"
-                  name="Parcel"
-                  isAnimationActive={true}
-                  animationDuration={600}
-                />
-              </BarChart>
+              </ComposedChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Legend Section */}
-          <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-lg border border-orange-200/50">
-            <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
-              <div className="w-3.5 h-3.5 rounded" style={{ backgroundColor: "#ef4444" }}></div>
-              <span className="text-xs font-semibold text-gray-700">Zomato</span>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-[#111827]/50 border border-[#1f2937] p-4 rounded-xl flex items-center justify-between">
+              <span className="text-gray-400 text-xs font-black uppercase tracking-widest">Total Period Volume</span>
+              <span className="text-xl font-black text-orange-400">
+                {filteredDateWiseData.reduce((sum, d) => sum + d.totalQty, 0).toLocaleString()}
+              </span>
             </div>
-            <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
-              <div className="w-3.5 h-3.5 rounded" style={{ backgroundColor: "#f97316" }}></div>
-              <span className="text-xs font-semibold text-gray-700">Swiggy</span>
-            </div>
-            <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
-              <div className="w-3.5 h-3.5 rounded" style={{ backgroundColor: "#3b82f6" }}></div>
-              <span className="text-xs font-semibold text-gray-700">Dining</span>
-            </div>
-            <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
-              <div className="w-3.5 h-3.5 rounded" style={{ backgroundColor: "#10b981" }}></div>
-              <span className="text-xs font-semibold text-gray-700">Parcel</span>
+            <div className="bg-[#111827]/50 border border-[#1f2937] p-4 rounded-xl flex items-center justify-between">
+              <span className="text-gray-400 text-xs font-black uppercase tracking-widest">Zomato Market Share</span>
+              <span className="text-xl font-black text-purple-400">
+                {((filteredDateWiseData.reduce((sum, d) => sum + d.zomatoQty, 0) /
+                  (filteredDateWiseData.reduce((sum, d) => sum + d.totalQty, 0) || 1)) * 100).toFixed(1)}%
+              </span>
             </div>
           </div>
         </div>
