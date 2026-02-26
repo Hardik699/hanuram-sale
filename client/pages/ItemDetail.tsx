@@ -63,26 +63,22 @@ export default function ItemDetail() {
   // Fetch unique restaurants (non-blocking)
   useEffect(() => {
     let isMounted = true;
-    const controller = new AbortController();
     let timeoutId: NodeJS.Timeout | null = null;
 
-    const fetchRestaurants = async () => {
+    const fetchRestaurants = async (retryCount = 0) => {
       try {
         if (!isMounted) return;
-        setRestaurantsLoading(true);
+        if (retryCount === 0) setRestaurantsLoading(true);
 
-        // Set timeout for 15 seconds
-        timeoutId = setTimeout(() => {
-          if (!isMounted) return;
-          controller.abort();
-        }, 15000);
+        const controller = new AbortController();
+        const abortTimeoutId = setTimeout(() => controller.abort(), 15000);
 
         const response = await fetch("/api/sales/restaurants", {
           signal: controller.signal,
         });
 
+        clearTimeout(abortTimeoutId);
         if (!isMounted) return;
-        if (timeoutId) clearTimeout(timeoutId);
 
         if (!response.ok) {
           console.warn("⚠️ Failed to fetch restaurants:", response.status);
@@ -100,15 +96,20 @@ export default function ItemDetail() {
           }
         }
       } catch (error) {
-        // Only log non-abort errors
         if (error instanceof Error && error.name !== "AbortError") {
-          console.warn("⚠️ Restaurant fetch failed (non-critical):", error);
+          console.warn(`⚠️ Restaurant fetch failed (attempt ${retryCount + 1}):`, error);
+          // Retry once on network errors
+          if (retryCount < 1 && error instanceof TypeError && isMounted) {
+            console.log("⏳ Retrying restaurant fetch in 2 seconds...");
+            timeoutId = setTimeout(() => fetchRestaurants(retryCount + 1), 2000);
+            return;
+          }
         }
         if (isMounted) {
           setRestaurants([]);
         }
       } finally {
-        if (isMounted) {
+        if (isMounted && retryCount === 0) {
           setRestaurantsLoading(false);
         }
       }
@@ -116,7 +117,7 @@ export default function ItemDetail() {
 
     fetchRestaurants();
 
-    // Cleanup function - just mark as unmounted, don't abort
+    // Cleanup function
     return () => {
       isMounted = false;
       if (timeoutId) clearTimeout(timeoutId);
