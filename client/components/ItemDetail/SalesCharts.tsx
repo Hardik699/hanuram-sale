@@ -349,73 +349,31 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Donut Chart */}
-            <div className="lg:col-span-1 flex justify-center items-center bg-white rounded-xl border border-gray-100 shadow-lg p-6">
-              <div className="w-72 h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={restaurantData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={100}
-                      paddingAngle={2}
-                      dataKey="value"
-                      isAnimationActive={true}
-                      animationDuration={600}
-                    >
-                      {restaurantData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={RESTAURANT_COLORS[index % RESTAURANT_COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      formatter={(value) => value.toLocaleString()}
-                      contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb", borderRadius: "8px" }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            {/* Restaurant List */}
-            <div className="lg:col-span-2 bg-white rounded-xl border border-gray-100 shadow-lg p-6">
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {restaurantData.map((restaurant, idx) => {
-                  const total = restaurantData.reduce((sum, r) => sum + r.value, 0);
-                  const percentage = (restaurant.value / total) * 100;
-                  return (
-                    <div
-                      key={idx}
-                      className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-gray-300 transition"
-                    >
-                      <div className="flex items-center gap-3 flex-1">
-                        <div
-                          className="w-3 h-3 rounded-full flex-shrink-0 shadow-sm"
-                          style={{ backgroundColor: RESTAURANT_COLORS[idx % RESTAURANT_COLORS.length] }}
-                        ></div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-gray-900 truncate">{restaurant.name}</p>
-                          <div className="w-32 h-1.5 bg-gray-200 rounded-full overflow-hidden mt-1">
-                            <div
-                              className="h-full rounded-full transition-all"
-                              style={{
-                                width: `${percentage}%`,
-                                backgroundColor: RESTAURANT_COLORS[idx % RESTAURANT_COLORS.length]
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right ml-4">
-                        <p className="text-sm font-bold text-gray-900">{restaurant.value.toLocaleString()}</p>
-                        <p className="text-xs font-semibold text-gray-600 mt-1">{percentage.toFixed(1)}%</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+          <div className="flex justify-center items-center bg-white rounded-xl border border-gray-100 shadow-lg p-6">
+            <div className="w-72 h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={restaurantData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={2}
+                    dataKey="value"
+                    isAnimationActive={true}
+                    animationDuration={600}
+                  >
+                    {restaurantData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={RESTAURANT_COLORS[index % RESTAURANT_COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value) => value.toLocaleString()}
+                    contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb", borderRadius: "8px" }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
