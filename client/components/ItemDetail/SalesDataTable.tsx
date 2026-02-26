@@ -33,6 +33,21 @@ interface SalesDataTableProps {
 
 export default function SalesDataTable({ data, itemName, saleType = "QTY" }: SalesDataTableProps) {
   const calculateTotals = () => {
+    if (!data || !Array.isArray(data) || data.length === 0) {
+      return {
+        zomatoQty: 0,
+        zomatoValue: 0,
+        swiggyQty: 0,
+        swiggyValue: 0,
+        diningQty: 0,
+        diningValue: 0,
+        parcelQty: 0,
+        parcelValue: 0,
+        totalQty: 0,
+        totalValue: 0,
+      };
+    }
+
     return data.reduce(
       (acc, row) => ({
         zomatoQty: acc.zomatoQty + row.zomato.quantity,
