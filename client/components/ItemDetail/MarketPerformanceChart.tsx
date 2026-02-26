@@ -142,14 +142,14 @@ export default function MarketPerformanceChart({
       </div>
 
       {/* Date Range Section */}
-      <div className="bg-gradient-to-r from-orange-900/40 to-orange-800/30 rounded-xl p-6 border border-orange-700/50 backdrop-blur-sm">
-        <label className="block text-xs font-bold text-orange-300 uppercase tracking-widest mb-4 flex items-center gap-2">
+      <div className="bg-gradient-to-r from-blue-900/40 to-blue-800/30 rounded-xl p-6 border border-blue-700/50 backdrop-blur-sm">
+        <label className="block text-xs font-bold text-blue-300 uppercase tracking-widest mb-4 flex items-center gap-2">
           <Calendar className="w-4 h-4" />
           Select Date Range
         </label>
         <div className="grid grid-cols-2 gap-3">
           <div className="relative">
-            <span className="absolute left-3 top-2 text-orange-400 text-xs font-semibold">From</span>
+            <span className="absolute left-3 top-2 text-blue-400 text-xs font-semibold">From</span>
             <input
               type="date"
               value={startDate}
@@ -157,11 +157,11 @@ export default function MarketPerformanceChart({
                 setStartDate(e.target.value);
                 onDateRangeChange(e.target.value, endDate);
               }}
-              className="w-full px-3 py-3 pt-6 rounded-lg border border-orange-600/60 bg-orange-900/40 text-white font-semibold text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all cursor-pointer hover:bg-orange-900/50"
+              className="w-full px-3 py-3 pt-6 rounded-lg border border-blue-600/60 bg-blue-900/40 text-white font-semibold text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all cursor-pointer hover:bg-blue-900/50"
             />
           </div>
           <div className="relative">
-            <span className="absolute left-3 top-2 text-orange-400 text-xs font-semibold">To</span>
+            <span className="absolute left-3 top-2 text-blue-400 text-xs font-semibold">To</span>
             <input
               type="date"
               value={endDate}
@@ -169,7 +169,7 @@ export default function MarketPerformanceChart({
                 setEndDate(e.target.value);
                 onDateRangeChange(startDate, e.target.value);
               }}
-              className="w-full px-3 py-3 pt-6 rounded-lg border border-orange-600/60 bg-orange-900/40 text-white font-semibold text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all cursor-pointer hover:bg-orange-900/50"
+              className="w-full px-3 py-3 pt-6 rounded-lg border border-blue-600/60 bg-blue-900/40 text-white font-semibold text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all cursor-pointer hover:bg-blue-900/50"
             />
           </div>
         </div>
