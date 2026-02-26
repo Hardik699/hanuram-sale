@@ -5,6 +5,7 @@ import SalesSummaryCards from "@/components/ItemDetail/SalesSummaryCards";
 import DateFilter from "@/components/ItemDetail/DateFilter";
 import SalesDataTable from "@/components/ItemDetail/SalesDataTable";
 import SalesCharts from "@/components/ItemDetail/SalesCharts";
+import MarketPerformanceChart from "@/components/ItemDetail/MarketPerformanceChart";
 
 console.log("📄 ItemDetail module loaded");
 
@@ -727,6 +728,14 @@ export default function ItemDetail() {
                   />
                 </div>
               </div>
+
+              {/* Market Performance Chart */}
+              <MarketPerformanceChart
+                dateRange={dateRange}
+                onDateRangeChange={(start, end) => setDateRange({ start, end })}
+              />
+
+              <div className="h-px bg-gray-800"></div>
 
               {salesLoading ? (
                 <div className="p-20 text-center flex flex-col items-center gap-4">
