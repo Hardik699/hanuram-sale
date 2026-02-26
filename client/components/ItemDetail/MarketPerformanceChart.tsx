@@ -127,33 +127,29 @@ export default function MarketPerformanceChart({
 
   return (
     <div className="space-y-6">
-      {/* Header with Stats - Light Theme */}
-      <div className="bg-gradient-to-br from-white via-orange-50/30 to-orange-50 rounded-2xl border border-orange-200/60 p-8 shadow-lg hover:shadow-xl transition">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="p-3 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 rounded-xl shadow-lg">
-            <TrendingUp className="w-6 h-6 text-white" />
-          </div>
+      {/* Header with Stats */}
+      <div className="bg-gradient-to-r from-orange-900/40 to-orange-800/30 rounded-xl p-6 border border-orange-700/50 backdrop-blur-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h3 className="text-3xl font-bold text-gray-900">
-              Daily Sales Breakdown
+            <h3 className="text-2xl font-bold text-white flex items-center gap-2">
+              📊 Daily Sales Breakdown
             </h3>
-            <p className="text-xs text-orange-600 font-semibold mt-0.5">Daily-wise sales analytics</p>
+            <p className="text-orange-300 text-sm font-semibold mt-2">
+              Total quantity sold: <span className="text-orange-400 font-bold">{totalQuantity.toLocaleString()}</span> units
+            </p>
           </div>
         </div>
-        <p className="text-sm font-medium text-gray-600 mt-4">
-          Total quantity sold: <span className="font-bold text-orange-600">{totalQuantity.toLocaleString()}</span> units
-        </p>
       </div>
 
-      {/* Date Range Section - Light Theme */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-lg">
-        <label className="block text-xs font-bold text-gray-700 uppercase tracking-widest mb-4 flex items-center gap-2">
+      {/* Date Range Section */}
+      <div className="bg-gradient-to-r from-blue-900/40 to-blue-800/30 rounded-xl p-6 border border-blue-700/50 backdrop-blur-sm">
+        <label className="block text-xs font-bold text-blue-300 uppercase tracking-widest mb-4 flex items-center gap-2">
           <Calendar className="w-4 h-4" />
           Select Date Range
         </label>
         <div className="grid grid-cols-2 gap-3">
           <div className="relative">
-            <span className="absolute left-3 top-2 text-gray-600 text-xs font-semibold">From</span>
+            <span className="absolute left-3 top-2 text-blue-400 text-xs font-semibold">From</span>
             <input
               type="date"
               value={startDate}
@@ -161,11 +157,11 @@ export default function MarketPerformanceChart({
                 setStartDate(e.target.value);
                 onDateRangeChange(e.target.value, endDate);
               }}
-              className="w-full px-3 py-3 pt-6 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all cursor-pointer hover:bg-gray-50"
+              className="w-full px-3 py-3 pt-6 rounded-lg border border-blue-600/60 bg-blue-900/40 text-white font-semibold text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all cursor-pointer hover:bg-blue-900/50"
             />
           </div>
           <div className="relative">
-            <span className="absolute left-3 top-2 text-gray-600 text-xs font-semibold">To</span>
+            <span className="absolute left-3 top-2 text-blue-400 text-xs font-semibold">To</span>
             <input
               type="date"
               value={endDate}
@@ -173,14 +169,14 @@ export default function MarketPerformanceChart({
                 setEndDate(e.target.value);
                 onDateRangeChange(startDate, e.target.value);
               }}
-              className="w-full px-3 py-3 pt-6 rounded-lg border border-gray-300 bg-white text-gray-900 font-semibold text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all cursor-pointer hover:bg-gray-50"
+              className="w-full px-3 py-3 pt-6 rounded-lg border border-blue-600/60 bg-blue-900/40 text-white font-semibold text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all cursor-pointer hover:bg-blue-900/50"
             />
           </div>
         </div>
       </div>
 
-      {/* Chart - Light Theme */}
-      <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-lg">
+      {/* Chart */}
+      <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-8 border border-orange-700/40 shadow-2xl">
         <ResponsiveContainer width="100%" height={420}>
           <ComposedChart
             data={chartData}
@@ -195,7 +191,7 @@ export default function MarketPerformanceChart({
                 <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.3" />
               </filter>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.6} />
+            <CartesianGrid strokeDasharray="4 4" stroke="#374151" opacity={0.5} />
             <XAxis
               dataKey="date"
               stroke="#9ca3af"
@@ -203,13 +199,13 @@ export default function MarketPerformanceChart({
               angle={-45}
               textAnchor="end"
               height={90}
-              tick={{ fill: "#6b7280" }}
+              tick={{ fill: "#d1d5db" }}
             />
             <YAxis
               stroke="#9ca3af"
               style={{ fontSize: "12px" }}
-              label={{ value: "Qty", angle: -90, position: "insideLeft", fill: "#6b7280", offset: 10 }}
-              tick={{ fill: "#6b7280" }}
+              label={{ value: "Qty", angle: -90, position: "insideLeft", fill: "#d1d5db", offset: 10 }}
+              tick={{ fill: "#d1d5db" }}
             />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(249, 115, 22, 0.1)" }} />
             <Legend
@@ -250,28 +246,36 @@ export default function MarketPerformanceChart({
         </ResponsiveContainer>
       </div>
 
-      {/* Chart Legend Info - Light Theme */}
-      <div className="bg-gradient-to-r from-orange-50 via-orange-100/30 to-orange-50 rounded-xl p-6 border border-orange-200/60">
-        <p className="text-xs font-bold text-orange-700 uppercase tracking-widest mb-4 flex items-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-orange-600"></span>
+      {/* Chart Legend Info */}
+      <div className="bg-gradient-to-r from-orange-900/30 to-orange-800/20 rounded-xl p-6 border border-orange-700/40 backdrop-blur-sm">
+        <p className="text-xs font-bold text-orange-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+          <span className="inline-block w-2 h-2 rounded-full bg-orange-500"></span>
           Legend & Metrics
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
-            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#f97316" }}></div>
-            <span className="text-sm font-semibold text-gray-700">Daily Sales</span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="flex flex-col items-start gap-1 p-3 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-orange-600/50 transition">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#f97316" }}></div>
+              <span className="text-xs font-semibold text-orange-300">Daily Sales</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
-            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#a78bfa" }}></div>
-            <span className="text-sm font-semibold text-gray-700">Zomato Trend</span>
+          <div className="flex flex-col items-start gap-1 p-3 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-purple-600/50 transition">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#a78bfa" }}></div>
+              <span className="text-xs font-semibold text-purple-300">Trend Line</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
-            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#ef4444" }}></div>
-            <span className="text-sm font-semibold text-gray-700">Zomato</span>
+          <div className="flex flex-col items-start gap-1 p-3 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-red-600/50 transition">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#ef4444" }}></div>
+              <span className="text-xs font-semibold text-red-300">Zomato</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
-            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#3b82f6" }}></div>
-            <span className="text-sm font-semibold text-gray-700">Other Areas</span>
+          <div className="flex flex-col items-start gap-1 p-3 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-blue-600/50 transition">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: "#3b82f6" }}></div>
+              <span className="text-xs font-semibold text-blue-300">Other Areas</span>
+            </div>
           </div>
         </div>
       </div>
