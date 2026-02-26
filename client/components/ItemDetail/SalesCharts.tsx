@@ -90,16 +90,16 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
   return (
     <div className="space-y-6">
       {/* Monthly Sales Quantity Chart - All 12 Months with Stacked Bars */}
-      <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div className="bg-gradient-to-r from-orange-900/40 to-orange-800/30 rounded-xl p-6 border border-orange-700/50 backdrop-blur-sm">
         <div className="flex items-center gap-2 mb-2">
-          <div className="p-2 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg">
+          <div className="p-2 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg">
             <BarChart3 className="w-5 h-5 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">Monthly Sales Quantity</h2>
+          <h2 className="text-2xl font-bold text-white">Monthly Sales Quantity</h2>
         </div>
-        <p className="text-sm text-gray-600 mb-4">Area-wise sales across all 12 months</p>
+        <p className="text-sm text-gray-300 mb-4">Area-wise sales across all 12 months</p>
 
-        <div className="w-full h-96 bg-white rounded-lg p-4 border border-gray-100">
+        <div className="w-full h-96 bg-gray-900/30 rounded-lg p-4 border border-gray-800">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={allMonthsData}
@@ -123,19 +123,19 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
                   <stop offset="100%" stopColor="#10b981" stopOpacity={0.6} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={true} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={true} />
               <XAxis
                 dataKey="month"
-                stroke="#6b7280"
-                tick={{ fill: "#374151", fontSize: 12, fontWeight: 500 }}
+                stroke="#9ca3af"
+                tick={{ fill: "#d1d5db", fontSize: 12, fontWeight: 500 }}
                 angle={-45}
                 textAnchor="end"
                 height={80}
               />
               <YAxis
-                stroke="#6b7280"
-                tick={{ fill: "#374151", fontSize: 12 }}
-                label={{ value: 'Quantity', angle: -90, position: 'insideLeft', style: { fill: '#374151' } }}
+                stroke="#9ca3af"
+                tick={{ fill: "#d1d5db", fontSize: 12 }}
+                label={{ value: 'Quantity', angle: -90, position: 'insideLeft', style: { fill: '#d1d5db' } }}
               />
               <Tooltip
                 content={<CustomMonthlyTooltip />}
@@ -181,53 +181,58 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
           </ResponsiveContainer>
         </div>
 
-        <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-          <p className="text-xs font-semibold text-blue-900 uppercase tracking-wide">📊 Chart Legend</p>
+        <div className="mt-4 p-4 bg-gradient-to-r from-orange-900/30 to-orange-800/20 rounded-lg border border-orange-700/40">
+          <p className="text-xs font-semibold text-orange-400 uppercase tracking-wide mb-3">📊 Chart Legend</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded" style={{ backgroundColor: AREA_COLORS.zomato }}></div>
-              <span className="text-sm text-blue-900 font-medium">Zomato</span>
+              <span className="text-sm text-gray-300 font-medium">Zomato</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded" style={{ backgroundColor: AREA_COLORS.swiggy }}></div>
-              <span className="text-sm text-blue-900 font-medium">Swiggy</span>
+              <span className="text-sm text-gray-300 font-medium">Swiggy</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded" style={{ backgroundColor: AREA_COLORS.dining }}></div>
-              <span className="text-sm text-blue-900 font-medium">Dining</span>
+              <span className="text-sm text-gray-300 font-medium">Dining</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded" style={{ backgroundColor: AREA_COLORS.parcel }}></div>
-              <span className="text-sm text-blue-900 font-medium">Parcel</span>
+              <span className="text-sm text-gray-300 font-medium">Parcel</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Date-wise Daily Sales Chart */}
-      {filteredDateWiseData && filteredDateWiseData.length > 0 && (
-        <div className="bg-gradient-to-br from-slate-50 to-green-50 rounded-xl border border-gray-200 p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg">
-                <TrendingUp className="w-5 h-5 text-white" />
+      {dateWiseData && dateWiseData.length > 0 && filteredDateWiseData && filteredDateWiseData.length > 0 && (
+        <div className="bg-gradient-to-br from-white via-orange-50/30 to-orange-50 rounded-2xl border border-orange-200/60 p-8 shadow-lg hover:shadow-xl transition">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 rounded-xl shadow-lg">
+                <TrendingUp className="w-6 h-6 text-white" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">
-                Daily Sales Breakdown {selectedMonth && `- ${selectedMonth}`}
-              </h2>
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900">
+                  Daily Sales Breakdown
+                </h2>
+                {selectedMonth && (
+                  <p className="text-sm text-orange-600 font-semibold mt-1">📅 Filtered by {selectedMonth}</p>
+                )}
+              </div>
             </div>
             {selectedMonth && (
               <button
                 onClick={() => setSelectedMonth(null)}
-                className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-300 text-sm font-semibold transition shadow-sm hover:shadow"
+                className="px-5 py-2.5 bg-white hover:bg-orange-50 text-orange-700 rounded-lg border border-orange-300 text-sm font-bold transition shadow-md hover:shadow-lg hover:border-orange-400"
               >
-                Clear Filter
+                ✕ Clear Filter
               </button>
             )}
           </div>
-          <p className="text-sm text-gray-600 mb-4">Daily area-wise sales for {selectedMonth || 'selected period'}</p>
+          <p className="text-sm font-medium text-gray-600 mb-6">Daily area-wise sales for {selectedMonth || 'selected period'}</p>
 
-          <div className="w-full h-96 bg-white rounded-lg p-4 border border-gray-100">
+          <div className="w-full bg-white rounded-xl p-6 border border-gray-100 shadow-lg">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={filteredDateWiseData}
@@ -308,23 +313,45 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
               </BarChart>
             </ResponsiveContainer>
           </div>
+
+          {/* Legend Section */}
+          <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-lg border border-orange-200/50">
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
+              <div className="w-3.5 h-3.5 rounded" style={{ backgroundColor: "#ef4444" }}></div>
+              <span className="text-xs font-semibold text-gray-700">Zomato</span>
+            </div>
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
+              <div className="w-3.5 h-3.5 rounded" style={{ backgroundColor: "#f97316" }}></div>
+              <span className="text-xs font-semibold text-gray-700">Swiggy</span>
+            </div>
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
+              <div className="w-3.5 h-3.5 rounded" style={{ backgroundColor: "#3b82f6" }}></div>
+              <span className="text-xs font-semibold text-gray-700">Dining</span>
+            </div>
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
+              <div className="w-3.5 h-3.5 rounded" style={{ backgroundColor: "#10b981" }}></div>
+              <span className="text-xs font-semibold text-gray-700">Parcel</span>
+            </div>
+          </div>
         </div>
       )}
 
       {/* Restaurant Sales Comparison - Donut Chart */}
-      {restaurantData.length > 0 && (
-        <div className="bg-gradient-to-br from-slate-50 to-pink-50 rounded-xl border border-gray-200 p-6 shadow-sm">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="p-2 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg">
-              <BarChart3 className="w-5 h-5 text-white" />
+      {Object.keys(restaurantSales || {}).length > 0 && restaurantData.length > 0 && (
+        <div className="bg-gradient-to-br from-white via-orange-50/20 to-orange-50 rounded-2xl border border-orange-200/50 p-8 shadow-lg hover:shadow-xl transition">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-3 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 rounded-xl shadow-lg">
+              <BarChart3 className="w-6 h-6 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Restaurant Sales Comparison</h2>
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">Restaurant Sales Comparison</h2>
+              <p className="text-xs text-orange-600 font-semibold mt-0.5">Total sales distribution by platform</p>
+            </div>
           </div>
-          <p className="text-sm text-gray-600 mb-4">Total sales by restaurant</p>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Donut Chart */}
-            <div className="lg:col-span-1 flex justify-center items-center bg-white rounded-lg border border-gray-100 p-4">
+            <div className="lg:col-span-1 flex justify-center items-center bg-white rounded-xl border border-gray-100 shadow-lg p-6">
               <div className="w-72 h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -353,7 +380,7 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
             </div>
 
             {/* Restaurant List */}
-            <div className="lg:col-span-2 bg-white rounded-lg border border-gray-100 p-4">
+            <div className="lg:col-span-2 bg-white rounded-xl border border-gray-100 shadow-lg p-6">
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {restaurantData.map((restaurant, idx) => {
                   const total = restaurantData.reduce((sum, r) => sum + r.value, 0);
