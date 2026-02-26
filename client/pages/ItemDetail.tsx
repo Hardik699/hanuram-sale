@@ -5,6 +5,7 @@ import SalesSummaryCards from "@/components/ItemDetail/SalesSummaryCards";
 import SalesDataTable from "@/components/ItemDetail/SalesDataTable";
 import SalesCharts from "@/components/ItemDetail/SalesCharts";
 import MarketPerformanceChart from "@/components/ItemDetail/MarketPerformanceChart";
+import VariationWiseSalesCards from "@/components/ItemDetail/VariationWiseSalesCards";
 
 console.log("📄 ItemDetail module loaded");
 
@@ -723,6 +724,17 @@ export default function ItemDetail() {
                   </select>
                 </div>
               </div>
+
+              {/* Variation-wise Sales Cards */}
+              {salesData && (
+                <VariationWiseSalesCards
+                  pickupData={salesData.parcelData}
+                  diningData={salesData.diningData}
+                  zomatoData={salesData.zomatoData}
+                  swiggyData={salesData.swiggyData}
+                  saleType={item?.variations?.[0]?.saleType || "QTY"}
+                />
+              )}
 
               {/* Market Performance Chart */}
               <MarketPerformanceChart
