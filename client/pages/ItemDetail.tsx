@@ -4,7 +4,6 @@ import { ArrowLeft, Trash2, Edit, RotateCcw, Package, FileText, TrendingUp } fro
 import SalesSummaryCards from "@/components/ItemDetail/SalesSummaryCards";
 import SalesDataTable from "@/components/ItemDetail/SalesDataTable";
 import SalesCharts from "@/components/ItemDetail/SalesCharts";
-import MarketPerformanceChart from "@/components/ItemDetail/MarketPerformanceChart";
 import VariationWiseSalesCards from "@/components/ItemDetail/VariationWiseSalesCards";
 
 console.log("📄 ItemDetail module loaded");
@@ -738,14 +737,6 @@ export default function ItemDetail() {
                 />
               )}
 
-              {/* Market Performance Chart */}
-              <MarketPerformanceChart
-                dateWiseData={salesData?.dateWiseData}
-                dateRange={dateRange}
-                onDateRangeChange={(start, end) => setDateRange({ start, end })}
-              />
-
-              <div className="h-px bg-gray-800"></div>
 
 
               {salesLoading ? (
