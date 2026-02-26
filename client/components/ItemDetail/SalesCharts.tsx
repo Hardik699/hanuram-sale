@@ -90,19 +90,16 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
   return (
     <div className="space-y-6">
       {/* Monthly Sales Quantity Chart - All 12 Months with Stacked Bars */}
-      <div className="bg-gradient-to-br from-white via-orange-50/20 to-orange-50 rounded-2xl border border-orange-200/50 p-8 shadow-lg hover:shadow-xl transition">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="p-3 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 rounded-xl shadow-lg">
-            <BarChart3 className="w-6 h-6 text-white" />
+      <div className="bg-gradient-to-r from-orange-900/40 to-orange-800/30 rounded-xl p-6 border border-orange-700/50 backdrop-blur-sm">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="p-2 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg">
+            <BarChart3 className="w-5 h-5 text-white" />
           </div>
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900">Monthly Sales Quantity</h2>
-            <p className="text-xs text-orange-600 font-semibold mt-0.5">All channels performance</p>
-          </div>
+          <h2 className="text-2xl font-bold text-white">Monthly Sales Quantity</h2>
         </div>
-        <p className="text-sm font-medium text-gray-600 mb-6">Area-wise sales across all 12 months</p>
+        <p className="text-sm text-gray-300 mb-4">Area-wise sales across all 12 months</p>
 
-        <div className="w-full h-96 bg-white rounded-xl p-6 border border-gray-100 shadow-inner">
+        <div className="w-full h-96 bg-gray-900/30 rounded-lg p-4 border border-gray-800">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={allMonthsData}
@@ -126,19 +123,19 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
                   <stop offset="100%" stopColor="#10b981" stopOpacity={0.6} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={true} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={true} />
               <XAxis
                 dataKey="month"
-                stroke="#6b7280"
-                tick={{ fill: "#374151", fontSize: 12, fontWeight: 500 }}
+                stroke="#9ca3af"
+                tick={{ fill: "#d1d5db", fontSize: 12, fontWeight: 500 }}
                 angle={-45}
                 textAnchor="end"
                 height={80}
               />
               <YAxis
-                stroke="#6b7280"
-                tick={{ fill: "#374151", fontSize: 12 }}
-                label={{ value: 'Quantity', angle: -90, position: 'insideLeft', style: { fill: '#374151' } }}
+                stroke="#9ca3af"
+                tick={{ fill: "#d1d5db", fontSize: 12 }}
+                label={{ value: 'Quantity', angle: -90, position: 'insideLeft', style: { fill: '#d1d5db' } }}
               />
               <Tooltip
                 content={<CustomMonthlyTooltip />}
@@ -184,27 +181,24 @@ export default function SalesCharts({ monthlyData, dateWiseData, restaurantSales
           </ResponsiveContainer>
         </div>
 
-        <div className="mt-6 p-5 bg-gradient-to-r from-orange-50 via-orange-100/30 to-orange-50 rounded-xl border border-orange-200/60">
-          <p className="text-xs font-bold text-orange-700 uppercase tracking-widest mb-4 flex items-center gap-2">
-            <span className="inline-block w-2 h-2 rounded-full bg-orange-600"></span>
-            Chart Legend
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: AREA_COLORS.zomato }}></div>
-              <span className="text-sm font-semibold text-gray-700">Zomato</span>
+        <div className="mt-4 p-4 bg-gradient-to-r from-orange-900/30 to-orange-800/20 rounded-lg border border-orange-700/40">
+          <p className="text-xs font-semibold text-orange-400 uppercase tracking-wide mb-3">📊 Chart Legend</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded" style={{ backgroundColor: AREA_COLORS.zomato }}></div>
+              <span className="text-sm text-gray-300 font-medium">Zomato</span>
             </div>
-            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: AREA_COLORS.swiggy }}></div>
-              <span className="text-sm font-semibold text-gray-700">Swiggy</span>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded" style={{ backgroundColor: AREA_COLORS.swiggy }}></div>
+              <span className="text-sm text-gray-300 font-medium">Swiggy</span>
             </div>
-            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: AREA_COLORS.dining }}></div>
-              <span className="text-sm font-semibold text-gray-700">Dining</span>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded" style={{ backgroundColor: AREA_COLORS.dining }}></div>
+              <span className="text-sm text-gray-300 font-medium">Dining</span>
             </div>
-            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white border border-orange-100 hover:border-orange-300 transition">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: AREA_COLORS.parcel }}></div>
-              <span className="text-sm font-semibold text-gray-700">Parcel</span>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded" style={{ backgroundColor: AREA_COLORS.parcel }}></div>
+              <span className="text-sm text-gray-300 font-medium">Parcel</span>
             </div>
           </div>
         </div>
