@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Trash2, Edit, RotateCcw, Package, FileText, TrendingUp } from "lucide-react";
 import SalesSummaryCards from "@/components/ItemDetail/SalesSummaryCards";
-import DateFilter from "@/components/ItemDetail/DateFilter";
 import SalesDataTable from "@/components/ItemDetail/SalesDataTable";
 import SalesCharts from "@/components/ItemDetail/SalesCharts";
 import MarketPerformanceChart from "@/components/ItemDetail/MarketPerformanceChart";
@@ -702,7 +701,7 @@ export default function ItemDetail() {
             /* Sales Tab Content */
             <div className="space-y-8">
               {/* Filter Area */}
-              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 grid grid-cols-1 md:grid-cols-2 gap-6 shadow-inner">
+              <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800 max-w-md shadow-inner">
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
                     Source Restaurant
@@ -717,15 +716,6 @@ export default function ItemDetail() {
                       <option key={res} value={res}>{res}</option>
                     ))}
                   </select>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-black text-gray-500 uppercase tracking-widest">
-                    Reporting Interval
-                  </label>
-                  <DateFilter
-                    onDateRangeChange={(start, end) => setDateRange({ start, end })}
-                  />
                 </div>
               </div>
 
