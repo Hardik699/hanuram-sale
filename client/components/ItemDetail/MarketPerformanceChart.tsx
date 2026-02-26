@@ -48,8 +48,14 @@ export default function MarketPerformanceChart({
 
   const chartData = useMemo(() => {
     if (!dateWiseData || dateWiseData.length === 0) return [];
-    return dateWiseData.slice(0, 15); // Limit to last 15 days for readability
-  }, [dateWiseData]);
+
+    // Filter data based on selected date range
+    const filteredData = dateWiseData.filter(item => {
+      return item.date >= startDate && item.date <= endDate;
+    });
+
+    return filteredData;
+  }, [dateWiseData, startDate, endDate]);
 
   const totalQuantity = chartData.reduce((sum, item) => sum + item.totalQty, 0);
 
