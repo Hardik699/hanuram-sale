@@ -738,6 +738,7 @@ export default function ItemDetail() {
 
               {/* Market Performance Chart */}
               <MarketPerformanceChart
+                dateWiseData={salesData?.dateWiseData}
                 dateRange={dateRange}
                 onDateRangeChange={(start, end) => setDateRange({ start, end })}
               />
